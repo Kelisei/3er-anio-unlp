@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item key="org.eclipse.jdt.ui.last.selected.jre.kind2" value="2"/>
+	<item key="org.eclipse.jdt.ui.last.selected.execution.enviroment" value="JavaSE-17"/>
 	<section name="org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart">
 		<item key="group_libraries" value="true"/>
 		<item key="layout" value="2"/>
@@ -16,9 +18,9 @@
 	<section name="NewClassCreationWizard.dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="697"/>
 		<item key="DIALOG_Y_ORIGIN" value="97"/>
-		<item key="DIALOG_WIDTH" value="638"/>
-		<item key="DIALOG_HEIGHT" value="655"/>
-		<item key="DIALOG_FONT_NAME" value="1|JetBrains Mono|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|0|3|2|1|49|JetBrains Mono"/>
+		<item key="DIALOG_WIDTH" value="800"/>
+		<item key="DIALOG_HEIGHT" value="696"/>
+		<item key="DIALOG_FONT_NAME" value="1|JetBrains Mono|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|0|3|2|1|49|JetBrains Mono"/>
 	</section>
 	<section name="OptionalMessageDialog.hide.">
 		<item key="org.eclipse.jdt.ui.typecomment.deprecated" value="true"/>
@@ -30,19 +32,19 @@
 	<section name="NewInterfaceCreationWizard.dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="695"/>
 		<item key="DIALOG_Y_ORIGIN" value="174"/>
-		<item key="DIALOG_WIDTH" value="547"/>
-		<item key="DIALOG_HEIGHT" value="525"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		<item key="DIALOG_WIDTH" value="840"/>
+		<item key="DIALOG_HEIGHT" value="596"/>
+		<item key="DIALOG_FONT_NAME" value="1|JetBrains Mono|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|0|3|2|1|49|JetBrains Mono"/>
 	</section>
 	<section name="org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog">
 		<item key="ShowStatusLine" value="true"/>
 		<item key="History" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History/&gt;"/>
 		<section name="DialogBoundsSettings">
-			<item key="DIALOG_HEIGHT" value="546"/>
-			<item key="DIALOG_WIDTH" value="425"/>
+			<item key="DIALOG_HEIGHT" value="581"/>
+			<item key="DIALOG_WIDTH" value="396"/>
 			<item key="DIALOG_X_ORIGIN" value="-37"/>
 			<item key="DIALOG_Y_ORIGIN" value="-44"/>
-			<item key="DIALOG_FONT_NAME" value="1|JetBrains Mono|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|0|3|2|1|49|JetBrains Mono"/>
+			<item key="DIALOG_FONT_NAME" value="1|JetBrains Mono|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|0|3|2|1|49|JetBrains Mono"/>
 		</section>
 	</section>
 	<section name="RefactoringWizard.preview">
@@ -66,5 +68,14 @@
 		<item key="DIALOG_WIDTH" value="423"/>
 		<item key="DIALOG_HEIGHT" value="573"/>
 		<item key="DIALOG_FONT_NAME" value="1|JetBrains Mono|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|0|3|2|1|49|JetBrains Mono"/>
+	</section>
+	<section name="JavaProjectWizard.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="461"/>
+		<item key="DIALOG_Y_ORIGIN" value="9"/>
+		<item key="DIALOG_WIDTH" value="1016"/>
+		<item key="DIALOG_HEIGHT" value="885"/>
+		<item key="DIALOG_FONT_NAME" value="1|JetBrains Mono|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|0|3|2|1|49|JetBrains Mono"/>
+	</section>
+	<section name="RenameInformationPopup">
 	</section>
 </section>

@@ -2,6 +2,7 @@
 <section name="Workbench">
 	<section name="MavenProjectWizardLocationPage">
 		<list key="location">
+			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio1\src\test\java\ejercicios\ejercicio1\TweetTest.java"/>
 			<item value="C:\Users\frank\OneDrive\Desktop\3er-anio-unlp\Objetos2\ejercicios"/>
 		</list>
 		<list key="projectNameTemplate">
@@ -26,15 +27,10 @@
 	</section>
 	<section name="Maven2ProjectWizardArchifactPage">
 		<list key="package">
-			<item value="ejercicios.ejercicio2"/>
-			<item value="ejercicios.ejercicio1"/>
 		</list>
 		<list key="groupId">
-			<item value="ejercicios"/>
 		</list>
 		<list key="artifactId">
-			<item value="ejercicio2"/>
-			<item value="ejercicio1"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
@@ -83,6 +79,9 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio5"/>
+			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio1"/>
+			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio3"/>
 			<item value="C:\Users\frank\OneDrive\Desktop\3er-anio-unlp\Objetos2\ejercicios\ejercicio1"/>
 		</list>
 		<list key="projectNameTemplate">
@@ -93,5 +92,9 @@
 			<item value="[groupId].[artifactId]-[version]"/>
 			<item value="[name]"/>
 		</list>
+	</section>
+	<section name="org.eclipse.m2e.core.pom.overview">
+	</section>
+	<section name="org.eclipse.m2e.core.pom.dependencies">
 	</section>
 </section>
