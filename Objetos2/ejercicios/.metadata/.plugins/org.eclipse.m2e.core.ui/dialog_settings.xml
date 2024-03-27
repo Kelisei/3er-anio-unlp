@@ -79,9 +79,13 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+<<<<<<< Updated upstream
 			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio5"/>
 			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio1"/>
 			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio3"/>
+=======
+			<item value="C:\Users\frank\OneDrive\Desktop\3er-anio-unlp\Objetos2\ejercicios\ejercicio3\ej-biblioteca"/>
+>>>>>>> Stashed changes
 			<item value="C:\Users\frank\OneDrive\Desktop\3er-anio-unlp\Objetos2\ejercicios\ejercicio1"/>
 		</list>
 		<list key="projectNameTemplate">
