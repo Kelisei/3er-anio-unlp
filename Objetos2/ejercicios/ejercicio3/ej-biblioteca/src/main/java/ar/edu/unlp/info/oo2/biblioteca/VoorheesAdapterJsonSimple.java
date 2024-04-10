@@ -2,7 +2,7 @@ package ar.edu.unlp.info.oo2.biblioteca;
 
 import java.util.List;
 import org.json.simple.*;
-public class VoorheesAdapter extends VoorheesExporter {
+public class VoorheesAdapterJsonSimple extends VoorheesExporter {
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject exportar(Socio socio) {

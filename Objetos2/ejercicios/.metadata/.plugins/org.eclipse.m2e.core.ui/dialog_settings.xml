@@ -1,88 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<section name="MavenProjectWizardLocationPage">
-		<list key="location">
-			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio1\src\test\java\ejercicios\ejercicio1\TweetTest.java"/>
-			<item value="C:\Users\frank\OneDrive\Desktop\3er-anio-unlp\Objetos2\ejercicios"/>
-		</list>
-		<list key="projectNameTemplate">
-			<item value="[artifactId]"/>
-			<item value="[artifactId]-TRUNK"/>
-			<item value="[artifactId]-[version]"/>
-			<item value="[groupId].[artifactId]"/>
-			<item value="[groupId].[artifactId]-[version]"/>
-			<item value="[name]"/>
-		</list>
-	</section>
-	<section name="MavenProjectWizardArchetypePage">
-		<item key="catalog" value="All Catalogs"/>
-		<list key="projectNameTemplate">
-			<item value="[artifactId]"/>
-			<item value="[artifactId]-TRUNK"/>
-			<item value="[artifactId]-[version]"/>
-			<item value="[groupId].[artifactId]"/>
-			<item value="[groupId].[artifactId]-[version]"/>
-			<item value="[name]"/>
-		</list>
-	</section>
-	<section name="Maven2ProjectWizardArchifactPage">
-		<list key="package">
-		</list>
-		<list key="groupId">
-		</list>
-		<list key="artifactId">
-		</list>
-		<list key="projectNameTemplate">
-			<item value="[artifactId]"/>
-			<item value="[artifactId]-TRUNK"/>
-			<item value="[artifactId]-[version]"/>
-			<item value="[groupId].[artifactId]"/>
-			<item value="[groupId].[artifactId]-[version]"/>
-			<item value="[name]"/>
-		</list>
-		<list key="version">
-			<item value="0.0.1-SNAPSHOT"/>
-		</list>
-	</section>
-	<section name="MavenProjectWizardArtifactPage">
-		<list key="groupId">
-		</list>
-		<list key="name">
-		</list>
-		<list key="artifactId">
-		</list>
-		<list key="projectNameTemplate">
-			<item value="[artifactId]"/>
-			<item value="[artifactId]-TRUNK"/>
-			<item value="[artifactId]-[version]"/>
-			<item value="[groupId].[artifactId]"/>
-			<item value="[groupId].[artifactId]-[version]"/>
-			<item value="[name]"/>
-		</list>
-		<list key="version">
-			<item value="0.0.1-SNAPSHOT"/>
-		</list>
-	</section>
-	<section name="org.eclipse.m2e.core.ui.internal.wizards.CustomArchetypeDialog">
-		<list key="archetypeGroupId">
-			<item value="ar.edu.unlp.info.oo2"/>
-		</list>
-		<list key="archetypeArtifactId">
-			<item value="objetos-dos"/>
-		</list>
-		<list key="archetypeVersion">
-			<item value="0.0.2"/>
-		</list>
-		<list key="repositoryUrl">
-			<item value="https://github.com/unlp-info-objetos/oo2-2022/blob/main/oo2_archetype-archetype-0.0.2/oo2_archetype-archetype-0.0.2.jar?raw=true"/>
-		</list>
-	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
-			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio5"/>
-			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio1"/>
-			<item value="C:\Users\frank\Documents\GitHub\3er-anio-unlp\Objetos2\ejercicios\ejercicio3"/>
-			<item value="C:\Users\frank\OneDrive\Desktop\3er-anio-unlp\Objetos2\ejercicios\ejercicio1"/>
+			<item value="C:\Users\frank\OneDrive\Desktop\3er-anio-unlp\Objetos2\ejercicios\ejercicio3\ej-biblioteca"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
