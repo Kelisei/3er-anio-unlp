@@ -22,4 +22,9 @@ public class Archivo extends Componente {
     public Archivo getMasNuevo() {
         return this;
     }
+
+    @Override
+    public void listarContenido(StringBuilder listado, String previo){
+        listado.append(previo).append(this.getNombre()).append("/\n");
+    }
 }

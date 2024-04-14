@@ -39,7 +39,5 @@ public abstract class Componente {
         }
     }
 
-    public String listarContenido(String contenido){
-        return contenido + "/" +this.getNombre() + "/";
-    }
+    public abstract void listarContenido(StringBuilder listado, String previo);
 }

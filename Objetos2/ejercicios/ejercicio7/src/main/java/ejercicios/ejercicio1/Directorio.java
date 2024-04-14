@@ -42,14 +42,10 @@ public class Directorio extends Componente {
         this.contenido.stream().forEach(c -> c.buscarTodos(lista, nombre));
     }
 
-    @Override
-    public String toString() {
-        String contenido = "/" + this.getNombre() + "/";
-        return contenido + "\n" + this.listarContenido("");
-    }
-
-    public String listarContenido(String contenido){
-        return this.contenido.stream().map(c -> contenido + "/" + c.listarContenido(this.getNombre())).collect(Collectors.joining("\n"));
+    public void listarContenido(StringBuilder listado, String previo) {
+        String nuevoPrevio = previo + this.getNombre() + "/";
+        listado.append(nuevoPrevio).append("\n");
+        this.contenido.stream().forEach(c -> c.listarContenido(listado, nuevoPrevio));
     }
 
     public void agregar(Componente componente) {
