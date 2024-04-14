@@ -40,4 +40,8 @@ public abstract class Componente {
     }
 
     public abstract void listarContenido(StringBuilder listado, String previo);
+    @Override
+    public String toString(){
+        return this.getNombre();
+    }
 }
