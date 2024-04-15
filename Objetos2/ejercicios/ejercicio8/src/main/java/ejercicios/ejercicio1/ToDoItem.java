@@ -52,4 +52,7 @@ public class ToDoItem {
     public void appendComment(String comment){
         this.comments.add(comment);
     }
+    public Stage getStage(){
+        return this.stage;
+    }
 }
