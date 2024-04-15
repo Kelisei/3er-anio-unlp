@@ -5,8 +5,6 @@ public abstract class State {
     public State(Excursion excursion) {
         this.context = excursion;
     }
-    public void enroll(User user){
-        this.context.addToEnrolled(user);
-    }
+    public abstract void enroll(User user);
     public abstract String getInfo();
 }

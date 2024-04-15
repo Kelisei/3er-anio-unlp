@@ -9,6 +9,14 @@ public class Definitive extends State {
     /*
      * nombre, costo, fechas, punto de encuentro, los mails de los usuarios inscriptos y cantidad de usuarios faltantes para alcanzar el cupo máximo.
      */
+    public void enroll(User user) {
+        if (this.context.getEnrolled().size() >= this.context.getMaxCap()){
+            this.context.addToWaitList(user);
+            this.context.setState(new Definitive(this.context));
+        } else {
+            this.context.addToEnrolled(user);
+        }
+    }
     public String getInfo(){
         String info = "";
         info += "Name: " + this.context.getName() + "\n";

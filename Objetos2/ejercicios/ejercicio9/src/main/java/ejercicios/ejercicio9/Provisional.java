@@ -4,6 +4,13 @@ public class Provisional extends State {
     public Provisional(Excursion excursion) {
        super(excursion);
     }
+
+    public void enroll(User user) {
+        this.context.addToEnrolled(user);
+        if (this.context.getEnrolled().size() >= this.context.getMinCap()){
+            this.context.setState(new Definitive(this.context));
+        } 
+    }
     public String getInfo(){
         String info = "";
         info += "Name: " + this.context.getName() + "\n";

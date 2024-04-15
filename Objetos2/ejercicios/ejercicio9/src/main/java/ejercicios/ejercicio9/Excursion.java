@@ -23,10 +23,11 @@ public class Excursion {
         this.endDate = endDate;
         this.maxCap = maxCap;
         this.minCap = minCap;
-        enrolled = new ArrayList<>();
-        waitList = new ArrayList<>();
+        this.enrolled = new ArrayList<>();
+        this.waitList = new ArrayList<>();
         this.cost = cost;
         this.location = location;
+        this.state = new Provisional(this);
     }
 
     public void enroll(User user){
