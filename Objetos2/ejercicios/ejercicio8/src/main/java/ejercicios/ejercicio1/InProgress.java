@@ -1,8 +1,7 @@
 package ejercicios.ejercicio1;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
 
 public class InProgress extends Stage {
     public InProgress(ToDoItem todoItem) {
@@ -21,6 +20,6 @@ public class InProgress extends Stage {
 
     // 3 casos, falla en Pending.
     public Duration workedTime() {
-        return Duration.ofMinutes(ChronoUnit.MINUTES.between(this.todoItem.getStart(), LocalDate.now())); 
+        return Duration.between(this.todoItem.getStart(), LocalDateTime.now()); 
     }
 }

@@ -2,7 +2,6 @@ package ejercicios.ejercicio1;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class Paused extends Stage {
     public Paused(ToDoItem todoItem) {
@@ -21,6 +20,6 @@ public class Paused extends Stage {
 
     // 3 casos, falla en Pending.
     public Duration workedTime() {
-        return Duration.ofMinutes(ChronoUnit.MINUTES.between(this.todoItem.getStart(), LocalDate.now())); 
+        return Duration.between(this.todoItem.getStart(), LocalDate.now()); 
     }
 }

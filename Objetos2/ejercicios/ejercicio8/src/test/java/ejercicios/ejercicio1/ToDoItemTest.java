@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,6 @@ import org.junit.jupiter.api.Test;
  * 
  */
 public class ToDoItemTest {
-	private ToDoItem tareaPendiente;
 	private ToDoItem tareaIniciada;
 	private ToDoItem tareaSinIniciar;
 	private ToDoItem tareaTerminada;
@@ -60,5 +61,13 @@ public class ToDoItemTest {
 			tareaIniciada.start();
 		});
 		assertEquals(excepcion.getMessage(), "El ToDoItem ya ha iniciado");
+	}
+	@Test
+	void workedTime(){
+		tareaTerminada.changeStart(LocalDateTime.of(2023, 3, 31, 15, 32, 0));
+		Finished finalizada = (Finished) tareaTerminada.getStage();
+		finalizada.changeEnd(LocalDateTime.of(2023, 3, 31, 16, 32, 30));
+		assertEquals(tareaTerminada.workedTime().getSeconds(),  3630);
+		// Como se supone que testee esto con los pendientes o pausados???
 	}
 }

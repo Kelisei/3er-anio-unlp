@@ -1,6 +1,7 @@
 package ejercicios.ejercicio1;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class ToDoItem {
     @SuppressWarnings("unused")
     private String name;
     private List<String> comments;
-    private LocalDate start;
+    private LocalDateTime start;
     private Stage stage;
 
     public ToDoItem(String name){
@@ -40,10 +41,10 @@ public class ToDoItem {
     }
 
 
-    public void changeStart(LocalDate start) {
+    public void changeStart(LocalDateTime start) {
         this.start = start;
     }
-    public LocalDate getStart(){
+    public LocalDateTime getStart(){
         return this.start;
     }
     public void changeStage(Stage stage){

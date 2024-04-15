@@ -1,6 +1,6 @@
 package ejercicios.ejercicio1;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Pending extends Stage {
     public Pending(ToDoItem todoItem){
@@ -10,6 +10,6 @@ public class Pending extends Stage {
     @Override
     public void start(){
         this.todoItem.changeStage(new InProgress(this.todoItem));
-        this.todoItem.changeStart(LocalDate.now());
+        this.todoItem.changeStart(LocalDateTime.now());
     }
 }
