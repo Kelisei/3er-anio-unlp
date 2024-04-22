@@ -12,13 +12,15 @@ public class Dispositivo {
         this.connection = new FourGAdapter(new FourGConnection("4G"));
         this.display = new Display();
     }
-    public void configurarCRC(CRC_Calculator crc) {
+    public String configurarCRC(CRC_Calculator crc) {
         this.crcCalc = crc;
+        return "CRC changed";
     }
-    public void configurarConexion(Connection connection){
+    public String conectarCon(Connection connection){
         this.connection = connection;
         this.display.showBanner(connection.pict());
         this.ringer.ring();
+        return "Connection changed";
     }
     public String send(String data) {
         int crc = this.crcCalc.crcFor(data);
