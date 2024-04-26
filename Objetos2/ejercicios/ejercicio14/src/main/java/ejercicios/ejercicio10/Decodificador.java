@@ -10,7 +10,6 @@ public class Decodificador {
 
     public Decodificador() {
         this.reproducidas = new ArrayList<>();
-        this.grilla = new ArrayList<>();
         this.sugerencia = new Novedades();
     }   
 
@@ -32,9 +31,5 @@ public class Decodificador {
 
     public List<Pelicula> generarRecomendacion(){
         return sugerencia.generarRecomendacion(this);
-    }
-
-    public void cambiarSugerencias(Sugerencia sugerencia){
-        this.sugerencia = sugerencia;
     }
 }

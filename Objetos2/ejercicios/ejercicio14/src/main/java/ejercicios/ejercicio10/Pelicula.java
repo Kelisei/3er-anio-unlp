@@ -9,6 +9,7 @@ public class Pelicula {
     private LocalDate anioDeEstreno;
     private int puntaje;
     private List<Pelicula> similares;
+
     public Pelicula(String titulo, LocalDate anioDeEstreno, int puntaje) {
         this.titulo = titulo;
         this.anioDeEstreno = anioDeEstreno;
@@ -17,29 +18,25 @@ public class Pelicula {
     }
 
     public void agregarSimilar(Pelicula similar) {
-        if (!this.similares.contains(similar)) {
+        if (this.similares.contains(similar)) {
             this.similares.add(similar);
             similar.agregarSimilar(this);
         }
     }
 
     public List<Pelicula> getSimilares() {
-        return this.similares;
+        return similares;
     }
 
     public String getTitulo() {
-        return this.titulo;
+        return titulo;
     }
 
     public LocalDate getAnioDeEstreno() {
-        return this.anioDeEstreno;
+        return anioDeEstreno;
     }
 
     public int getPuntaje() {
-        return this.puntaje;
-    }
-    @Override
-    public String toString(){
-        return this.titulo;
+        return puntaje;
     }
 }
