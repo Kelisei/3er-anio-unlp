@@ -60,7 +60,7 @@ public class DispositivoTest {
         List<Pelicula> recomendaciones = decodificador.generarRecomendacion();
         assertTrue(recomendaciones.contains(madagascar3));
         assertTrue(recomendaciones.contains(madagascar2));
-        assertTrue(recomendaciones.contains(interstellar));
+        assertTrue(recomendaciones.contains(dune2));
 
     }
 }
