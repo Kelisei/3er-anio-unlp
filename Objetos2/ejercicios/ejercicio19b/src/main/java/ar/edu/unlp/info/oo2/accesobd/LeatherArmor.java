@@ -13,8 +13,4 @@ public class LeatherArmor implements Armor {
     public int recieveStaffStrike(){
         return 2;
     }
-    @Override
-    public int recieveHammerStrike(){
-        return 20;
-    }
 }

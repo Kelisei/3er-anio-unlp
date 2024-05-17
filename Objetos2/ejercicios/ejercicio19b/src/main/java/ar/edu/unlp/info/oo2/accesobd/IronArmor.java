@@ -1,20 +1,16 @@
 package ar.edu.unlp.info.oo2.accesobd;
 
-public class LeatherArmor implements Armor {
+public class IronArmor implements Armor {
     @Override
     public int recieveSwordStrike(){
-        return 8;
-    }
-    @Override
-    public int recieveBowStrike(){
         return 5;
     }
     @Override
-    public int recieveStaffStrike(){
-        return 2;
+    public int recieveBowStrike(){
+        return 3;
     }
     @Override
-    public int recieveHammerStrike(){
-        return 20;
+    public int recieveStaffStrike(){
+        return 1;
     }
 }
