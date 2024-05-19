@@ -47,7 +47,4 @@ public class VueloDiario {
     public String getCiudadSalida() {
         return ciudadSalida;
     }
-
-
-    
 }

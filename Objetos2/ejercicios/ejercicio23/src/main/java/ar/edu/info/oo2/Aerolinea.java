@@ -6,6 +6,7 @@
 package ar.edu.info.oo2;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,28 @@ public class Aerolinea {
         return pasajes;
     }
 
+    
+    public void agregarAvion(Avion avion) {
+        this.aviones.add(avion);
+    }
 
+    public double promedioOcupacion(LocalDate fechaInicio, LocalDate fechaFin){
+        return 0.0;
+    }
 
+    public double horasVoladasPorCadaAvion(){
+        return 0.0;
+    }
+
+    public double horasVoladasEnTotal(){
+        return 0.0;
+    }
+
+    public double descuentosTotalesAplicados(){
+        return 0.0;
+    }
+
+    public double eficienciaDeTarifas(){
+        return 0.0;
+    }
 }
