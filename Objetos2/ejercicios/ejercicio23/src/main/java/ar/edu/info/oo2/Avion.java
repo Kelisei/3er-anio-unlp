@@ -16,7 +16,7 @@ public class Avion {
     private String nombre;
     private double capacidadDeCarga;
     private int cantAsientos;
-    private List<tranis> pasajes;
+    private List<Pasaje> pasajes;
 
     public Avion(String nombre, double capacidadDeCarga, int cantAsientos) {
         this.nombre = nombre;
@@ -37,15 +37,15 @@ public class Avion {
         return cantAsientos;
     }
 
-    public List<tranis> getPasajes() {
+    public List<Pasaje> getPasajes() {
         return pasajes;
     }
 
-    public void agregarPasaje(tranis pasaje) {
+    public void agregarPasaje(Pasaje pasaje) {
         this.pasajes.add(pasaje);
     }
 
-    public void removerPasaje(tranis pasaje) {
+    public void removerPasaje(Pasaje pasaje) {
         this.pasajes.remove(pasaje);
     }
 }
