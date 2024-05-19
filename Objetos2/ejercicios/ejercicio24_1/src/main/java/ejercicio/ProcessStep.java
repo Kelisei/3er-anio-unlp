@@ -28,4 +28,8 @@ public abstract  class ProcessStep {
 	private void setSuccess() {
 		this.result = true;
 	}
+
+    public boolean isResult() {
+        return result;
+    }
 }
