@@ -1,0 +1,38 @@
+[
+    {
+        "username": "john_doe",
+        "email": "john.doe@example.com"
+    },
+    {
+        "username": "jane_smith",
+        "email": "jane.smith@example.com"
+    },
+    {
+        "username": "alex_brown",
+        "email": "alex.brown@example.com"
+    },
+    {
+        "username": "emily_jones",
+        "email": "emily.jones@example.com"
+    },
+    {
+        "username": "michael_adams",
+        "email": "michael.adams@example.com"
+    },
+    {
+        "username": "sarah_wilson",
+        "email": "sarah.wilson@example.com"
+    },
+    {
+        "username": "chris_jackson",
+        "email": "chris.jackson@example.com"
+    },
+    {
+        "username": "lisa_thompson",
+        "email": "lisa.thompson@example.com"
+    },
+    {
+        "username": "kevin_miller",
+        "email": "kevin.miller@example.com"
+    }
+]
