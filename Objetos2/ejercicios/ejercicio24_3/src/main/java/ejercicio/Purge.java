@@ -18,10 +18,7 @@ public class Purge extends ProcessStep {
             tank.heatPower(0);
             tank.mixerPower(0);
             tank.purge();
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException ex) {
-            }
+            tank.updateElapsedTime(4);
             return tank.upTo() == 0;
         }
     }

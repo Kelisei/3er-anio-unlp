@@ -14,10 +14,7 @@ public class LightMix extends ProcessStep {
     protected boolean basicExecute(MixingTank tank) {
         double temp = tank.temperature();
         tank.heatPower(100);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-        }
+        tank.updateElapsedTime(2);
         if (tank.temperature() - temp == 10) {
             tank.mixerPower(5);
             return true;

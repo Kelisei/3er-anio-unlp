@@ -2,46 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package ejercicio;
 
 /**
  *
  * @author frank
  */
-public class MixingTank {
-    private int heatPower;
-    private int mixerPower;
-    private double volume;
-    private double temperature;
+public abstract class MixingTank {
 
-    public MixingTank() {
-        this.heatPower = 0;
-        this.mixerPower = 0;
-        this.volume = 0;
-        this.temperature = 0;
-    }
+    public abstract boolean heatPower(int percentage);
 
-    public boolean heatPower(int percentage){
-        this.heatPower = percentage;
-        return true;
-    }
+    public abstract boolean mixerPower(int percentage);
 
-    public boolean mixerPower(int percentage){
-        this.mixerPower = percentage;
-        return true;
-    }
+    public abstract boolean purge();
 
-    public boolean purge(){
-        this.volume = 0;
-        return true;
-    }
+    public abstract double upTo();
 
-    public double upTo(){
-        return this.volume;
-    }
+    public abstract double temperature();
 
-    public double temperature(){
-        return this.temperature;
-    }
+    public abstract void updateElapsedTime(long time);
 }

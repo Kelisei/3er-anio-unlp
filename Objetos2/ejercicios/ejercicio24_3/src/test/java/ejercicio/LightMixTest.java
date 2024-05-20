@@ -19,7 +19,7 @@ public class LightMixTest {
 	
     @Test
     public void testBasicExecute() {
-        mix1.execute(new MixingTank());
+        mix1.execute(new MixingTankMock());
 		assertTrue(mix1.isResult());
     }
 }
