@@ -1,62 +1,62 @@
 <mxfile host="65bd71144e">
     <diagram id="ZDwx_2lt21PSLHX_r7NO" name="Page-1">
-        <mxGraphModel dx="2511" dy="916" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="1711" dy="1157" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="7" value="GestorNumerosDisponibles" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" parent="1" vertex="1">
-                    <mxGeometry x="180" y="670" width="280" height="138" as="geometry"/>
+                    <mxGeometry x="120" y="670" width="400" height="150" as="geometry"/>
                 </mxCell>
-                <mxCell id="8" value="- tipoGenerador: String&#10;- lineas : String [*]" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="7" vertex="1">
-                    <mxGeometry y="26" width="280" height="34" as="geometry"/>
+                <mxCell id="8" value="- lineas : String [*]" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="7" vertex="1">
+                    <mxGeometry y="26" width="400" height="24" as="geometry"/>
                 </mxCell>
                 <mxCell id="9" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" parent="7" vertex="1">
-                    <mxGeometry y="60" width="280" height="8" as="geometry"/>
+                    <mxGeometry y="50" width="400" height="8" as="geometry"/>
                 </mxCell>
-                <mxCell id="10" value="+ getLineas(): String[*]&#10;+ obtenerNumeroLibre(): String&#10;+ cambiarTipoGenerador(valor: String)" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="7" vertex="1">
-                    <mxGeometry y="68" width="280" height="70" as="geometry"/>
+                <mxCell id="10" value="+ &lt;&lt;create&gt;&gt; GestorNumerosDisponibles()&#10;+ getLineas(): String[*]&#10;+ obtenerNumeroLibre(): String&#10;+ cambiarTipoGenerador(tipoGenerador: GeneradorNumero)&#10;+ agregarNumeroTelefono(numero: String)" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="7" vertex="1">
+                    <mxGeometry y="58" width="400" height="92" as="geometry"/>
                 </mxCell>
-                <mxCell id="12" value="Llamada" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" parent="1" vertex="1">
-                    <mxGeometry x="-20" y="10" width="260" height="260" as="geometry"/>
+                <mxCell id="12" value="&lt;&lt;abstract&gt;&gt;&#10;Llamada" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="-280" y="10" width="520" height="190" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="- tipoDeLlamada: String&#10;- origen: String&#10;- destino: String&#10;- duracion: Integer" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="12" vertex="1">
-                    <mxGeometry y="26" width="260" height="74" as="geometry"/>
+                <mxCell id="13" value="- origen: String&#10;- destino: String&#10;- duracion: Integer" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="12" vertex="1">
+                    <mxGeometry y="40" width="520" height="54" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" parent="12" vertex="1">
-                    <mxGeometry y="100" width="260" height="8" as="geometry"/>
+                    <mxGeometry y="94" width="520" height="8" as="geometry"/>
                 </mxCell>
-                <mxCell id="15" value="+ &lt;&lt;create&gt;&gt; (tipoLlamada: String,&#10;origen: String, destino: String,&#10;duracion: Integer)&#10;+ getTipoDeLlamada(): String&#10;+ getRemitente(): String&#10;+ getDuracion(): Integer&#10;+ getOrigen(): String" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="12" vertex="1">
-                    <mxGeometry y="108" width="260" height="152" as="geometry"/>
+                <mxCell id="15" value="+ &lt;&lt;create&gt;&gt;Llamada(origen: String, destino: String,duracion: Integer)&#10;+ getRemitente(): String&#10;+ getDuracion(): Integer&#10;+ getOrigen(): String&#10;+ &lt;&lt;abstrat&gt;&gt; calcularCosto(): Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="12" vertex="1">
+                    <mxGeometry y="102" width="520" height="88" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="Cliente" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;gradientColor=none;rounded=1;labelBackgroundColor=none;labelBorderColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="340" y="10" width="240" height="290" as="geometry"/>
+                <mxCell id="16" value="&lt;&lt;abstract&gt;&gt;&#10;Cliente" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;gradientColor=none;rounded=1;labelBackgroundColor=none;labelBorderColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="10" width="430" height="230" as="geometry"/>
                 </mxCell>
-                <mxCell id="17" value="- tipo: String&#10;- nombre: String&#10;- numeroTelefono: String&#10;- cuit: String&#10;- dni: String" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="16" vertex="1">
-                    <mxGeometry y="26" width="240" height="74" as="geometry"/>
+                <mxCell id="17" value="- nombre: String&#10;- numeroTelefono: String" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="16" vertex="1">
+                    <mxGeometry y="40" width="430" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" parent="16" vertex="1">
-                    <mxGeometry y="100" width="240" height="8" as="geometry"/>
+                    <mxGeometry y="80" width="430" height="8" as="geometry"/>
                 </mxCell>
-                <mxCell id="19" value="+ &amp;lt;&amp;lt;create&amp;gt;&amp;gt; Cliente()&lt;br&gt;+ getTipo(): String&lt;br&gt;+ setTipo(tipo: String)&lt;br&gt;+ getNombre(): String&lt;br&gt;+ setNombre(nombre: String)&lt;br&gt;+ getNumeroTelefono(): String&lt;br&gt;+ setNumeroTelefono(&lt;br&gt;numeroTelefono: String)&lt;br&gt;+ getCuit(): String&lt;br&gt;+ setCuit(cuit: String)&lt;br&gt;+ getDNI(): String&lt;br&gt;+ setDNI(dni: String)&lt;br&gt;" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;labelBackgroundColor=none;labelBorderColor=none;html=1;fontColor=#F0F0F0;" parent="16" vertex="1">
-                    <mxGeometry y="108" width="240" height="182" as="geometry"/>
+                <mxCell id="19" value="+ &amp;lt;&amp;lt;create&amp;gt;&amp;gt; Cliente(nombre:String, numeroTelefono:String)&lt;br&gt;+ getNombre(): String&lt;br&gt;+ setNombre(nombre: String)&lt;br&gt;+ getNumeroTelefono(): String&lt;br&gt;+ setNumeroTelefono(&lt;br&gt;numeroTelefono: String)&lt;br&gt;+ calcularMontoTotalLlamadas(): Real&lt;br&gt;+ agregarLlamada(llamada: Llamada)&lt;br&gt;# &amp;lt;&amp;lt;abstract&amp;gt;&amp;gt; calcularDescuento(montoActual: Real): Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;labelBackgroundColor=none;labelBorderColor=none;html=1;fontColor=#F0F0F0;" parent="16" vertex="1">
+                    <mxGeometry y="88" width="430" height="142" as="geometry"/>
                 </mxCell>
-                <mxCell id="40" style="edgeStyle=none;html=1;entryX=0.392;entryY=1.022;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;" edge="1" parent="1" source="20" target="15">
+                <mxCell id="40" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;" parent="1" source="20" target="15" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="41" style="edgeStyle=none;html=1;entryX=0.502;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;" edge="1" parent="1" source="20" target="19">
+                <mxCell id="41" style="edgeStyle=none;html=1;entryX=0.502;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;" parent="1" source="20" target="19" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="20" value="Empresa" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#FFFFFF;strokeColor=#190033;rounded=1;" parent="1" vertex="1">
-                    <mxGeometry x="-20" y="390" width="680" height="210" as="geometry"/>
+                    <mxGeometry x="-25" y="360" width="690" height="258" as="geometry"/>
                 </mxCell>
-                <mxCell id="21" value="+ &lt;&lt;static&gt;&gt; descuentoJur: Real&#10;+ &lt;&lt;static&gt;&gt; descuentoFis: Real&#10;" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="20" vertex="1">
-                    <mxGeometry y="26" width="680" height="34" as="geometry"/>
+                <mxCell id="21" value="" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" parent="20" vertex="1">
+                    <mxGeometry y="26" width="690" height="34" as="geometry"/>
                 </mxCell>
                 <mxCell id="22" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" parent="20" vertex="1">
-                    <mxGeometry y="60" width="680" height="8" as="geometry"/>
+                    <mxGeometry y="60" width="690" height="8" as="geometry"/>
                 </mxCell>
-                <mxCell id="23" value="+ &lt;&lt;create&gt;&gt; Empresa()&#10;+ agregarNumeroTelefono(str:String):Boolean&#10;+ obtenerNumeroLibre():String&#10;+ resgistrarUsuario(data: String,nombre: String, tipo:String): Cliente&#10;+ registrarLlamada(origen: Cliente, destino: Cliente, t: String, duracion: Integer): Llamada&#10;+ calcularMontoTotalLlamadas(cliente:Cliente):Real&#10;+ cantidadDeUsuarios():Integer&#10;+ existeUsuario(persona: Cliente): Boolean&#10;+ getGestorNumeros(): GestorNumerosDisponibles" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;shadow=0;glass=0;fontColor=#F0F0F0;" parent="20" vertex="1">
-                    <mxGeometry y="68" width="680" height="142" as="geometry"/>
+                <mxCell id="23" value="+ &lt;&lt;create&gt;&gt; Empresa()&#10;+ agregarNumeroTelefono(numero:String):Boolean&#10;+ obtenerNumeroLibre():String&#10;+ registrarUsuarioFisico(dni: String, nombre: String): Cliente&#10;+ registrarUsuarioJuridico(cuit: String,nombre: String): Cliente&#10;+ registrarLlamadaNacional(origen: Cliente, destino: Cliente, duracion: Integer): Llamada&#10;+ registrarLlamadaInternacional(origen: Cliente, destino: Cliente, duracion: Integer): Llamada&#10;- agregarLlamada(origen: Cliente, llamada: Llamada)&#10;+ calcularMontoTotalLlamadas(cliente:Cliente):Real&#10;+ cantidadDeUsuarios():Integer&#10;+ existeUsuario(persona: Cliente): Boolean&#10;+ getGestorNumeros(): GestorNumerosDisponibles" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;shadow=0;glass=0;fontColor=#F0F0F0;" parent="20" vertex="1">
+                    <mxGeometry y="68" width="690" height="190" as="geometry"/>
                 </mxCell>
                 <mxCell id="25" value="llamadas *" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=JetBrains Mono;fontColor=#18141D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" parent="1" vertex="1">
                     <mxGeometry x="240" y="180" width="100" height="30" as="geometry"/>
@@ -71,10 +71,157 @@
                     <mxGeometry x="320" y="610" width="70" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="38" value="llamadas *" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=JetBrains Mono;fontColor=#18141D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;labelBackgroundColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="140" y="320" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="80" y="330" width="100" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#18141D;" edge="1" parent="1" source="23" target="7">
+                <mxCell id="42" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#18141D;" parent="1" source="23" target="7" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="&lt;&lt;interface&gt;&gt;&#10;GeneradorNumero" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="660" y="689" width="350" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="43">
+                    <mxGeometry y="40" width="350" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="43">
+                    <mxGeometry y="60" width="350" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="+ obtenerNumeroLibre(lineas: String [*]):String" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="43">
+                    <mxGeometry y="68" width="350" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#18141D;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="10" target="46">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="470" y="730" as="sourcePoint"/>
+                        <mxPoint x="470" y="800" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="48" value="tipoGenerador 1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=JetBrains Mono;fontColor=#18141D;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="740" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="Primero" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="670" y="890" width="350" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#18141D;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.514;entryY=1.031;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=block;endFill=0;dashed=1;" edge="1" parent="49" target="46">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="170" as="sourcePoint"/>
+                        <mxPoint x="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="50" value="" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="49">
+                    <mxGeometry y="30" width="350" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="49">
+                    <mxGeometry y="50" width="350" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="+ obtenerNumeroLibre(lineas: String [*]):String" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="49">
+                    <mxGeometry y="58" width="350" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="Ultimo" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="270" y="890" width="350" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="53">
+                    <mxGeometry y="30" width="350" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="53">
+                    <mxGeometry y="50" width="350" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="+ obtenerNumeroLibre(lineas: String [*]):String" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="53">
+                    <mxGeometry y="58" width="350" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="Aleatoria" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1050" y="890" width="350" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="57">
+                    <mxGeometry y="30" width="350" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="57">
+                    <mxGeometry y="50" width="350" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="+ obtenerNumeroLibre(lineas: String [*]):String" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="57">
+                    <mxGeometry y="58" width="350" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#18141D;exitX=1;exitY=0.5;exitDx=0;exitDy=0;endArrow=block;endFill=0;dashed=1;" edge="1" parent="1" target="46">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="479.76" y="890" as="sourcePoint"/>
+                        <mxPoint x="479.6600000000001" y="789.992" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="63" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#18141D;exitX=1;exitY=0.5;exitDx=0;exitDy=0;endArrow=block;endFill=0;dashed=1;" edge="1" parent="1" target="46">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1230.0000000000002" y="890" as="sourcePoint"/>
+                        <mxPoint x="990" y="820" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65" value="LlamadaNacional" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="-5" y="-180" width="580" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="-&lt;&lt;static&gt;&gt;&lt;&lt;final&gt;&gt; PRECIO_POR_SEGUNDO: Real&#10;-&lt;&lt;static&gt;&gt;&lt;&lt;final&gt;&gt; IVA: Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="65">
+                    <mxGeometry y="26" width="580" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="65">
+                    <mxGeometry y="70" width="580" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="+ &lt;&lt;create&gt;&gt;LlamadaNacional(origen: String, destino: String,duracion: Integer)&#10;+ calcularCosto(): Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="65">
+                    <mxGeometry y="78" width="580" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="LlamadaInternacional" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="-630" y="-180" width="610" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="-&lt;&lt;static&gt;&gt;&lt;&lt;final&gt;&gt; PRECIO_POR_SEGUNDO: Real&#10;-&lt;&lt;static&gt;&gt;&lt;&lt;final&gt;&gt; IVA: Real&#10;-&lt;&lt;static&gt;&gt;&lt;&lt;final&gt;&gt; COSTO_ESTABLECIMIENTO_DE_LLAMADA: Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="69">
+                    <mxGeometry y="26" width="610" height="54" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="69">
+                    <mxGeometry y="80" width="610" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="+ &lt;&lt;create&gt;&gt;LlamadaInternacional(origen: String, destino: String,duracion: Integer)&#10;+ calcularCosto(): Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="69">
+                    <mxGeometry y="88" width="610" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;endArrow=block;endFill=0;" edge="1" parent="1" source="69" target="12">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-14.700163857508784" y="36.660000000000025" as="sourcePoint"/>
+                        <mxPoint x="-70" y="-50" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="74" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;endArrow=block;endFill=0;" edge="1" parent="1" source="68" target="12">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-2.0799999999999272" y="-70.00400000000005" as="sourcePoint"/>
+                        <mxPoint x="120" y="13.34" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="75" value="ClienteFisico" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;gradientColor=none;rounded=1;labelBackgroundColor=none;labelBorderColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="850" y="130" width="580" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="- dni: String&#10;- &lt;&lt;static&gt;&gt; descuentoFisico: Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="75">
+                    <mxGeometry y="26" width="580" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="75">
+                    <mxGeometry y="60" width="580" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="+ &amp;lt;&amp;lt;create&amp;gt;&amp;gt; ClienteFisico(nombre:String, numeroTelefono:String, dni:String)&lt;br&gt;# calcularDescuento(monoActual: Real): Real&lt;br&gt;+ &amp;lt;&amp;lt;static&amp;gt;&amp;gt; getDescuentoFisico(): Real&lt;br&gt;+ &amp;lt;&amp;lt;static&amp;gt;&amp;gt; setDescuentoFisico(descuentoFisico: Real)&lt;br&gt;+ getDni():String&lt;br&gt;+ setDni(dni: String)" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;labelBackgroundColor=none;labelBorderColor=none;html=1;fontColor=#F0F0F0;" vertex="1" parent="75">
+                    <mxGeometry y="68" width="580" height="102" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="ClienteJuridico" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;swimlaneFillColor=#18141D;fillColor=#330033;fontColor=#ffffff;strokeColor=#190033;gradientColor=none;rounded=1;labelBackgroundColor=none;labelBorderColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="850" y="-60" width="580" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="- cuit: String&#10;- &lt;&lt;static&gt;&gt; descuentoJuridico: Real" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;fontColor=#F0F0F0;" vertex="1" parent="79">
+                    <mxGeometry y="26" width="580" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;" vertex="1" parent="79">
+                    <mxGeometry y="60" width="580" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="+ &amp;lt;&amp;lt;create&amp;gt;&amp;gt;&amp;nbsp;&lt;span style=&quot;color: rgb(255, 255, 255); text-align: center;&quot;&gt;ClienteJuridico&lt;/span&gt;(nombre:String, numeroTelefono:String, cuit:String)&lt;br&gt;# calcularDescuento(monoActual: Real): Real&lt;br&gt;+ &amp;lt;&amp;lt;static&amp;gt;&amp;gt; getDescuentoJuridico(): Real&lt;br&gt;+ &amp;lt;&amp;lt;static&amp;gt;&amp;gt; setDescuentoJuridico(descuentoJuridico: Real)&lt;br&gt;+ getCuit():String&lt;br&gt;+ setCuit(dni: String)" style="text;strokeColor=none;fillColor=#18141D;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=JetBrains Mono;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DJetBrains%2BMono;rounded=1;labelBackgroundColor=none;labelBorderColor=none;html=1;fontColor=#F0F0F0;" vertex="1" parent="79">
+                    <mxGeometry y="68" width="580" height="102" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;endArrow=block;endFill=0;" edge="1" parent="1" source="79" target="16">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="884.105" y="-220" as="sourcePoint"/>
+                        <mxPoint x="785.8907142857142" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="85" style="edgeStyle=none;html=1;labelBackgroundColor=#FFFFFF;strokeColor=#18141D;fontColor=#F0F0F0;endArrow=block;endFill=0;" edge="1" parent="1" source="75" target="16">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="970" y="18.45323741007178" as="sourcePoint"/>
+                        <mxPoint x="779.9999999999995" y="73.12949640287775" as="targetPoint"/>
+                    </mxGeometry>
                 </mxCell>
             </root>
         </mxGraphModel>

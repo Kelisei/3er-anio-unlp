@@ -21,19 +21,19 @@ class EmpresaTest {
 
 	@Test
 	void testcalcularMontoTotalLlamadas() {
-		Cliente emisorPersonaFisca = sistema.registrarUsuario("11555666", "Brendan Eich" , "fisica");
-		Cliente remitentePersonaFisica = sistema.registrarUsuario("00000001", "Doug Lea" , "fisica");
-		Cliente emisorPersonaJuridica = sistema.registrarUsuario("17555222", "Nvidia Corp" , "juridica");
-		Cliente remitentePersonaJuridica = sistema.registrarUsuario("25765432", "Sun Microsystems" , "juridica");
+		Cliente emisorPersonaFisca = sistema.registrarUsuarioFisico("11555666", "Brendan Eich");
+		Cliente remitentePersonaFisica = sistema.registrarUsuarioFisico("00000001", "Doug Lea");
+		Cliente emisorPersonaJuridica = sistema.registrarUsuarioJuridico("17555222", "Nvidia Corp");
+		Cliente remitentePersonaJuridica = sistema.registrarUsuarioJuridico("25765432", "Sun Microsystems");
 
-		this.sistema.registrarLlamada(emisorPersonaJuridica, remitentePersonaFisica, "nacional", 10);
-		this.sistema.registrarLlamada(emisorPersonaJuridica, remitentePersonaFisica, "internacional", 8);
-		this.sistema.registrarLlamada(emisorPersonaJuridica, remitentePersonaJuridica, "nacional", 5);
-		this.sistema.registrarLlamada(emisorPersonaJuridica, remitentePersonaJuridica, "internacional", 7);
-		this.sistema.registrarLlamada(emisorPersonaFisca, remitentePersonaFisica, "nacional", 15);
-		this.sistema.registrarLlamada(emisorPersonaFisca, remitentePersonaFisica, "internacional", 45);
-		this.sistema.registrarLlamada(emisorPersonaFisca, remitentePersonaJuridica, "nacional", 13);
-		this.sistema.registrarLlamada(emisorPersonaFisca, remitentePersonaJuridica, "internacional", 17);
+		this.sistema.registrarLlamadaNacional(emisorPersonaJuridica, remitentePersonaFisica, 10);
+		this.sistema.registrarLlamadaInternacional(emisorPersonaJuridica, remitentePersonaFisica, 8);
+		this.sistema.registrarLlamadaNacional(emisorPersonaJuridica, remitentePersonaJuridica, 5);
+		this.sistema.registrarLlamadaInternacional(emisorPersonaJuridica, remitentePersonaJuridica, 7);
+		this.sistema.registrarLlamadaNacional(emisorPersonaFisca, remitentePersonaFisica, 15);
+		this.sistema.registrarLlamadaInternacional(emisorPersonaFisca, remitentePersonaFisica, 45);
+		this.sistema.registrarLlamadaNacional(emisorPersonaFisca, remitentePersonaJuridica, 13);
+		this.sistema.registrarLlamadaInternacional(emisorPersonaFisca, remitentePersonaJuridica, 17);
 
 		assertEquals(11454.64, this.sistema.calcularMontoTotalLlamadas(emisorPersonaFisca), 0.01);
 		assertEquals(2445.40, this.sistema.calcularMontoTotalLlamadas(emisorPersonaJuridica), 0.01);
@@ -44,8 +44,8 @@ class EmpresaTest {
 	@Test
 	void testAgregarUsuario() {
 		assertEquals(this.sistema.cantidadDeUsuarios(), 0);
-		this.sistema.agregarNumeroTelefono("2214444558"); 
-		Cliente nuevaPersona = this.sistema.registrarUsuario("2444555","Alan Turing", "fisica");
+		this.sistema.agregarNumeroTelefono("2214444558");
+		Cliente nuevaPersona = this.sistema.registrarUsuarioFisico("2444555", "Alan Turing");
 
 		assertEquals(1, this.sistema.cantidadDeUsuarios());
 		assertTrue(this.sistema.existeUsuario(nuevaPersona));
@@ -56,10 +56,10 @@ class EmpresaTest {
 		// por defecto es el ultimo
 		assertEquals("2214444559", this.sistema.obtenerNumeroLibre());
 
-		this.sistema.getGestorNumeros().cambiarTipoGenerador("primero");
+		this.sistema.getGestorNumeros().cambiarTipoGenerador(new Primero());
 		assertEquals("2214444554", this.sistema.obtenerNumeroLibre());
 
-		this.sistema.getGestorNumeros().cambiarTipoGenerador("random");
+		this.sistema.getGestorNumeros().cambiarTipoGenerador(new Aleatoria());
 		assertNotNull(this.sistema.obtenerNumeroLibre());
 	}
 }

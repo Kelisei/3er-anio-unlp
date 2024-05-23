@@ -4,11 +4,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class GestorNumerosDisponibles {
-	SortedSet<String> lineas = new TreeSet<>();
-	GeneradorNumero tipoGenerador;
+	private SortedSet<String> lineas = new TreeSet<>();
+	private GeneradorNumero tipoGenerador;
 
-	public GestorNumerosDisponibles(GeneradorNumero tipoGenerador) {
-		this.tipoGenerador = tipoGenerador;
+	public GestorNumerosDisponibles() {
+		this.tipoGenerador = new Ultimo();
 	}
 
 	public SortedSet<String> getLineas() {
@@ -17,11 +17,20 @@ public class GestorNumerosDisponibles {
 
 	public String obtenerNumeroLibre(){
 		String linea = this.tipoGenerador.obtenerNumeroLibre(this.getLineas());
-		this.lineas.remove(linea);
+		this.getLineas().remove(linea);
 		return linea;
 	}
 
-	public void cambiarTipoGenerador(GeneradorNumero valor) {
-		this.tipoGenerador = valor;
+	public void cambiarTipoGenerador(GeneradorNumero tipoGenerador) {
+		this.tipoGenerador = tipoGenerador;
 	}
+
+	public boolean agregarNumeroTelefono(String numero) {
+		if (!this.getLineas().contains(numero)) {
+			this.getLineas().add(numero);
+			return true;
+		}
+		return false;
+	}
+	
 }
