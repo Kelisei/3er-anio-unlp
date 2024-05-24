@@ -9,9 +9,17 @@ public class ClienteFisico extends Cliente {
 		this.dni = dni;
 	}
 
-	public double calcularDescuento(double montoActual) {
+	protected double calcularDescuento(double montoActual) {
 		montoActual -= montoActual * descuentoFisico;
 		return montoActual;
+	}	
+
+	public static double getDescuentoFisico() {
+		return descuentoFisico;
+	}
+
+	public static void setDescuentoFisico(double descuentoFisico) {
+		ClienteFisico.descuentoFisico = descuentoFisico;
 	}
 
 	public String getDni() {

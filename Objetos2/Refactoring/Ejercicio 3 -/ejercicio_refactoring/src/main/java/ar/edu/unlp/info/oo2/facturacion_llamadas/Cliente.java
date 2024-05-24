@@ -31,27 +31,11 @@ public abstract class Cliente {
     }
 
     public double calcularMontoTotalLlamadas() {
-        double monto = 0;
-        for (Llamada llamada : this.llamadas) {
-            double montoActual = 0;
-            montoActual = llamada.calcularCosto();
-            montoActual = calcularDescuento(montoActual);
-            monto += montoActual;
-        }
-        return monto;
-
+        return this.llamadas.stream().mapToDouble(l -> calcularDescuento(l.calcularCosto())).sum();
     }
 
     public void agregarLLamada(Llamada llamada) {
         this.llamadas.add(llamada);
-    }
-
-    public List<Llamada> getLlamadas() {
-        return llamadas;
-    }
-
-    public void setLlamadas(List<Llamada> llamadas) {
-        this.llamadas = llamadas;
     }
 
     protected abstract double calcularDescuento(double montoActual);

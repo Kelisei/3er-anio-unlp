@@ -17,16 +17,18 @@ public class ClienteJuridico extends Cliente {
 		this.cuit = cuit;
 	}
 
-	public double calcularDescuento(double montoActual) {
+	protected double calcularDescuento(double montoActual) {
 		montoActual -= montoActual * descuentoJuridico;
 		return montoActual;
 	}
 
-	public double getDescuentoJuridico() {
+	public static double getDescuentoJuridico() {
 		return descuentoJuridico;
 	}
-	public void setDescuentoJuridico(double descuentoJuridico) {
+	public static void setDescuentoJuridico(double descuentoJuridico) {
 		ClienteJuridico.descuentoJuridico = descuentoJuridico;
 	}
+	
+	
 
 }

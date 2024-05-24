@@ -15,19 +15,22 @@ public class Empresa {
 	public String obtenerNumeroLibre() {
 		return guia.obtenerNumeroLibre();
 	}
+	
 
 	public Cliente registrarUsuarioFisico(String DNI, String nombre) {
-		String telefono = this.obtenerNumeroLibre();
-		ClienteFisico nuevoCliente = new ClienteFisico(nombre, telefono, DNI);
-		clientes.add(nuevoCliente);
+		ClienteFisico nuevoCliente = new ClienteFisico(nombre, this.obtenerNumeroLibre(), DNI);
+		agregarCliente(nuevoCliente);
 		return nuevoCliente;
 	}
 
 	public Cliente registrarUsuarioJuridico(String CUIT, String nombre) {
-		String telefono = this.obtenerNumeroLibre();
-		ClienteJuridico nuevoCliente = new ClienteJuridico(nombre, telefono, CUIT);
-		clientes.add(nuevoCliente);
+		ClienteJuridico nuevoCliente = new ClienteJuridico(nombre, this.obtenerNumeroLibre(), CUIT);
+		agregarCliente(nuevoCliente);
 		return nuevoCliente;
+	}
+	
+	private void agregarCliente(Cliente cliente) {
+		this.clientes.add(cliente);	
 	}
 
 	public Llamada registrarLlamadaNacional(Cliente origen, Cliente destino, int duracion) {
