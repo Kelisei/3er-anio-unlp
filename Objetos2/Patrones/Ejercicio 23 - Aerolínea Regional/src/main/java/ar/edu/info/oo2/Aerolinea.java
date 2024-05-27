@@ -2,12 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package ar.edu.info.oo2;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,16 +14,17 @@ import java.util.List;
  * @author frank
  */
 public class Aerolinea {
-    private List<Avion> aviones;
-    private List<Pasaje> pasajes;
+
+    private final List<Avion> aviones;
+    private final List<Pasaje> pasajes;
 
     public Aerolinea() {
         this.aviones = new ArrayList<>();
         this.pasajes = new ArrayList<>();
     }
 
-    public Pasaje emitirPasaje(Pasajero pasajero, DayOfWeek dia,Avion avion, List<VueloDiario> tramos) {
-        Pasaje pasaje= new Pasaje(dia, tramos, pasajero, avion);
+    public Pasaje emitirPasaje(Pasajero pasajero, Date dia, Avion avion, List<VueloDiario> tramos) {
+        Pasaje pasaje = new Pasaje(dia, tramos, pasajero, avion);
         this.pasajes.add(pasaje);
         return pasaje;
     }
@@ -33,7 +33,7 @@ public class Aerolinea {
         this.pasajes.remove(pasaje);
     }
 
-    public Pasaje modificarPasaje(Pasaje pasaje, Pasajero pasajero,DayOfWeek dia, List<VueloDiario> tramos, Avion avion) {
+    public Pasaje modificarPasaje(Pasaje pasaje, Pasajero pasajero, Date dia, List<VueloDiario> tramos, Avion avion) {
         pasaje.setAvion(avion);
         pasaje.setDia(dia);
         pasaje.setTramos(tramos);
@@ -41,33 +41,31 @@ public class Aerolinea {
         return pasaje;
     }
 
-
     public List<Pasaje> getPasajes() {
         return pasajes;
     }
 
-    
     public void agregarAvion(Avion avion) {
         this.aviones.add(avion);
     }
 
-    public double promedioOcupacion(LocalDate fechaInicio, LocalDate fechaFin){
+    public double promedioOcupacion(LocalDate fechaInicio, LocalDate fechaFin) {
         return 0.0;
     }
 
-    public double horasVoladasPorCadaAvion(){
+    public double horasVoladasPorCadaAvion() {
         return 0.0;
     }
 
-    public double horasVoladasEnTotal(){
+    public double horasVoladasEnTotal() {
         return 0.0;
     }
 
-    public double descuentosTotalesAplicados(){
+    public double descuentosTotalesAplicados() {
         return 0.0;
     }
 
-    public double eficienciaDeTarifas(){
+    public double eficienciaDeTarifas() {
         return 0.0;
     }
 }

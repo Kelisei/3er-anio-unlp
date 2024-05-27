@@ -5,6 +5,8 @@
 package ar.edu.info.oo2;
 
 import java.time.DayOfWeek;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +30,12 @@ public class Pasaje {
         rates.put(DayOfWeek.SUNDAY, 1.01);
     }
 
-    private DayOfWeek dia;
+    private Date dia;
     private List<VueloDiario> tramos;
     private Pasajero comprador;
     private Avion avion;
 
-    public Pasaje(DayOfWeek dia, List<VueloDiario> tramos, Pasajero comprador, Avion avion) {
+    public Pasaje(Date dia, List<VueloDiario> tramos, Pasajero comprador, Avion avion) {
         this.dia = dia;
         this.tramos = tramos;
         this.comprador = comprador;
@@ -41,7 +43,7 @@ public class Pasaje {
         this.avion.agregarPasaje(this);
     }
 
-    public DayOfWeek getDia() {
+    public Date getDia() {
         return dia;
     }
 
@@ -54,9 +56,9 @@ public class Pasaje {
     }
 
     public double getRateDiario() {
-        return rates.get(this.getDia());
+        return rates.get(this.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfWeek());
     }
-
+    
     public double getRateRoundtrip() {
         if (this.getVuelos().get(this.getVuelos().size() - 1).ciudadLlegada.equals(this.getVuelos().get(0).ciudadSalida)) {
             return 0.95;
@@ -77,37 +79,7 @@ public class Pasaje {
         return this.getVuelos().stream().mapToDouble(VueloDiario::getCostoBase).sum() * this.getRateDiario() * this.getRateRoundtrip() * this.getRateMultiHop();
     }
 
-    // public double getRateDiario() {
-    //     double rate = 0;
-    //     switch (this.getDia()) {
-    //         case MONDAY:
-    //             rate = 1;
-    //             break;
-    //         case TUESDAY:
-    //             rate = 1.01;
-    //             break;
-    //         case WEDNESDAY:
-    //             rate = 0.99;
-    //             break;
-    //         case THURSDAY:
-    //             rate = 0.95;
-    //             break;
-    //         case FRIDAY:
-    //             rate = 1;
-    //             break;
-    //         case SATURDAY:
-    //             rate = 1.01;
-    //             break;
-    //         case SUNDAY:
-    //             rate = 1.01;
-    //         break;  
-    //         default:
-    //             throw new AssertionError();
-    //     }
-    //     return rate;
-    // }
-
-    public void setDia(DayOfWeek dia) {
+    public void setDia(Date dia) {
         this.dia = dia;
     }
 
