@@ -2,6 +2,7 @@ package ar.edu.unlp.info.oo2.accesobd;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.*;
 
 public class DBProxy implements DatabaseAccess {
     private DatabaseAccess access;
@@ -15,39 +16,40 @@ public class DBProxy implements DatabaseAccess {
         this.isLogged = false;
     }
 
-    public void LogIn(String password){
-        if (this.password.equals(password)){
+    public void LogIn(String password) {
+        if (this.password.equals(password)) {
             this.isLogged = true;
         } else {
-            throw new RuntimeException("Wrong password");
+            Logger.getLogger("id").log(Level.SEVERE, "access denied");
         }
     }
 
-    public void LogOut(){
-        if (this.isLogged){
+    public void LogOut() {
+        if (this.isLogged) {
             this.isLogged = false;
-        } else {
-            throw new RuntimeException("Not logged in");
         }
     }
 
     @Override
     public Collection<String> getSearchResults(String queryString) {
-        if (this.isLogged){
+        if (this.isLogged) {
+            Logger.getLogger("id").log(Level.INFO, "read of rows completed");
             return this.access.getSearchResults(queryString);
         } else {
-            throw new RuntimeException("Not logged in");
+            Logger.getLogger("id").log(Level.SEVERE, "access denied");
+            throw new RuntimeException("access denied");
         }
     }
 
     @Override
     public int insertNewRow(List<String> rowData) {
-        if (this.isLogged){
+        if (this.isLogged) {
+            Logger.getLogger("id").log(Level.WARNING, "write of rows completed");
             return this.access.insertNewRow(rowData);
         } else {
-            throw new RuntimeException("Not logged in");
+            Logger.getLogger("id").log(Level.SEVERE, "access denied");
+            throw new RuntimeException("access denied");
         }
     }
-
 
 }
