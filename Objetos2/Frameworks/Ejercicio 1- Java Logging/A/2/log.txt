@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2024-06-01T00:05:05.541382100Z</date>
+  <millis>1717200305541</millis>
+  <nanos>382100</nanos>
+  <sequence>0</sequence>
+  <logger>app.model</logger>
+  <level>WARNING</level>
+  <class>ar.edu.unlp.oo1.ejercicio1.impl.WallPostImpl</class>
+  <method>like</method>
+  <thread>20</thread>
+  <message>La cantidad de likes llegó a diez</message>
+</record>
+<record>
+  <date>2024-06-01T00:05:16.589021800Z</date>
+  <millis>1717200316589</millis>
+  <nanos>21800</nanos>
+  <sequence>1</sequence>
+  <logger>app.model</logger>
+  <level>WARNING</level>
+  <class>ar.edu.unlp.oo1.ejercicio1.impl.WallPostImpl</class>
+  <method>like</method>
+  <thread>20</thread>
+  <message>La cantidad de likes llegó a diez</message>
+</record>
+<record>
+  <date>2024-06-01T00:05:17.278062700Z</date>
+  <millis>1717200317278</millis>
+  <nanos>62700</nanos>
+  <sequence>2</sequence>
+  <logger>app.model</logger>
+  <level>WARNING</level>
+  <class>ar.edu.unlp.oo1.ejercicio1.impl.WallPostImpl</class>
+  <method>like</method>
+  <thread>20</thread>
+  <message>La cantidad de likes llegó a diez</message>
+</record>
+<record>
+  <date>2024-06-01T00:05:19.605331900Z</date>
+  <millis>1717200319605</millis>
+  <nanos>331900</nanos>
+  <sequence>3</sequence>
+  <logger>app.model</logger>
+  <level>WARNING</level>
+  <class>ar.edu.unlp.oo1.ejercicio1.impl.WallPostImpl</class>
+  <method>dislike</method>
+  <thread>20</thread>
+  <message>La cantidad de likes llegó a cero</message>
+</record>
+<record>
+  <date>2024-06-01T00:05:21.895304400Z</date>
+  <millis>1717200321895</millis>
+  <nanos>304400</nanos>
+  <sequence>4</sequence>
+  <logger>app.model</logger>
+  <level>WARNING</level>
+  <class>ar.edu.unlp.oo1.ejercicio1.impl.WallPostImpl</class>
+  <method>like</method>
+  <thread>20</thread>
+  <message>La cantidad de likes llegó a diez</message>
+</record>

@@ -1,5 +1,7 @@
 package ar.edu.unlp.oo1.ejercicio1.impl;
 
+import java.util.logging.Logger;
+
 /**
  * Completar esta clase de acuerdo a lo especificado en el cuadernillo
  *
@@ -40,15 +42,19 @@ public class WallPostImpl implements WallPost {
 	@Override
 	public void like() {
 		this.likes = this.likes + 1;
-
+		if (likes == 10) {
+			Logger.getLogger("app.model").warning("La cantidad de likes llegó a diez");
+		}
 	}
 
 	@Override
 	public void dislike() {
 		if (likes > 0) {
 			this.likes = this.likes - 1;
+			if (likes == 0) {
+				Logger.getLogger("app.model").warning("La cantidad de likes llegó a cero");
+			}
 		}
-
 	}
 
 	@Override

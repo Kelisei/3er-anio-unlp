@@ -1,6 +1,9 @@
 package ar.edu.unlp.oo1.ejercicio1.ui;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -82,15 +85,18 @@ public class WallPostUI {
   private void wireComponents() {
     this.like.addActionListener( e -> {
       this.wallPost.like();
+      Logger.getLogger("app.ui").log(Level.INFO, "Se presiono el boton like");
       this.likesLabel.setText(String.valueOf(this.wallPost.getLikes()));
     });
     
-    this.dislike.addActionListener( e -> {
+    this.dislike.addActionListener( (ActionEvent e) -> {
       this.wallPost.dislike();
+      Logger.getLogger("app.ui").log(Level.INFO, "Se presiono el boton dislike");
       this.likesLabel.setText(String.valueOf(this.wallPost.getLikes()));
     });
     
     this.featuredCheckbox.addActionListener(e -> {
+      Logger.getLogger("app.ui").log(Level.INFO, "Se presiono el boton featured");
       this.wallPost.toggleFeatured();
     });
     
