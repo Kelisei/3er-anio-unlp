@@ -1,0 +1,15 @@
+a.¿Que debo hacer si aparece una nueva fuente de locomoción (por ejemplo, ruedas con tracción 4x4)? ¿Cuántas y cuáles clases debo agregar en caso de querer todas las variantes de robots posibles para este nuevo tipo de sistema de locomoción?
+
+Debo agregar una clase, por ejemplo FourWheeler o algo asi, que herede de Locomotion.
+
+b.¿Puedo cambiarle, a un robot existente, el sistema de armas sin tener que instanciar el robot de nuevo?
+
+Si, seria hacer el un setter de arms.
+
+c.¿Donde almacenaría usted el nivel de carga de la batería? ¿Que implicaría eso si antes de disparar el laser hay que garantizar que la fuente de energía puede satisfacer el consumo del arma?
+
+Va en energy Source puesto que ahora tenemos una clase que se encarga de la energia, y al disparar habra que consultar al source para saber si puede hacer el disparo.
+
+
+Ventajas: Aguante al composición pa', si vos intentas siquera agregar otro tipo de fuente de energía en el modelo previo vas a estar 3 lustros, modificando la herencia y eso es un bad smell. Lo que si acá las creaciones de los robots son mas complejas, pero se soluciona con un Factory.
+Ademas con herencia hay repeticion de codigo, y no se pueden cambiar las cosas en ejecucion.

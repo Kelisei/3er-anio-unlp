@@ -1,0 +1,11 @@
+a.¿Qué debo hacer si aparece una nueva fuente de energía (por ejemplo, paneles solares con baterías)? ¿Cuántas y cuáles clases debo agregar en caso de querer todas las variantes de robots posibles para este nuevo tipo de fuente de energía?
+
+Si queremos una nueva fuente de energia deberemos primero añadir un nuevo tipo de robot que herede de la clase Robot, que se llame SolarRobot, a su vez va tener que tener 2 herencias para el Catterpillar y el Overcraft, y estos a su vez 2 herencias para el laser y las bombas, es decir 7 clases: SolarRobot, SolarRobotWithCaterpillar, SolarRobotWithCaterpillarAndLaser, SolarRobotWithCaterpillarAndBombs, SolarRobotWithOvercraft, SolarRobotWithOvercraftAndBombs, SolarRobotWithOvercraftAndLaser.
+
+b.¿Puedo cambiarle, a un robot existente, el sistema de armas sin tener que instanciar el robot de nuevo?
+
+No, no hay composicion.
+
+c.¿Dónde almacenaría usted el nivel de carga de la batería? ¿Qué implicaría eso sí antes de disparar el láser hay que garantizar que la fuente de energía puede satisfacer el consumo del arma?
+
+Dado que la bateria es comun a todos los robots se debería agregar en el Robot, y para disparar habria que chequear esto mismo (si hay suficiente nivel de carga para disparar) (Este mismo chequeo va en el Robot para no repetir codigo en la subclases).
