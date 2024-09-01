@@ -56,15 +56,13 @@
     3.No hay demora inncesaria ya que en el momento que sea su turno el proceso entrara.
     4.Hay eventual entrada porque se turnan"
 7) 
-    int N = ...; bool peticiones[N]; tomado = false; actual=-1;
+    int N = ...; bool peticiones[N]; actual=-1;
     Process trabajador[i = 0 to N-1]{
       while (true){
         peticiones[i] = true;
         while(actual != i){ skip; }
         // SC 
         actual = -1;
-        tomado = false;
-        perticiones[i] = false;
       }
 
     }
@@ -72,11 +70,10 @@
     Process coordinador{
       while(true){
         for (int i = 0; i < N; i++) {
-          if(pidio[i]){
-            pidio[i]=false;
-            tomado=true;
+          if(peticiones[i]){
+            peticiones[i]=false;
             actual=i;
-            while(tomado) { skip; }
+            while(actual == -1) { skip; }
           }
         }
       }
