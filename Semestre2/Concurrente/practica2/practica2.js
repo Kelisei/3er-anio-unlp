@@ -257,5 +257,97 @@
     }
 6)
     /*
-
+    6. Existen N personas que deben imprimir un trabajo cada una. Resolver cada ítem usando
+    semáforos:
+    a) Implemente una solución suponiendo que existe una única impresora compartida por
+    todas las personas, y las mismas la deben usar de a una persona a la vez, sin importar
+    el orden. Existe una función Imprimir(documento) llamada por la persona que simula el
+    uso de la impresora. Sólo se deben usar los procesos que representan a las Personas.
+    b) Modifique la solución de (a) para el caso en que se deba respetar el orden de llegada.
+    c) Modifique la solución de (a) para el caso en que se deba respetar estrictamente el
+    orden dado por el identificador del proceso (la persona X no puede usar la impresora
+    hasta que no haya terminado de usarla la persona X-1).
+    d) Modifique la solución de (b) para el caso en que además hay un proceso Coordinador
+    que le indica a cada persona que es su turno de usar la impresora.
+    e) Modificar la solución (d) para el caso en que sean 5 impresoras. El coordinador le
+    indica a la persona cuando puede usar una impresora, y cual debe usar. 
     */
+
+    a)
+    sem semImpresora = 1;
+    process Persona[i= 0..N-1]{
+        Documento doc;
+        P(semImpresora)
+        Imprimir(doc)
+        V(semImpresora)
+    }
+    b)
+    sem semCola = 1;
+    sem calentaQueSalis[N] = ([N], 0);
+    colaLlegadas c;
+    int sig = -1;
+    process Persona[i= 0..N-1]{
+        Documento doc;
+        P(semCola)
+        if(sig == -1){
+            sig=i;
+            V(semCola)
+        } else {
+            c.push(i);
+            V(semCola)
+            P(calentaQueSalis[i])
+        }
+        Imprimir(doc)
+
+        P(semCola)
+        if(c.isEmpty()){
+            sig = -1;
+        } else {
+            V(calentaQueSalis[c.pop()])
+        }
+        V(semCola)
+    }
+    c)
+    sem soyAdmin[N] = ([N], 0)
+    int sig = 0;
+
+    process Persona[i= 0..N-1]{
+        Documento doc;
+        if(sig != i){
+            P(soyAdmin[i])
+        }
+        Imprimir(doc)
+        if(i < N){
+            V(soyAdmin[i+1])
+        }
+    }
+
+    d)
+    sem semCola = 1, cantListos = 0;
+    sem calentaQueSalis[N] = ([N], 0);
+    colaLlegadas c;
+
+    sem imprimio = 0;
+    process Persona[i= 0..N-1]{
+        Documento doc;
+        P(semCola)
+        colaLlegadas.push(i)
+        V(semCola)
+        V(cantListos)
+
+        P(calentaQueSalis[i])
+        Imprimir(doc)
+        V(imprimio)
+    }
+
+    process Coordinador{
+        while (true) {
+            P(cantListos)
+            P(semCola)
+            V(calentaQueSalis[cola.pop()])
+            V(semCola)
+            P(imprimio)
+        }
+    }
+    e) 
+    ...
