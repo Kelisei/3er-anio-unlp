@@ -662,82 +662,20 @@
     }
 
     process Enfermera[id:=0..2]{
-        P(mutexTerminaron);
-        while(cantTerminaron < 150){
-            V(mutexTerminaron);
+        //Espero a que me activen
+        P(esperandoEnf[id]);
+        P(accesoColaEnfermeras[id]);
+        //Si no hay nada en la cola entonces es porque terminaron todos los pasajeros de ser hisopados,
+        //Solo habría algo en la cola si se me fue asignado.
+        while(!enfermeras[id].isEmpty()){
+            int idPasajero = enfermeras[id].pop();
+            V(accesoColaEnfermeras[id])
+            Hisopar(idPasajero)
+            V(termino[idPasajero])
             P(esperandoEnf[id]);
-            //Puede entrar llegar al if si terminaron todos (no hay nadie en la cola) o si le llegó uno
-            if (!enfermeras[id].isEmpty()){
-                // Accedo  la cola de las enfermeras, consigo el id del pasjero, luego lo hisopo y aumento los que terminaron
-                P(accesoColaEnfermeras[id])
-                int idPasajero = enfermeras[id].pop();
-                V(accesoColaEnfermeras[id])
-                Hisopar(idPasajero)
-                V(termino[idPasajero])
-                P(mutexTerminaron);
-                cantTerminaron++;
-                V(mutexTerminaron)
-            }
-            P(mutexTerminaron);
+            P(accesoColaEnfermeras[id]);
         }
-        V(mutexTerminaron);
-    }
-    a 1.5)
-    sem accesoCola = 1; colaLlegadas llegadas; 
-    sem esperando = 0;
-    sem termino[149] = ([149],0)
-    sem accesoColaEnfermeras[3] = ([3], 1); colaEnfermeras enfermeras[3];
-    sem mutexRepartidos = 1; int repartidos = 0;
-    sem esperandoEnf[3] = ([3],0)
-    process Pasajero [id=0..149]{
-        //Me agrego a la cola y le aviso a la recepcionista q estoy, luego espero a terminar
-        P(accesoCola);
-        llegadas.push(id);
-        V(accesoCola);
-        V(esperando);
-        P(termino[id])
-    }
-
-    process Recepcionista{
-        for i:=1..149{
-            //Espero a que haya un pasajero, consigo el puesto y su id
-            P(esperando);
-            int idPuesto = PuestoConMenosGente();
-            P(accesoCola)
-            int idPersona = llegadas.pop();
-            V(accesoCola)
-            //Lo agrego a la cola de su respectiva enfermera y le aviso que tiene uno.
-            P(accesoColaEnfermeras[idPuesto])
-            enfermeras[idPuesto].push(idPersona)
-            V(accesoColaEnfermeras[idPuesto])
-            V(esperandoEnf[idPuesto])
-            P(mutexRepartidos);
-            repartidos++;
-            V(mutexRepartidos)
-        } 
-        //Sacamos a las enfermeras si q estan esperando
-        for j = 0..2 {
-            V(esperandoEnf[j]);
-        }
-    }
-
-    process Enfermera[id:=0..2]{
-        P(mutexRepartidos);
-        while(repartidos < 150 || !enfermeras[id].isEmpty()){
-            V(mutexRepartidos);
-            P(esperandoEnf[id]);
-            //Puede entrar llegar al if si terminaron todos (no hay nadie en la cola) o si le llegó uno
-            if (!enfermeras[id].isEmpty()){
-                // Accedo  la cola de las enfermeras, consigo el id del pasjero, luego lo hisopo y aumento los que terminaron
-                P(accesoColaEnfermeras[id])
-                int idPasajero = enfermeras[id].pop();
-                V(accesoColaEnfermeras[id])
-                Hisopar(idPasajero)
-                V(termino[idPasajero])
-            }
-            P(mutexRepartidos);
-        }
-        V(mutexRepartidos);
+        V(accesoColaEnfermeras[id])
     }
     b)
     process Pasajero[id=0..149]{
