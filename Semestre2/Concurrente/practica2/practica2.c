@@ -723,7 +723,7 @@
 
     process Enfermera[id:=0..2]{
         P(mutexRepartidos);
-        while(repartidos < 150 && !enfermeras[id].isEmpty()){
+        while(repartidos < 150 || !enfermeras[id].isEmpty()){
             V(mutexRepartidos);
             P(esperandoEnf[id]);
             //Puede entrar llegar al if si terminaron todos (no hay nadie en la cola) o si le llegó uno
