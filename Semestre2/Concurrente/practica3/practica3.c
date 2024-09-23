@@ -332,112 +332,154 @@
     }
 
     b)
-    Monitor Corralon {
-        cola colaLlegadas<int>;
-        cond hayLista[N], hayComprobante[N], atendido[N], despertarAlgunTrabajador, fin[N];
-        String listas[N], comprobantes[N];
-
-        procedure Comprar(in int id; in String lista; out String comprobante){
-            colaLlegadas.push(id);
-            signal(despertarAlgunTrabajador);
-            wait(atendido[id])
-            
-            listas[id] = lista;
-            signal(hayLista[id]);
-
-            wait(hayComprobante[id]);
-            comprobante = comprobantes[id];
-
-            signal(fin[id]);
-        }
-
-        procedure Atender(){
-            if(colaLlegadas.isEmpty()){
-                wait(despertarAlgunTrabajador);
-            }
-
-            int idAtendido = colaLlegadas.pop();
-            signal(atendido[idAtendido]);
-            
-            wait(hayLista[idAtendido]);
-            String lista = listas[idAtendido];
-            comprobantes[idAtendido] = generarComprobante(lista);
-            signal(hayComprobante[idAtendido]);
-            wait(fin[idAtendido])
-        }    
-    }
-    process Persona[id:=1..N]{
-        String lista, comprobante;
-        lista = ...;
-        Corralon.Comprar(lista, comprobante)
-    }
-
-    process Empleado[id:=1..M]{
-        for i:=1..N{
-            Corralon.Atender()
-        }
-    }
-
-    c)
-    Monitor Corralon {
-        cola colaLlegadas<int>;
-        cond hayLista[N], hayComprobante[N], atendido[N], despertarAlgunTrabajador, fin[N];
-        String listas[N], comprobantes[N];
-        int cantAtendidos = 0;
-        
-        procedure Comprar(in int id; in String lista; out String comprobante){
-            colaLlegadas.push(id);
-            signal(despertarAlgunTrabajador);
-            wait(atendido[id])
-            
-            listas[id] = lista;
-            signal(hayLista[id]);
-
-            wait(hayComprobante[id]);
-            comprobante = comprobantes[id];
-
-            signal(fin[id]);
-        }
-
-        procedure Atender(out bool tengoQueTerminar){
-            // Si la cola esta vacia me siento a esperar q me despierten
-            if(colaLlegadas.isEmpty()){
-                wait(despertarAlgunTrabajador);
-            }
-            // Si me despiertan porque terminamos todos los atendidos me salgo a la mierda, 
-            // sino hago el proceso normal de atender
-            if(cantAtendidos == N){
-                tengoQueTerminar = true;
+    Monitor AtencionAlPublico {
+        cola empleadosLibres;
+        cond esperaCliente;
+        int esperando = 0;
+        int cantEmpleadosLibres; // Esto se usa para aplicar el passing the condition
+        // Representa los empleados realmente libre(no atendiendo nadie y q no hayan mandado un signal)
+        Procedure PedirEmpleado(idEmpleado out int){
+            if(cantEmpleadosLibres == 0){
+                esperando++;
+                wait(esperarCliente);
             } else {
-                int id = colaLlegadas.pop();
-                signal(atendido[id]);
-                
-                wait(hayLista[id]);
-                String lista = listas[id];
-                comprobantes[id] = generarComprobante(lista);
-                signal(hayComprobante[id]);
-                wait(fin[id]);
-                // Si al final de proceso de atender me doy cuenta de que no hay mas clientes, le aviso a todos los que estan
-                // esperando q se despierten y chequeen la cantidad de restantes
-                cantAtendidos++;
-                if(cantAtendidos == N){
-                    tengoQueTerminar = true;
-                    signal_all(despertarAlgunTrabajador)
-                }
+                cantEmpleadosLibres--;
             }
-            
-        }    
-    }
-    process Persona[id:=1..N]{
-        String lista, comprobante;
-        lista = ...;
-        Corralon.Comprar(id, lista, comprobante);
+            pop(empleadosLibres, idEmpleado);
+        }
+
+        Procedure Proximo(idEmpleado in int){
+            push(empleadosLibres, idEmpleado);
+            if(esperando >  0){
+                esperando--;
+                signal(esperaCliente);
+            } else {
+                cantEmpleadosLibres++;
+            }
+        }
     }
 
-    process Empleado[id:=1..M]{
-        bool tengoQueTerminar = false;
-        while(!tengoQueTerminar){        
-            Corralon.Atender(tengoQueTerminar)
+    Monitor Empleado[id:=1..E] {
+        procedure Atencion(lista in String, comprobante out String){
+            listaE = lista;
+            signal(despertarEmpleado);
+            wait(despertarCliente);
+            comprobante = comprobanteE;
+            signal(despertarEmpleado);
+        }
+
+        procedure esperarDatos(lista out String){
+            wait(despertarEmpleado);
+            lista = listaE;
+        }
+
+        procedure enviarResultado(r in String){
+            resultados = r;
+            signal(despertarCliente);
+            wait(despertarEmpleado);
+        }
+    }
+    process Cliente[id:=1..N]{
+        int idEmpleado;
+        String lista, comprobante;
+        AtencionAlPublico.PedirEmpleado(idEmpleado);
+        Empleado[idEmpleado].atencion(lista, comprobante);
+    }
+
+    process Empleado[id:=1..E]{
+        String comprobante;
+        while(true){
+            AtencionAlPublico.Proximo(id);
+            Empleado[id].esperarDatos(datos);
+            comprobante = generarComprobante(datos);
+            Empleado[id].enviarResultado(comprobante);
+        }
+    }
+    c)
+        Monitor AtencionAlPublico {
+        cola empleadosLibres;
+        cond esperaCliente;
+        int esperando = 0;
+        int cantEmpleadosLibres; // Esto se usa para aplicar el passing the condition
+        // Representa los empleados realmente libre(no atendiendo nadie y q no hayan mandado un signal)
+        Procedure PedirEmpleado(idEmpleado out int){
+            if(cantEmpleadosLibres == 0){
+                esperando++;
+                wait(esperarCliente);
+            } else {
+                cantEmpleadosLibres--;
+            }
+            pop(empleadosLibres, idEmpleado);
+        }
+
+        Procedure Proximo(idEmpleado in int){
+            push(empleadosLibres, idEmpleado);
+            if(esperando >  0){
+                esperando--;
+                signal(esperaCliente);
+            } else {
+                cantEmpleadosLibres++;
+            }
+        }
+    }
+
+    Monitor Empleado[id:=1..E] {
+        cond despertarCliente, despertarEmpleado;
+        String listaE, ComprobanteE;
+        bool listo = false;
+        procedure Atencion(lista in String, comprobante out String){
+            listaE = lista;
+            listo = true;
+            signal(despertarEmpleado);
+            wait(despertarCliente);
+            comprobante = comprobanteE;
+            signal(despertarEmpleado);
+        }
+
+        procedure esperarDatos(lista out String){
+            if (! listo){
+                wait(despertarEmpleado);
+            }
+            lista = listaE;
+        }
+
+        procedure enviarResultado(res in String){
+            ComprobanteE = res;
+            signal(despertarCliente);
+            wait(despertarEmpleado);
+            Contador.AumentarTerminados();
+        }
+    }
+
+    Monitor Contador{
+        int cantTerminados;
+
+        procedure AumentarTerminados(){
+            if(cantTerminados < N){
+                cantTerminados++;
+            }
+        }
+
+        procedure TerminaronTodos(terminaron out bool){
+            terminaron = cantTerminados == N;
+        }
+    }
+    process Cliente[id:=1..N]{
+        int idEmpleado;
+        String lista, comprobante;
+        AtencionAlPublico.PedirEmpleado(idEmpleado);
+        Empleado[idEmpleado].atencion(lista, comprobante);
+    }
+
+    process Empleado[id:=1..E]{
+        String comprobante;
+        terminaron = Contador.TerminaronTodos();
+        while(!terminaron){
+            AtencionAlPublico.Proximo(id);
+            Empleado[id].esperarDatos(datos);
+            comprobante = generarComprobante(datos);
+            Empleado[id].enviarResultado(comprobante);
+            terminaron = Contador.TerminaronTodos();
         }
     }
 6)
@@ -590,4 +632,161 @@
         Carrera.Iniciar();
         //Corre carrera
         Carrera.TomarBotellita();
+    }
+8)
+    /*
+    8. En un entrenamiento de fútbol hay 20 jugadores que forman 4 equipos (cada jugador conoce
+    el equipo al cual pertenece llamando a la función DarEquipo()). Cuando un equipo está listo
+    (han llegado los 5 jugadores que lo componen), debe enfrentarse a otro equipo que también
+    esté listo (los dos primeros equipos en juntarse juegan en la cancha 1, y los otros dos equipos
+    juegan en la cancha 2). Una vez que el equipo conoce la cancha en la que juega, sus jugadores
+    se dirigen a ella. Cuando los 10 jugadores del partido llegaron a la cancha comienza el partido,
+    juegan durante 50 minutos, y al terminar todos los jugadores del partido se retiran (no es
+    necesario que se esperen para salir).
+    */
+    /*
+        pasos:
+        1. Conseguir equipo, se hace desde el proceso.
+        2. Deben ir a cancha y reunirse los jugadores de mismo equipo. Ordenarlos por orden de reunión.
+        3. Ir cancha y esperar a los otros jugadores (de ambos equipos).
+        4. Delay 50.
+        5. Se van.
+    */
+    process Jugador[id:=1..20]{
+        int equipo, cancha;
+        equipo = DarEquipo(equipo);
+        Equipo[equipo].llegar(cancha);
+        Cancha[cancha].llegar();
+    }
+
+    process Cancha[id:=1..4]{
+        Cancha[id].iniciar();
+        delay(50);
+        Cancha[id].terminar();
+    }
+
+    Monitor Equipo[id:=1..4]{
+        int jugadoresEsperando = 0, numCancha;
+        cond esperarAlResto;
+
+        procedure llegar(cancha out int){
+            jugadoresEsperando++;
+            if(cant != 5){
+                wait(esperarAlResto);
+            } else {
+                Admin.DarCancha(numCancha);
+                signal_all(esperarAlResto);
+            }
+            cancha = numCancha;
+        }
+    }
+
+    Monitor AdminCanchas{
+        int llegadasDeEquipo = 0;
+        procedure DarCancha(cancha out int){
+            llegadasDeEquipo++;
+            if(llegadasDeEquipo > 2){ 
+                cancha = 2;
+            } else {
+                cancha = 1;
+            }
+        }
+    }
+
+    Monitor Cancha[id:=1..2]{
+        int jugadoresEsperando = 0;
+        cond esperarAlResto, iniciar;
+
+        procedure llegar(){
+            jugadoresEsperando++;
+            if(jugadoresEsperando == 10) signal(iniciar);
+            wait(esperar)
+        }
+
+        procedure iniciar(){
+            if(jugadoresEsperando < 10){
+                wait(iniciar);
+            }
+        }
+
+        procedure Terminar(){
+            signal_all(esperar);
+        }
+    }
+9)
+    /*
+    9. En un examen de la secundaria hay un preceptor y una profesora que deben tomar un examen
+    escrito a 45 alumnos. El preceptor se encarga de darle el enunciado del examen a los alumnos
+    cundo los 45 han llegado (es el mismo enunciado para todos). La profesora se encarga de ir
+    corrigiendo los exámenes de acuerdo con el orden en que los alumnos van entregando. Cada
+    alumno al llegar espera a que le den el enunciado, resuelve el examen, y al terminar lo deja
+    para que la profesora lo corrija y le envíe la nota. Nota: maximizar la concurrencia; todos los
+    procesos deben terminar su ejecución; suponga que la profesora tiene una función
+    corregirExamen que recibe un examen y devuelve un entero con la nota. 
+    */
+    
+    /*
+        45 alumnos
+        Preceptor da enunciado a los 45.
+        Profesora corrije segun orden de llegada.
+        Alumnos esperan recibir enunciado, resuelven y espera a recibir su nota.
+        Todos deben terminar.
+    */
+
+    Process Preceptor{
+        for i:=1..45{
+            Enunciado.Dar();
+        }
+    }
+
+    process Alumno[id:=1..45]{
+        text enunciado, resolucion; int nota;
+        Enunciado.Recibir(enunciado);
+        // Resolver
+        Profesora.PedirCorrecion(resolucion, nota);
+    }
+
+    process Profesora{
+        for i:=1..45{
+            Profesora.Corregir();
+        }
+    }
+
+    Monitor Enunciado {
+        text enunciado;
+        int esperando = 0;
+        cond despertarPreceptor;
+        procedure Recibir(e out text){
+            signal(despertarPreceptor);
+            esperando++;
+            wait(despertarAlumno);
+            e = enunciado;
+        }
+
+        procedure Dar(){
+            if(esperando == 0){
+                wait(despertarPreceptor);
+            }
+            enunciado = imprimirEnunciado();
+            signal(despertarAlumno);
+            esperando--;
+        }
+    }
+
+    Monitor Profesora(){
+        text resolucion; int notaP;
+        procedure RecibirResolucion(res out text){
+            if(esperando == 0){
+                wait(despetarProfesora);
+            }
+            res = resolucion;
+        }
+
+        procdure DevolverCorrecion(nota in int){
+            notaP = nota;
+            signal(despertarAlumno);
+        }
+        procedure PedirCorrecion(res in text, nota out int){
+            
+        }
     }
