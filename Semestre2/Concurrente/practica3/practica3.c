@@ -440,3 +440,154 @@
             Corralon.Atender(tengoQueTerminar)
         }
     }
+6)
+    /*
+    6. Existe una comisión de 50 alumnos que deben realizar tareas de a pares, las cuales son
+    corregidas por un JTP. Cuando los alumnos llegan, forman una fila. Una vez que están todos
+    en fila, el JTP les asigna un número de grupo a cada uno. Para ello, suponga que existe una
+    función AsignarNroGrupo() que retorna un número “aleatorio” del 1 al 25. Cuando un alumno 
+    ha recibido su número de grupo, comienza a realizar su tarea. Al terminarla, el alumno le avisa
+    al JTP y espera por su nota. Cuando los dos alumnos del grupo completaron la tarea, el JTP
+    les asigna un puntaje (el primer grupo en terminar tendrá como nota 25, el segundo 24, y así
+    sucesivamente hasta el último que tendrá nota 1). Nota: el JTP no guarda el número de grupo
+    que le asigna a cada alumno.
+    */
+    Monitor Tarea {
+        int cantEnFila = 0;
+
+        cond tareaFueAsignada[50];
+        int tareaAsignada[50];
+        
+        cola tareaTerminadas<int>;
+        cond tareaTerminada;
+
+        int terminaron[25] = ([25], 0);
+        int nota = 25;
+        int notasFinales[25];
+        cond graduados[25];
+
+        process ObtenerTarea(int int id; out int tarea){
+            cantEnFila++;
+            signal(nuevoEnFila);
+            wait(tareaFueAsignada[id]);
+            tarea = tareaAsignada[id];
+        }
+
+
+        procedure AsignarTareas(){
+            while(cantEnFila != 50){
+                wait(nuevoEnFila);
+            }
+
+            for i:=1..50 {
+                tareaAsignada[i] = AsignarNroGrupo()
+                signal(tareaFueAsignada[i])
+            }
+        }
+
+        procedure RankearNotas(){
+            while(nota > 0){
+                if(tareaTerminadas.isEmpty()){
+                    wait(tareaTerminada);
+                }
+                int tarea = tareaTerminadas.pop();
+                terminaron[tarea]++;
+                if(terminaron[tarea] == 2){
+                    notasFinales[tarea] = nota;
+                    nota--;
+                    signal_all(graduado[tarea]);
+                }
+            }
+        }
+
+        procedure EsperarNota(in int tarea; out int notaFinal){
+            tareaTerminada.push(tarea);
+            signal(tareaTerminada);
+            wait(graduado[tarea]);
+            notaFinal = notasFinales[tarea];
+        }
+    }
+
+    process Alumno[id:=1..50]{
+        int tarea; int notaFinal;
+        Tarea.ObtenerTarea(id, tarea);
+        // hacer tarea
+        Tarea.EsperarNota(tarea, notaFinal);
+    }
+
+    process Profesor{
+        Tarea.AsignarTareas();
+        Tarea.RankearNotas();
+    }
+7)
+    /*
+    7. Se debe simular una maratón con C corredores donde en la llegada hay UNA máquina
+    expendedoras de agua con capacidad para 20 botellas. Además, existe un repositor encargado
+    de reponer las botellas de la máquina. Cuando los C corredores han llegado al inicio comienza
+    la carrera. Cuando un corredor termina la carrera se dirigen a la máquina expendedora, espera
+    su turno (respetando el orden de llegada), saca una botella y se retira. Si encuentra la máquina
+    sin botellas, le avisa al repositor para que cargue nuevamente la máquina con 20 botellas;
+    espera a que se haga la recarga; saca una botella y se retira. Nota: mientras se reponen las
+    botellas se debe permitir que otros corredores se encolen. 
+    */
+
+    Monitor Carrera {
+        int esperando;
+        cond salir;
+        procedure Iniciar(){
+            esperando++;
+            if esperando == C {
+                signal_all(salir);
+            } else {
+                wait(salir);
+            }
+        }
+
+        cond despertarRepositor;
+        int cantBotellas = 20;
+
+        cola corredoresEsperando<int>;
+        int sigCorredor;
+        cond siguiente[C];
+
+        procedure Reponer(){
+            if(esperandoBotella == 0){
+                wait(despertarRepositor)
+            }
+            cantBotellas = 20;
+            signal(hayBotellas);
+        }
+
+        procedure TomarBotellita(in int id){
+            if(sigCorredor == -1){
+                sigCorredor = id;
+            } else {
+                corredoresEsperando.push(id);
+                wait(siguiente[id])
+            }
+
+            if(cantBotellas == 0){
+                signal(despertarRepositor);
+                wait(hayBotellas);
+            }
+
+            cantBotellas--;
+
+            if(corredoresEsperando.isEmpty()) {
+                sigCorredor == -1;
+            } else {
+                signal(siguiente[corredoresEsperando.pop()]);
+            }
+        }
+    }
+
+    process Repositor{
+        while(true){
+            Carrera.Reponer();
+        }
+    }
+    process Corredor[id:=1..C]{
+        Carrera.Iniciar();
+        //Corre carrera
+        Carrera.TomarBotellita();
+    }
