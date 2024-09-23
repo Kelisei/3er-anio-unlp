@@ -774,19 +774,25 @@
     }
 
     Monitor Profesora(){
-        text resolucion; int notaP;
+        Cola resoluciones; Cola notas;
         procedure RecibirResolucion(res out text){
             if(esperando == 0){
                 wait(despetarProfesora);
             }
-            res = resolucion;
+            res = resoluciones.pop();
         }
 
         procdure DevolverCorrecion(nota in int){
-            notaP = nota;
+            notas.push(nota);
             signal(despertarAlumno);
         }
+        
         procedure PedirCorrecion(res in text, nota out int){
-            
+            resoluciones.push(res);
+            esperando++;
+            signal(despetarProfesora);
+            wait(despertarAlumno);
+            nota = notas.pop();
+            esperando--;
         }
     }
