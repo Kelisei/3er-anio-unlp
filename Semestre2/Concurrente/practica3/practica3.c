@@ -786,7 +786,7 @@
             notas.push(nota);
             signal(despertarAlumno);
         }
-        
+
         procedure PedirCorrecion(res in text, nota out int){
             resoluciones.push(res);
             esperando++;
@@ -796,3 +796,62 @@
             esperando--;
         }
     }
+10)
+    /*
+    10.En un parque hay un juego para ser usada por N personas de a una a la vez y de acuerdo al
+    orden en que llegan para solicitar su uso. Además, hay un empleado encargado de desinfectar el
+    juego durante 10 minutos antes de que una persona lo use. Cada persona al llegar espera hasta
+    que el empleado le avisa que puede usar el juego, lo usa por un tiempo y luego lo devuelve.
+    Nota: suponga que la persona tiene una función Usar_juego que simula el uso del juego; y el
+    empleado una función Desinfectar_Juego que simula su trabajo. Todos los procesos deben
+    terminar su ejecución. 
+    */
+    /*
+        1 juego, cola de personas para usarlo (passing the condition)
+        1 empleado lo desinfecta antes de cada persona durante 10 minutos.
+        Empleado le avisa a quien usar el juego.
+    */
+    process Persona[id:=1..N]{
+        Juego.SolicitarUso();
+        Usar_juego();
+        Juego.MeFui();
+    }
+
+    process Empleado{
+        for i:=1..N{
+            Juego.EsperarLlegada();
+            Desinfectar_Juego();
+            Juego.InformarDesinfeccion();
+        }
+    }
+
+    Monitor Juego{
+        cond despertarEmpleado, fin;
+        bool usando = false;
+        int esperando++;
+        procedure SolicitarUso(){
+            signal(despertarEmpleado);
+            esperando++;
+            wait(despertarPersona);
+        }
+
+        procedure MeFui(){
+            esperando--;
+            signal(fin);
+        }
+
+        procedure EsperarLlegada(){
+            if(esperando == 0){
+                wait(despertarEmpleado);
+            }
+        }
+
+        procedure InformarDesinfeccion(){
+            signal(despertarPersona);
+            wait(fin)
+        }
+    }
+
+
+
+
