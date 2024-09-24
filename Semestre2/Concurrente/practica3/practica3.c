@@ -396,10 +396,11 @@
         }
     }
     c)
-        Monitor AtencionAlPublico {
+    Monitor AtencionAlPublico {
         cola empleadosLibres;
         cond esperaCliente;
         int esperando = 0;
+        int atendidos = 0;
         int cantEmpleadosLibres; // Esto se usa para aplicar el passing the condition
         // Representa los empleados realmente libre(no atendiendo nadie y q no hayan mandado un signal)
         Procedure PedirEmpleado(idEmpleado out int){
@@ -412,13 +413,18 @@
             pop(empleadosLibres, idEmpleado);
         }
 
-        Procedure Proximo(idEmpleado in int){
-            push(empleadosLibres, idEmpleado);
-            if(esperando >  0){
-                esperando--;
-                signal(esperaCliente);
+        Procedure Proximo(idEmpleado in int; termino out bool){
+            if(atendidos != N){
+                push(empleadosLibres, idEmpleado);
+                if(esperando >  0){
+                    esperando--;
+                    signal(esperaCliente);
+                } else {
+                    cantEmpleadosLibres++;
+                }
+                termino = false;
             } else {
-                cantEmpleadosLibres++;
+                termino = true;
             }
         }
     }
@@ -473,13 +479,15 @@
 
     process Empleado[id:=1..E]{
         String comprobante;
-        terminaron = Contador.TerminaronTodos();
+        terminaron = false;
         while(!terminaron){
-            AtencionAlPublico.Proximo(id);
-            Empleado[id].esperarDatos(datos);
-            comprobante = generarComprobante(datos);
-            Empleado[id].enviarResultado(comprobante);
-            terminaron = Contador.TerminaronTodos();
+            AtencionAlPublico.Proximo(id, terminaron);
+            if(!terminaron){
+                Empleado[id].esperarDatos(datos);
+                comprobante = generarComprobante(datos);
+                Empleado[id].enviarResultado(comprobante);
+            }
+            
         }
     }
 6)
@@ -734,9 +742,7 @@
     */
 
     Process Preceptor{
-        for i:=1..45{
-            Enunciado.Dar();
-        }
+        Enunciado.Dar();
     }
 
     process Alumno[id:=1..45]{
@@ -747,34 +753,39 @@
     }
 
     process Profesora{
+        text res; int nota;
         for i:=1..45{
-            Profesora.Corregir();
+            Profesora.RecibirResolucion(res);
+            //Corregir
+            Profesora.DevolverCorrecion(nota)
         }
     }
 
     Monitor Enunciado {
-        text enunciado;
+        text enunciado[45];
         int esperando = 0;
         cond despertarPreceptor;
         procedure Recibir(e out text){
-            signal(despertarPreceptor);
             esperando++;
+            if(espeando == 45){
+                signal(despertarPreceptor)
+            }
             wait(despertarAlumno);
             e = enunciado;
         }
 
         procedure Dar(){
-            if(esperando == 0){
-                wait(despertarPreceptor);
+            wait(despertarPreceptor);
+            for i:= 1..45{
+                enunciado[i] = nuevoEnunciado();
             }
-            enunciado = imprimirEnunciado();
-            signal(despertarAlumno);
-            esperando--;
+            signal_all(despertarAlumno);
+            
         }
     }
 
     Monitor Profesora(){
-        Cola resoluciones; Cola notas;
+        Cola resoluciones; Cola notas; int esperando = 0;
         procedure RecibirResolucion(res out text){
             if(esperando == 0){
                 wait(despetarProfesora);
