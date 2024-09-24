@@ -596,15 +596,30 @@
             }
         }
 
-        cond despertarRepositor;
-        int cantBotellas = 20;
+        procedure AccesoMaquina(){
+            if(maquinaLibre){
+                maquinaLibre = false;
+            } else {
+                esperando++;
+                wait(despertarEsperando);
+            }
+        }
 
-        cola corredoresEsperando<int>;
-        int sigCorredor;
-        cond siguiente[C];
+        procedure SiguienteMaquina(){
+            if(esperando > 0){
+                esperando--;
+                signal(despertarEsperando);
+            } else {
+                maquinaLibre = true;
+            }
+        }
+    }
 
+    Monitor Maquina{
+        int cantBotellas = 20; cond hayBotellas;
+        bool requieroReposicion = false;
         procedure Reponer(){
-            if(esperandoBotella == 0){
+            if(!requieroReposicion){
                 wait(despertarRepositor)
             }
             cantBotellas = 20;
@@ -612,37 +627,25 @@
         }
 
         procedure TomarBotellita(in int id){
-            if(sigCorredor == -1){
-                sigCorredor = id;
-            } else {
-                corredoresEsperando.push(id);
-                wait(siguiente[id])
-            }
-
             if(cantBotellas == 0){
+                requieroReposicion = true;
                 signal(despertarRepositor);
                 wait(hayBotellas);
             }
-
             cantBotellas--;
-
-            if(corredoresEsperando.isEmpty()) {
-                sigCorredor == -1;
-            } else {
-                signal(siguiente[corredoresEsperando.pop()]);
-            }
         }
     }
-
     process Repositor{
         while(true){
-            Carrera.Reponer();
+            Maquina.Reponer();
         }
     }
     process Corredor[id:=1..C]{
         Carrera.Iniciar();
         //Corre carrera
-        Carrera.TomarBotellita();
+        Carrera.AccesoMaquina();
+        Maquina.TomarBotellita();
+        CarrerA.SiguienteMaquina();
     }
 8)
     /*
@@ -752,7 +755,9 @@
         text enunciado, resolucion; int nota;
         Enunciado.Recibir(enunciad, id);
         // Resolver
+        EsperarCorrecion.Encolarse();
         Correcion.PedirCorrecion(resolucion, nota);
+        EsperarCorrecion.Siguiente();
     }
 
     process Profesora{
@@ -786,28 +791,49 @@
             
         }
     }
+    Monitor EsperarCorrecion(){
+        bool libre = true;
+        int esperando = 0;
+        procedure Encolarse(){
+            if(libre){
+                libre = false;
+            } else {
+                esperando++;
+                wait(despertarAlumno);
+            }
+        }
 
+        procedure Siguiente(){
+            if(esperando > 0){
+                esperando--;
+                signal(despertarAlumno);
+            } else {
+                libre = true;
+            }
+        }
+    }
     Monitor Correcion(){
-        Cola resoluciones; Cola notas; int esperando = 0;
+        text resolucion, int nota;
+        bool esperando = false;
         procedure RecibirResolucion(res out text){
-            if(esperando == 0){
+            if(!esperando){
                 wait(despetarProfesora);
             }
-            res = resoluciones.pop();
+            res = resolucion;
         }
 
-        procdure DevolverCorrecion(nota in int){
-            notas.push(nota);
+        procdure DevolverCorrecion(notaA in int){
+            nota = notaA;
             signal(despertarAlumno);
+            esperando = false;
         }
 
-        procedure PedirCorrecion(res in text, nota out int){
-            resoluciones.push(res);
-            esperando++;
+        procedure PedirCorrecion(res in text, notaA out int){
+            resolucion = res;
+            esperando = true;
             signal(despetarProfesora);
             wait(despertarAlumno);
-            nota = notas.pop();
-            esperando--;
+            notaA = nota;
         }
     }
 10)
@@ -833,7 +859,6 @@
 
     process Empleado{
         for i:=1..N{
-            Juego.EsperarLlegada();
             Desinfectar_Juego();
             Juego.InformarDesinfeccion();
         }
@@ -842,26 +867,28 @@
     Monitor Juego{
         cond despertarEmpleado, fin;
         bool usando = false;
-        int esperando++;
+        int esperando;
+        bool libre = false, esperandoDesinfeccion = false;
         procedure SolicitarUso(){
-            signal(despertarEmpleado);
-            esperando++;
-            wait(despertarPersona);
-        }
-
-        procedure MeFui(){
-            esperando--;
-            signal(fin);
-        }
-
-        procedure EsperarLlegada(){
-            if(esperando == 0){
-                wait(despertarEmpleado);
+            if(libre){
+                libre = false;
+            } else {
+                esperando++;
+                wait(despertarPersona);
             }
         }
 
-        procedure InformarDesinfeccion(){
-            signal(despertarPersona);
-            wait(fin)
+        procedure MeFui(){
+            signal(fin);
+        }
+
+        procedure IniciarDesinfeccion(){
+            if(esperando == 0){
+                libre = true;
+            } else {
+                esperando--;
+                signal(despertarPersona)
+            }
+            wait(fin);
         }
     }
