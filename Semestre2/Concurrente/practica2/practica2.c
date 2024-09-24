@@ -525,22 +525,20 @@
 
 10) 
     a) 
-    int cantTrigo =0; int cantMaiz = 0; sem mutexTrigo = 1; sem mutexMaiz =1;
+    sem maxTrigo = ...; sem maxMaiz = ...;
     sem maxTotal = 7;
-    colaT camionesTrigo; colaM camionesMaiz; sem mutexCT = 1; sem mutexCM = 1;
+    cola camiones; sem mutexC = 1;
     sem pasaTrigo[T] = ([T], 0); sem pasaMaiz[M] = ([M],0);
     sem mutexTerminaron = 1; int terminaron = 0;
     sem esperando = 0;
     process CamionT[id=0..T-1]{
-        P(mutexCT);
-        camionesTrigo.push(id);
-        V(mutexCT);
+        P(mutexC);
+        camiones.push(id, "trigo");
+        V(mutexC);
         V(esperando);
         P(pasaTrigo[id]);
         //Descarga
-        P(mutexTrigo);
-        cantTrigo--;
-        V(mutexTrigo);
+        V(maxTrigo);
         V(maxTotal);
         P(mutexTerminaron)
         terminaron++;
@@ -555,27 +553,23 @@
         P(mutexTerminaron)
         while(terminaron < M+T){
             V(mutexTerminaron)
-            P(esperando)
-            P(mutexTrigo);  P(mutexCT);
-            P(maxTotal)
-            if (cantTrigo <= 5 and not camionesTrigo.isEmpty()){
-                cantTrigo++;
-                V(mutexTrigo);
-                id = camionesTrigo.pop();
-                V(mutexCT);
-                V(pasaTrigo[id])
-            }
-            V(mutexTrigo); V(mutextCT);
+            P(esperando);
+            
 
-            P(mutexMaiz);  P(mutexCM);
-            if (cantMaiz <= 5 and not camionesMaiz.isEmpty()){
-                cantMaiz++;
-                V(mutexMaiz);
-                id = camionesMaiz.pop();
-                V(mutexCM);
+            P(mutexC);
+            int id, text tipo = camiones.pop();
+            V(mutexC);
+
+            if(tipo == "trigo"){
+                P(maxTrigo);
+                P(maxTotal);
+                V(pasaTrigo[id])
+            } else if (tipo == "maiz"){
+                P(maxMaiz);
+                P(maxTotal);
                 V(pasaMaiz[id])
             }
-            V(mutexTrigo); V(mutexCM);
+
             P(mutexTerminaron)
         }
     }
