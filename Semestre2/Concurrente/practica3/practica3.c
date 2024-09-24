@@ -415,6 +415,7 @@
 
         Procedure Proximo(idEmpleado in int; termino out bool){
             if(atendidos != N){
+                atendidos++;
                 push(empleadosLibres, idEmpleado);
                 if(esperando >  0){
                     esperando--;
@@ -518,14 +519,16 @@
 
         process ObtenerTarea(int int id; out int tarea){
             cantEnFila++;
-            signal(nuevoEnFila);
+            if(cantEnFila == 50){
+                signal(nuevoEnFila);
+            }
             wait(tareaFueAsignada[id]);
             tarea = tareaAsignada[id];
         }
 
 
         procedure AsignarTareas(){
-            while(cantEnFila != 50){
+            if(cantEnFila != 50){
                 wait(nuevoEnFila);
             }
 
@@ -664,13 +667,13 @@
         int equipo, cancha;
         equipo = DarEquipo(equipo);
         Equipo[equipo].llegar(cancha);
-        Cancha[cancha].llegar();
+        Partido[cancha].llegar();
     }
 
     process Cancha[id:=1..4]{
-        Cancha[id].iniciar();
+        Partido[id].iniciar();
         delay(50);
-        Cancha[id].terminar();
+        Partido[id].terminar();
     }
 
     Monitor Equipo[id:=1..4]{
@@ -701,7 +704,7 @@
         }
     }
 
-    Monitor Cancha[id:=1..2]{
+    Monitor Partido[id:=1..2]{
         int jugadoresEsperando = 0;
         cond esperarAlResto, iniciar;
 
@@ -747,17 +750,17 @@
 
     process Alumno[id:=1..45]{
         text enunciado, resolucion; int nota;
-        Enunciado.Recibir(enunciado);
+        Enunciado.Recibir(enunciad, id);
         // Resolver
-        Profesora.PedirCorrecion(resolucion, nota);
+        Correcion.PedirCorrecion(resolucion, nota);
     }
 
     process Profesora{
         text res; int nota;
         for i:=1..45{
-            Profesora.RecibirResolucion(res);
+            Correcion.RecibirResolucion(res);
             //Corregir
-            Profesora.DevolverCorrecion(nota)
+            Correcion.DevolverCorrecion(nota)
         }
     }
 
@@ -765,13 +768,13 @@
         text enunciado[45];
         int esperando = 0;
         cond despertarPreceptor;
-        procedure Recibir(e out text){
+        procedure Recibir(e out text; id in int){
             esperando++;
-            if(espeando == 45){
+            if(esperando == 45){
                 signal(despertarPreceptor)
             }
             wait(despertarAlumno);
-            e = enunciado;
+            e = enunciado[id];
         }
 
         procedure Dar(){
@@ -784,7 +787,7 @@
         }
     }
 
-    Monitor Profesora(){
+    Monitor Correcion(){
         Cola resoluciones; Cola notas; int esperando = 0;
         procedure RecibirResolucion(res out text){
             if(esperando == 0){
@@ -862,7 +865,3 @@
             wait(fin)
         }
     }
-
-
-
-
