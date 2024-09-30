@@ -396,10 +396,11 @@
         }
     }
     c)
-        Monitor AtencionAlPublico {
+    Monitor AtencionAlPublico {
         cola empleadosLibres;
         cond esperaCliente;
         int esperando = 0;
+        int atendidos = 0;
         int cantEmpleadosLibres; // Esto se usa para aplicar el passing the condition
         // Representa los empleados realmente libre(no atendiendo nadie y q no hayan mandado un signal)
         Procedure PedirEmpleado(idEmpleado out int){
@@ -412,13 +413,19 @@
             pop(empleadosLibres, idEmpleado);
         }
 
-        Procedure Proximo(idEmpleado in int){
-            push(empleadosLibres, idEmpleado);
-            if(esperando >  0){
-                esperando--;
-                signal(esperaCliente);
+        Procedure Proximo(idEmpleado in int; termino out bool){
+            if(atendidos != N){
+                atendidos++;
+                push(empleadosLibres, idEmpleado);
+                if(esperando >  0){
+                    esperando--;
+                    signal(esperaCliente);
+                } else {
+                    cantEmpleadosLibres++;
+                }
+                termino = false;
             } else {
-                cantEmpleadosLibres++;
+                termino = true;
             }
         }
     }
@@ -473,13 +480,15 @@
 
     process Empleado[id:=1..E]{
         String comprobante;
-        terminaron = Contador.TerminaronTodos();
+        terminaron = false;
         while(!terminaron){
-            AtencionAlPublico.Proximo(id);
-            Empleado[id].esperarDatos(datos);
-            comprobante = generarComprobante(datos);
-            Empleado[id].enviarResultado(comprobante);
-            terminaron = Contador.TerminaronTodos();
+            AtencionAlPublico.Proximo(id, terminaron);
+            if(!terminaron){
+                Empleado[id].esperarDatos(datos);
+                comprobante = generarComprobante(datos);
+                Empleado[id].enviarResultado(comprobante);
+            }
+            
         }
     }
 6)
@@ -510,14 +519,16 @@
 
         process ObtenerTarea(int int id; out int tarea){
             cantEnFila++;
-            signal(nuevoEnFila);
+            if(cantEnFila == 50){
+                signal(nuevoEnFila);
+            }
             wait(tareaFueAsignada[id]);
             tarea = tareaAsignada[id];
         }
 
 
         procedure AsignarTareas(){
-            while(cantEnFila != 50){
+            if(cantEnFila != 50){
                 wait(nuevoEnFila);
             }
 
@@ -585,15 +596,30 @@
             }
         }
 
-        cond despertarRepositor;
-        int cantBotellas = 20;
+        procedure AccesoMaquina(){
+            if(maquinaLibre){
+                maquinaLibre = false;
+            } else {
+                esperando++;
+                wait(despertarEsperando);
+            }
+        }
 
-        cola corredoresEsperando<int>;
-        int sigCorredor;
-        cond siguiente[C];
+        procedure SiguienteMaquina(){
+            if(esperando > 0){
+                esperando--;
+                signal(despertarEsperando);
+            } else {
+                maquinaLibre = true;
+            }
+        }
+    }
 
+    Monitor Maquina{
+        int cantBotellas = 20; cond hayBotellas;
+        bool requieroReposicion = false;
         procedure Reponer(){
-            if(esperandoBotella == 0){
+            if(!requieroReposicion){
                 wait(despertarRepositor)
             }
             cantBotellas = 20;
@@ -601,37 +627,25 @@
         }
 
         procedure TomarBotellita(in int id){
-            if(sigCorredor == -1){
-                sigCorredor = id;
-            } else {
-                corredoresEsperando.push(id);
-                wait(siguiente[id])
-            }
-
             if(cantBotellas == 0){
+                requieroReposicion = true;
                 signal(despertarRepositor);
                 wait(hayBotellas);
             }
-
             cantBotellas--;
-
-            if(corredoresEsperando.isEmpty()) {
-                sigCorredor == -1;
-            } else {
-                signal(siguiente[corredoresEsperando.pop()]);
-            }
         }
     }
-
     process Repositor{
         while(true){
-            Carrera.Reponer();
+            Maquina.Reponer();
         }
     }
     process Corredor[id:=1..C]{
         Carrera.Iniciar();
         //Corre carrera
-        Carrera.TomarBotellita();
+        Carrera.AccesoMaquina();
+        Maquina.TomarBotellita();
+        CarrerA.SiguienteMaquina();
     }
 8)
     /*
@@ -656,13 +670,13 @@
         int equipo, cancha;
         equipo = DarEquipo(equipo);
         Equipo[equipo].llegar(cancha);
-        Cancha[cancha].llegar();
+        Partido[cancha].llegar();
     }
 
     process Cancha[id:=1..4]{
-        Cancha[id].iniciar();
+        Partido[id].iniciar();
         delay(50);
-        Cancha[id].terminar();
+        Partido[id].terminar();
     }
 
     Monitor Equipo[id:=1..4]{
@@ -693,7 +707,7 @@
         }
     }
 
-    Monitor Cancha[id:=1..2]{
+    Monitor Partido[id:=1..2]{
         int jugadoresEsperando = 0;
         cond esperarAlResto, iniciar;
 
@@ -734,59 +748,147 @@
     */
 
     Process Preceptor{
-        for i:=1..45{
-            Enunciado.Dar();
-        }
+        Enunciado.Dar();
     }
 
     process Alumno[id:=1..45]{
         text enunciado, resolucion; int nota;
-        Enunciado.Recibir(enunciado);
+        Enunciado.Recibir(enunciad, id);
         // Resolver
-        Profesora.PedirCorrecion(resolucion, nota);
+        EsperarCorrecion.Encolarse();
+        Correcion.PedirCorrecion(resolucion, nota);
+        EsperarCorrecion.Siguiente();
     }
 
     process Profesora{
+        text res; int nota;
         for i:=1..45{
-            Profesora.Corregir();
+            Correcion.RecibirResolucion(res);
+            //Corregir
+            Correcion.DevolverCorrecion(nota)
         }
     }
 
     Monitor Enunciado {
-        text enunciado;
+        text enunciado[45];
         int esperando = 0;
         cond despertarPreceptor;
-        procedure Recibir(e out text){
-            signal(despertarPreceptor);
+        procedure Recibir(e out text; id in int){
             esperando++;
+            if(esperando == 45){
+                signal(despertarPreceptor)
+            }
             wait(despertarAlumno);
-            e = enunciado;
+            e = enunciado[id];
         }
 
         procedure Dar(){
-            if(esperando == 0){
-                wait(despertarPreceptor);
+            wait(despertarPreceptor);
+            for i:= 1..45{
+                enunciado[i] = nuevoEnunciado();
             }
-            enunciado = imprimirEnunciado();
-            signal(despertarAlumno);
-            esperando--;
+            signal_all(despertarAlumno);
+            
         }
     }
+    Monitor EsperarCorrecion(){
+        bool libre = true;
+        int esperando = 0;
+        procedure Encolarse(){
+            if(libre){
+                libre = false;
+            } else {
+                esperando++;
+                wait(despertarAlumno);
+            }
+        }
 
-    Monitor Profesora(){
-        text resolucion; int notaP;
+        procedure Siguiente(){
+            if(esperando > 0){
+                esperando--;
+                signal(despertarAlumno);
+            } else {
+                libre = true;
+            }
+        }
+    }
+    Monitor Correcion(){
+        text resolucion, int nota;
+        bool esperando = false;
         procedure RecibirResolucion(res out text){
-            if(esperando == 0){
+            if(!esperando){
                 wait(despetarProfesora);
             }
             res = resolucion;
         }
 
-        procdure DevolverCorrecion(nota in int){
-            notaP = nota;
+        procdure DevolverCorrecion(notaA in int){
+            nota = notaA;
             signal(despertarAlumno);
+            esperando = false;
         }
-        procedure PedirCorrecion(res in text, nota out int){
-            
+
+        procedure PedirCorrecion(res in text, notaA out int){
+            resolucion = res;
+            esperando = true;
+            signal(despetarProfesora);
+            wait(despertarAlumno);
+            notaA = nota;
+        }
+    }
+10)
+    /*
+    10.En un parque hay un juego para ser usada por N personas de a una a la vez y de acuerdo al
+    orden en que llegan para solicitar su uso. Además, hay un empleado encargado de desinfectar el
+    juego durante 10 minutos antes de que una persona lo use. Cada persona al llegar espera hasta
+    que el empleado le avisa que puede usar el juego, lo usa por un tiempo y luego lo devuelve.
+    Nota: suponga que la persona tiene una función Usar_juego que simula el uso del juego; y el
+    empleado una función Desinfectar_Juego que simula su trabajo. Todos los procesos deben
+    terminar su ejecución. 
+    */
+    /*
+        1 juego, cola de personas para usarlo (passing the condition)
+        1 empleado lo desinfecta antes de cada persona durante 10 minutos.
+        Empleado le avisa a quien usar el juego.
+    */
+    process Persona[id:=1..N]{
+        Juego.SolicitarUso();
+        Usar_juego();
+        Juego.MeFui();
+    }
+
+    process Empleado{
+        for i:=1..N{
+            Desinfectar_Juego();
+            Juego.InformarDesinfeccion();
+        }
+    }
+
+    Monitor Juego{
+        cond despertarEmpleado, fin;
+        bool usando = false;
+        int esperando;
+        bool libre = false, esperandoDesinfeccion = false;
+        procedure SolicitarUso(){
+            if(libre){
+                libre = false;
+            } else {
+                esperando++;
+                wait(despertarPersona);
+            }
+        }
+
+        procedure MeFui(){
+            signal(fin);
+        }
+
+        procedure IniciarDesinfeccion(){
+            if(esperando == 0){
+                libre = true;
+            } else {
+                esperando--;
+                signal(despertarPersona)
+            }
+            wait(fin);
         }
     }
