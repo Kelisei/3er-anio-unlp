@@ -85,6 +85,7 @@ monitor Estacion[1..5]{
 
     procedure ir(c out Comprobante){
         esperando = true
+        signal(despertarVerificador)
         wait(hayComprobante)
         c = comprobante
         esperando = false
