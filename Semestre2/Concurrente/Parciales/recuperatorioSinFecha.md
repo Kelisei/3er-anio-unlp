@@ -73,7 +73,7 @@ monitor Fila[1..5]{
 }
 
 monitor Estacion[1..5]{
-    bool esperando
+    bool esperando = false
     cond despertarVerificador, hayComprobante, meFui
     Comprobante comprobante 
 
