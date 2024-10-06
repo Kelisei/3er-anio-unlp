@@ -37,9 +37,9 @@ Resolver con MONITORES el siguiente problema. En una planta verificadora de veh√
 process Auto[id:1..75]{
     int numEs = ...;
     Fila[numEs].siguiente()
-    Estacion[numEs].ir()
     Comprobante comprobante 
-    Fila[numEs].irse(comprobante)
+    Estacion[numEs].ir(comprobante)
+    Fila[numEs].irse()
 }
 process Verificador[id:1..5]{
     while(true){
