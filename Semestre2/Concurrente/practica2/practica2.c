@@ -165,14 +165,16 @@
     empleadores Entregadores.
     */
     a)
-    typeT buf[n];
-    sem vacio = 1; tiene = 0;
+    typeT buf[n]; 
+    sem vacio = n; tiene = 0;
+    int libre = 0; ocupado = 0;
     process Preparador[]::{
         Recurso recurso;
         while(true){
             P(vacio)
-            buf.push(recurso)
+            buf[libre] = recurso
             V(tiene)
+            libre = (libre + 1 ) mod n
         }
     }
 
@@ -180,20 +182,23 @@
         Recurso recurso;
         while(true){
             P(tiene)
-            buf.pop(recurso)
+            recurso = buf[ocupado]
             V(vacio)
+            ocupado = (ocupado + 1) mod n
         }
     }
     b)
     typeT buf[n];
-    sem vacio = 1; tiene = 0;
+    sem vacio = n; tiene = 0;
     sem semPonedor = 1;
+    int libre = 0; ocupado = 0;
     process Preparador[i=0..P-1]::{
         Recurso recurso;
         while(true){
             P(vacio)
             P(semPonedor)
-            buf.push(recurso)
+            buf[libre] = recurso;
+            libre = (libre + 1) mod n
             V(semPonedor)
             V(tiene)
         }
@@ -203,19 +208,22 @@
         Recurso recurso;
         while(true){
             P(tiene)
-            buf.pop(recurso)
+            recurso = buf[ocupado]
+            ocupado = (ocupado + 1) mod n
             V(vacio)
         }
     }
     c)
     typeT buf[n];
-    sem vacio = 1; tiene = 0;
+    sem vacio = n; tiene = 0;
     sem semEntregador = 1;
+    int libre = 0; ocupado = 0;
     process Preparador[]::{
         Recurso recurso;
         while(true){
             P(vacio)
-            buf.push(recurso)
+            buf[libre] = recurso;
+            libre = (libre+1) mod n
             V(tiene)
         }
     }
@@ -225,21 +233,24 @@
         while(true){
             P(tiene)
             P(semEntregador)
-            buf.pop(recurso)
+            recurso = buf[ocupado]
+            ocupado = (ocupado+1) mod n
             V(semEntregador)
             V(vacio)
         }
     }
     d)
     typeT buf[n];
-    sem vacio = 1; tiene = 0;
+    sem vacio = n; tiene = 0;
     sem semPonedor = 1; semEntregador = 1;
+    int libre = 0; ocupado = 0;
     process Preparador[i=0..P-1]::{
         Recurso recurso;
         while(true){
             P(vacio)
             P(semPonedor)
-            buf.push(recurso)
+            buf[libre] = recurso;
+            libre = (libre + 1) mod n
             V(semPonedor)
             V(tiene)
         }
@@ -250,7 +261,8 @@
         while(true){
             P(tiene)
             P(semEntregador)
-            buf.pop(recurso)
+            recurso = buf[ocupado]
+            ocupado = (ocupado+1) mod n
             V(semEntregador)
             V(vacio)
         }
@@ -297,6 +309,7 @@
             V(semCola)
             P(calentaQueSalis[i])
         }
+
         Imprimir(doc)
 
         P(semCola)
@@ -377,16 +390,16 @@
     }
 
     process Coordinador{
-        while(true) {
+        for i:= 1..N{
             P(cantListos)
             P(semColaLlegadas)
-            int aux = colaLlegadas.pop()
+            int sig = colaLlegadas.pop()
             V(semColaLlegadas)
             P(cantImpresorasLibres)
             P(semImpresoraLibres)
-            impresoraSelec[aux] = colaImpresorasLibres.pop()
+            impresoraSelec[sig] = colaImpresorasLibres.pop()
             V(semImpresoraLibres)
-            V(calentaQueSalis[aux])
+            V(calentaQueSalis[sig])
         }
     }
 7)
@@ -486,11 +499,14 @@
     sem maxVidrios = 50; colaVidrios vidrios; sem accesoVidrios = 1;
     sem cantMarcos =0; sem cantVidrios = 0;
     sem accesoVentanas = 1; colaVentanas ventanas;
+    int ocupadoVidrio = 0; ocupadoMadera = 0; libreVidrio = 0; libreMadera = 0;
     process Carpintero[0..3]{
         while(true){
+            //Crear marco
             P(maxMarcos);
             P(accesoMarcos);
-            marcos.push(new Marco());
+            marcos[ocupadoMadera] = marco;
+            ocupadoMadera = (ocupadoMadera + 1) mod 30;
             V(cantMarcos);
             P(accesoMarcos);
         }
@@ -498,9 +514,11 @@
 
     process Vidreiero{
         while(true){
+            //Crear vidrio
             P(maxVidrios);
             P(accesoVidrios);
-            vidrios.push(new Vidrio());
+            vidrios[ocupadoVidrio] = vidrio;
+            ocupadoVidrio = (ocupadoVidrio + 1) mod 50;
             V(cantVidrios);
             P(accesoVidrios);
         }
@@ -510,11 +528,13 @@
         while(true){
             P(cantMarcos);
             P(accesoMarcos);
-            marco = marcos.pop();
+            marco = marcos[libreMadera];
+            libreMadera = (libreMadera +1) mod 30;
             V(accesoMarcos);
             P(cantVidrios);
             P(accesoVidrios);
-            vidrio = vidrios.pop();
+            vidrio = vidrios[libreVidrio];
+            libreVidrio = (libreVidrio +1 ) mod 50;
             V(accesoVidrios);
             //Armar ventana
             P(accesoVentanas);
@@ -525,11 +545,10 @@
 
 10) 
     a) 
-    sem maxTrigo = ...; sem maxMaiz = ...;
+    sem maxTrigo = 5 sem maxMaiz = 5;
     sem maxTotal = 7;
     cola camiones; sem mutexC = 1;
     sem pasaTrigo[T] = ([T], 0); sem pasaMaiz[M] = ([M],0);
-    sem mutexTerminaron = 1; int terminaron = 0;
     sem esperando = 0;
     process CamionT[id=0..T-1]{
         P(mutexC);
@@ -540,9 +559,6 @@
         //Descarga
         V(maxTrigo);
         V(maxTotal);
-        P(mutexTerminaron)
-        terminaron++;
-        V(mutexTerminaron)
     }
 
     process CamionM[id=O..M-1]{
@@ -550,12 +566,9 @@
     }
 
     process Coordinador{
-        P(mutexTerminaron)
-        while(terminaron < M+T){
-            V(mutexTerminaron)
+        for i:= 1..M+T{
             P(esperando);
             
-
             P(mutexC);
             int id, text tipo = camiones.pop();
             V(mutexC);
@@ -569,8 +582,6 @@
                 P(maxTotal);
                 V(pasaMaiz[id])
             }
-
-            P(mutexTerminaron)
         }
     }
     b)
@@ -603,18 +614,16 @@
     }
     
     Empleado{
-        ColaSiguientes C;
-        P(mutexVacunados)
         for j:=1..10{
-            V(mutexVacunados)
             for i:=1..5 {
-                P(esperando)
-                C.push(llegadas.pop())
+                P(esperando);
             }
             for i:= 1..5{
-                int id = C.pop();
-                VacunarPersona(C[id])
-                V(vacunado[id])
+                P(accesoCola);
+                int id = llegadas.pop();
+                V(accesoCola);
+                VacunarPersona(id);
+                V(vacunado[id]);
             }
         }
     }
@@ -626,6 +635,8 @@
     sem accesoColaEnfermeras[3] = ([3], 1); colaEnfermeras enfermeras[3];
     sem mutexTerminaron = 1; int cantTerminaron = 0;
     sem esperandoEnf[3] = ([3],0)
+
+    int vec[3] = ([3],0); sem mutexVec = 1;
     process Pasajero [id=0..149]{
         //Me agrego a la cola y le aviso a la recepcionista q estoy, luego espero a terminar
         P(accesoCola);
@@ -639,10 +650,16 @@
         for i:=1..149{
             //Espero a que haya un pasajero, consigo el puesto y su id
             P(esperando);
-            int idPuesto = PuestoConMenosGente();
+
+            P(mutexVec);
+            int idPuesto = min(vec);
+            vec[idPuesto]++;
+            V(mutexVec);
+
             P(accesoCola)
             int idPersona = llegadas.pop();
             V(accesoCola)
+
             //Lo agrego a la cola de su respectiva enfermera y le aviso que tiene uno.
             P(accesoColaEnfermeras[idPuesto])
             enfermeras[idPuesto].push(idPersona)
@@ -666,6 +683,11 @@
             V(accesoColaEnfermeras[id])
             Hisopar(idPasajero)
             V(termino[idPasajero])
+
+            P(mutexVec);
+            vec[id]--;
+            V(mutexVec);
+
             P(esperandoEnf[id]);
             P(accesoColaEnfermeras[id]);
         }
@@ -673,7 +695,10 @@
     }
     b)
     process Pasajero[id=0..149]{
-        idEnfemera = PuestoConMenosGente();
+        V(mutexVec);
+        idEnfemera = min(vec);
+        vec[idEnfemera]++;
+        P(mutexVec);
 
         P(mutexEnfemeras[idEnfemera]);
         enfermeras[idEnfemera].push(id);
@@ -684,29 +709,19 @@
     }
 
     process Enfermera[id:=0..2]{
-        P(mutexTerminaron);
-        while(cantTerminaron < 150){
-            V(mutexTerminaron);
-            P(esperandoEnf[id]);
-            //Puede entrar llegar al if si terminaron todos (no hay nadie en la cola) o si le llegó uno
-            if (!enfermeras[id].isEmpty()){
-                // Accedo  la cola de las enfermeras, consigo el id del pasajero, luego lo hisopo y aumento los que terminaron
-                P(accesoColaEnfermeras[id])
-                int idPasajero = enfermeras[id].pop();
-                V(accesoColaEnfermeras[id])
-                Hisopar(idPasajero)
-                V(termino[idPasajero])
-                P(mutexTerminaron);
-                cantTerminaron++;
-                //Liquidar los otros si ya terminaron
-                if (cantTerminaron == 150){
-                    for j = 0..2 {
-                        V(esperandoEnf[j]);
-                    }
-                }
-                V(mutexTerminaron)
-            }
-            P(mutexTerminaron);
+        while(true){
+            P(esperando[id]);
+
+            P(mutexEnfemeras[id])
+            int sig = enfermeras[id].pop();
+            V(mutexEnfemeras);
+
+            Hisopar(sig);
+            
+            V(termino[sig])
+
+            P(mutexVec);
+            vec[id]--;
+            V(mutexVec);
         }
-        V(mutexTerminaron);
     }

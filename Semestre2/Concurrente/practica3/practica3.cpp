@@ -488,7 +488,6 @@
                 comprobante = generarComprobante(datos);
                 Empleado[id].enviarResultado(comprobante);
             }
-            
         }
     }
 6)
@@ -503,75 +502,80 @@
     sucesivamente hasta el último que tendrá nota 1). Nota: el JTP no guarda el número de grupo
     que le asigna a cada alumno.
     */
-    Monitor Tarea {
-        int cantEnFila = 0;
+Monitor examen {
+    cond esperaJTP; cond esperaAlumno;
+    int cantAlumnos=0;
+    int alumnoGrupo[50]= [(50)0];
 
-        cond tareaFueAsignada[50];
-        int tareaAsignada[50];
-        
-        cola tareaTerminadas<int>;
-        cond tareaTerminada;
-
-        int terminaron[25] = ([25], 0);
-        int nota = 25;
-        int notasFinales[25];
-        cond graduados[25];
-
-        process ObtenerTarea(int int id; out int tarea){
-            cantEnFila++;
-            if(cantEnFila == 50){
-                signal(nuevoEnFila);
-            }
-            wait(tareaFueAsignada[id]);
-            tarea = tareaAsignada[id];
+    procedure asignarGrupo(){
+        if (cantAlumnos<50){
+            wait(esperaJTP);
         }
-
-
-        procedure AsignarTareas(){
-            if(cantEnFila != 50){
-                wait(nuevoEnFila);
-            }
-
-            for i:=1..50 {
-                tareaAsignada[i] = AsignarNroGrupo()
-                signal(tareaFueAsignada[i])
-            }
+        for (int i=1; i<50;i++){
+            alumnoGrupo[i]= AsignarNroGrupo();
         }
-
-        procedure RankearNotas(){
-            while(nota > 0){
-                if(tareaTerminadas.isEmpty()){
-                    wait(tareaTerminada);
-                }
-                int tarea = tareaTerminadas.pop();
-                terminaron[tarea]++;
-                if(terminaron[tarea] == 2){
-                    notasFinales[tarea] = nota;
-                    nota--;
-                    signal_all(graduado[tarea]);
-                }
-            }
-        }
-
-        procedure EsperarNota(in int tarea; out int notaFinal){
-            tareaTerminada.push(tarea);
-            signal(tareaTerminada);
-            wait(graduado[tarea]);
-            notaFinal = notasFinales[tarea];
-        }
+        signal_all(esperaAlumno);
     }
 
-    process Alumno[id:=1..50]{
-        int tarea; int notaFinal;
-        Tarea.ObtenerTarea(id, tarea);
-        // hacer tarea
-        Tarea.EsperarNota(tarea, notaFinal);
+    procedure llegoExamen(id:in int; grupoExamen:out int){
+        cantAlumnos++;
+        if(cantAlumnos==50){
+            signal(esperaJTP);
+        }
+        wait(esperaAlumno);
+        grupoExamen = alumnoGrupo[id];
     }
 
-    process Profesor{
-        Tarea.AsignarTareas();
-        Tarea.RankearNotas();
+    procedure entregoExamen (nroGrupo : in int){
+        cola.push(nroGrupo);
+        signal(esperaJTP);
     }
+
+    procedure siguiente(grupoExamen:out int){      
+		if (cola.empty()){
+            wait(esperaJTP);
+        }
+        grupoExamen = cola.pop();
+    }
+}
+
+monitor escritorio{
+    cond esperaNota[25];
+    notas[25]=([25]0);
+
+    procedure esperarNota(){
+        wait(esperaNota[nroGrupo]);
+	    nota= notas[nroGrupo];
+    }
+    procedure darNota(nroGrupo:in int,nota:in int){
+        notas[nroGrupo]=nota;
+        signal_all(esperaNota[nroGrupo]);
+    }
+
+}
+
+procedure Alumno [id: 1..50]{
+    examen.llegaExamen(id, nroGrupo);
+    hacerExamen(nroGrupo);
+    examen.entregoExamen(nroGrupo);
+    escritorio.esperoNota(nroGrupo, nota);
+
+}
+
+procedure JTP{
+    int examenGrupo[25]= [(25)0];
+    int notaFinal=25;
+
+    examen.asignarGrupo();
+    for (int i=1; i<50;i++){
+        examen.siguiente(nroGrupo);
+        examenGrupo[grupoExamen]++;
+        if(examenGrupo[grupoExamen]==2){
+        	escritorio.darNota(nroGrupo,notaFinal);
+        	notaFinal --;
+    	}
+    }
+}
 7)
     /*
     7. Se debe simular una maratón con C corredores donde en la llegada hay UNA máquina
