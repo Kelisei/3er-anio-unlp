@@ -63,9 +63,45 @@ process Empleado[0..1]{
 ```
 ```cpp
 // Con otro proceso
-chan Reportes[3]<Texto>
-chan Pedido<int>
-chan 
+chan Reportes(texto);
+chan Solicitud(int);
+chan Siguiente[3](texto);
+
+process Coordinador {
+    texto reporte;
+    int idEmpleado;
+    while (true) {
+        // Coordinador se encarga de recibir peticiones de tareas de mpleados, si hay reportes a resolver le envia uno, sino le envia vacio.
+        receive Solicitud(idEmpleado);
+        if (empty(Reportes)) 
+            reporte = "VACÍO";
+        else 
+            receive Reportes(reporte);
+        send Siguiente[idEmpleado](reporte);
+    }
+}
+
+process Empleado[id: 0..2] {
+    texto reporte;
+    // Empleados envian que estan libres, si el siguiente que sacan es una tarea vacia, entonces esperan, sino resuelven
+    while (true) {
+        send Solicitud(id);
+        receive Siguiente[id](reporte);
+        if (reporte != "VACÍO") 
+            resolver(reporte);
+        else 
+            delay(600); // tareas administrativas durante 10 minutos
+    }
+}
+
+process Cliente[id: 0..N-1] {
+    texto reporte;
+    while (true) {
+        // Clientes envian reportes
+        reporte = generarReporteConProblema();
+        send Reportes(reporte);
+    }
+}
 ```
 # 2
 Se  desea  modelar  el  funcionamiento  de  un  banco  en  el  cual  existen  5  cajas  para  realizar 
