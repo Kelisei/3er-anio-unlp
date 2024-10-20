@@ -105,15 +105,50 @@ process Cliente[id: 0..N-1] {
 ```
 # 2
 Se  desea  modelar  el  funcionamiento  de  un  banco  en  el  cual  existen  5  cajas  para  realizar 
-pagos.  Existen  P  clientes que  desean  hacer  un  pago.  Para  esto,  cada  una  selecciona  la  caja donde hay menos personas esperando; una vez seleccionada, espera a ser atendido. En cada 
-caja, los clientes son atendidos por orden de llegada por los cajeros. Luego del pago, se les 
+pagos.  Existen  P  clientes que  desean  hacer  un  pago.  Para  esto,  cada  una  selecciona  la  caja donde hay menos personas esperando; una vez seleccionada, espera a ser atendido. En cada caja, los clientes son atendidos por orden de llegada por los cajeros. Luego del pago, se les 
 entrega un comprobante. Nota: maximizar la concurrencia.
 ```cpp
-chan 
-process Cliente[0..P-1]{
+chan Comprobantes[P](text)
+chan Cola[5](int)
+chan CajaAsignada[P](int)
+chan Terminaciones(int)
+chan Peticiones(int)
 
+
+process Administrador{
+    int cantPorCola[5] = ([5], 0), caja, idActualAtentido
+    while(true){
+        // Si hay gente que termino reduzco la cantidad en la cola (esta actividad tiene más prioridad)
+        if(!empty(Terminaciones)){
+            receive Terminaciones(caja)
+            cantPorCola[caja]--
+            // Sino y hay peticiones, saco al siguiente, consigo la caja con menos gente, le doy la caja la persona, y aumento al cantidad
+        } else if (!empty(Peticiones)){
+            receive Peticiones(idActualAtendido)
+            caja = minCaja(cantPorCola)
+            send CajaAsignada[idActualAtentido](caja)
+            cantPorCola[idActualAtentido]++
+        }
+    }
+}
+
+process Cliente[0..P-1]{
+    int caja; text comprobante
+    // Pido una caja
+    send Peticiones(id)
+    receive CajaAsignada[id](caja)
+    // Me pongo en una cola y espero terminar, al terminan me avisan y aviso al admin que termine
+    send Cola[caja](id)
+    receive Comprobantes[id](comprobante)
+    send Terminaciones(caja)
 }
 process Caja[id:0..4]{
-
+    while(true){
+        // Recibo los siguientes, los atiendo y les pongo el comprobante donde van
+        int idSiguiente
+        receive Cola(idSiguiente)
+        comprobante = pago(idSiguiente)
+        send Comprobantes[idSiguiente](comprobante)
+    }
 }
 ```
