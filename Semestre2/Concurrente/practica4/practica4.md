@@ -113,11 +113,13 @@ chan Cola[5](int)
 chan CajaAsignada[P](int)
 chan Terminaciones(int)
 chan Peticiones(int)
-
+chan HayPedido(bool) //Este canal unicamente se usa para evitar busy waiting
 
 process Administrador{
     int cantPorCola[5] = ([5], 0), caja, idActualAtentido
     while(true){
+        bool pedido
+        receive HayPedido(pedido) //Si hay algun pedido (termino o hubo una peticion) avanzamos (receive es bloqueante)
         // Si hay gente que termino reduzco la cantidad en la cola (esta actividad tiene más prioridad)
         if(!empty(Terminaciones)){
             receive Terminaciones(caja)
@@ -136,11 +138,13 @@ process Cliente[0..P-1]{
     int caja; text comprobante
     // Pido una caja
     send Peticiones(id)
+    send HayPedido(true)
     receive CajaAsignada[id](caja)
     // Me pongo en una cola y espero terminar, al terminan me avisan y aviso al admin que termine
     send Cola[caja](id)
     receive Comprobantes[id](comprobante)
     send Terminaciones(caja)
+    send HayPedido(true)
 }
 process Caja[id:0..4]{
     while(true){
@@ -151,4 +155,19 @@ process Caja[id:0..4]{
         send Comprobantes[idSiguiente](comprobante)
     }
 }
+```
+# 3 
+3.  Se  debe  modelar  el  funcionamiento  de  una  casa  de  comida  rápida,  en  la  cual  trabajan  2 
+cocineros  y  3  vendedores,  y  que  debe  atender  a  C  clientes.  El  modelado  debe  considerar 
+que: 
+- Cada cliente realiza un pedido y luego espera a que se lo entreguen. 
+- Los pedidos que hacen los clientes son tomados por cualquiera de los vendedores y se 
+lo pasan a los cocineros para que realicen el plato. Cuando no hay pedidos para atender, 
+los vendedores aprovechan para reponer un pack de bebidas de la heladera (tardan entre 
+1 y 3 minutos para hacer esto). 
+- Repetidamente cada cocinero toma un pedido pendiente dejado por los vendedores, lo 
+cocina y se lo entrega directamente al cliente correspondiente. 
+Nota: maximizar la concurrencia.
+```
+
 ```
