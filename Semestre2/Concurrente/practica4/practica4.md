@@ -116,7 +116,7 @@ chan Peticiones(int)
 chan HayPedido(bool) //Este canal unicamente se usa para evitar busy waiting
 
 process Administrador{
-    int cantPorCola[5] = ([5], 0), caja, idActualAtentido
+    int cantPorCola[5] = ([5], 0), caja, idActualAtendido
     while(true){
         bool pedido
         receive HayPedido(pedido) //Si hay algun pedido (termino o hubo una peticion) avanzamos (receive es bloqueante)
@@ -168,6 +168,119 @@ los vendedores aprovechan para reponer un pack de bebidas de la heladera (tardan
 - Repetidamente cada cocinero toma un pedido pendiente dejado por los vendedores, lo 
 cocina y se lo entrega directamente al cliente correspondiente. 
 Nota: maximizar la concurrencia.
-```
+```cpp
+chan Pedidos(text, int) // Pedido e id del chabon
+chan VendedorLibre(int) // Id de los vendedores libres
+chan ColaVendedores[3](text, int) // Pedidos de los vendedores
+chan Platos[C](text)
+chan ColaCocineros(text, int)
 
+process Administrador{
+    while(true){
+        text pedido, int idCliente, idVendedor
+        receive VendedorLibre(idVendedor)
+        if (empty(Pedidos)) {
+            send ColaVendedores[idVendedor]('vacio', -1)
+        } else {
+            receive Pedidos(pedido, idCliente)
+            send ColaVendedores[idVendedor]('pedido', idCliente)
+        }
+    }
+}
+
+process Cliente[id:0..C-1]{
+    text pedido = ...;
+    send Pedidos(pedido, id)
+    receive Platos[id](pedido)
+}
+
+process Cocinero[0..1]{
+    while(true){
+        int id, text plato
+        receive ColaCocineros(plato, id)
+        send Platos[id](generarPedido(plato))
+    }
+} 
+
+process Vendedor[id:0..2]{
+    while(true){
+        text pedido, int idCliente
+        send VendedorLibre(id)
+        receive ColaVendedores[id](pedido, idCliente)
+        if(pedido == 'vacio')
+            reponerPack() // Tarda entre 1 y 3 minutos
+        else 
+            send ColaCocineros(pedido, idCliente)
+    }
+}
+```
+# 4
+Simular  la  atención  en  un  locutorio  con  10  cabinas  telefónicas,  el  cual  tiene  un  empleado 
+que se encarga de atender a N clientes. Al llegar, cada cliente espera hasta que el empleado 
+le  indique  a  qué  cabina  ir,  la  usa  y  luego  se  dirige  al  empleado  para  pagarle.  El  empleado 
+atiende a los clientes en el orden en que hacen los pedidos. A cada cliente se le entrega un 
+ticket factura por la operación.  
+a) Implemente una solución para el problema descrito. 
+b) Modifique  la  solución  implementada  para  que  el  empleado  dé  prioridad  a  los  que 
+terminaron de usar la cabina sobre los que están esperando para usarla. 
+Nota:  maximizar  la  concurrencia;  suponga  que  hay  una  función  Cobrar()  llamada  por  el 
+empleado que simula que el empleado le cobra al cliente.
+```cpp
+chan PeticionCabina(int)
+chan CabinaAsignada[N](int)
+chan ListoParaPagar(int, int)
+chan Tickets[N](text)
+
+process Empleado{
+    bool ocupacionCabina = ([10], false), int idCliente, int cabina
+    while(true){
+        if (hayCabinaLibre(ocupacionCabina) && !empty(PeticionCabina)){ //hayCabina chequea si algun booleano esta libre, siguienteCabina agarra la proximaCabina y pone copada
+            receive PeticionCabina(idCliente)
+            send CabinaAsignada[idCliente](siguienteCabina(ocupacionCabina))
+        } elif (!empty(ListoParaPagar)) {
+            receive ListoParaPagar(idCliente, cabina)
+            send Tickets[idCliente] (Cobrar(idCliente))
+            ocupacionCabina[cabina] = false
+        }
+    }
+}
+process Cliente[id:0..N-1]{
+    int cabina
+    send PeticionCabina(id)
+    receive CabinaAsignada[id](cabina)
+    Usar()
+    send ListoParaPagar(id, cabina)
+    text ticket
+    receive Tickets[id](ticket)
+}
+```
+b)
+```cpp
+chan PeticionCabina(int)
+chan CabinaAsignada[N](int)
+chan ListoParaPagar(int, int)
+chan Tickets[N](text)
+
+process Empleado{
+    bool ocupacionCabina = ([10], false), int idCliente, int cabina
+    while(true){
+        if (!empty(ListoParaPagar)) {
+            receive ListoParaPagar(idCliente, cabina)
+            send Tickets[idCliente] (Cobrar(idCliente))
+            ocupacionCabina[cabina] = false
+        } elif (hayCabinaLibre(ocupacionCabina) && !empty(PeticionCabina)){ //hayCabina chequea si algun booleano esta libre, siguienteCabina agarra la proximaCabina y pone copada
+            receive PeticionCabina(idCliente)
+            send CabinaAsignada[idCliente](siguienteCabina(ocupacionCabina))
+        }
+    }
+}
+process Cliente[id:0..N-1]{
+    int cabina
+    send PeticionCabina(id)
+    receive CabinaAsignada[id](cabina)
+    Usar()
+    send ListoParaPagar(id, cabina)
+    text ticket
+    receive Tickets[id](ticket)
+}
 ```
