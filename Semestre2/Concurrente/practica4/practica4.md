@@ -417,3 +417,74 @@ process Coordinador{
     }
 }
 ```
+d)
+```cpp
+```cpp
+chan PeticionUso(text)
+chan PeticionUsoPrioritaria(text)
+chan HayAccion(bool)
+chan ActivarImpresora[3](bool)
+chan Documentos[3](text)
+chan ImpresoraLibre(int)
+
+process Impresora[id:0..2]{
+    text documento, bool activar, deboSalir = false
+    while (!deboSalir) {
+        send ImpresoraLibre(id)
+        receive ActivarImpresora[id](terminacion)
+        if(terminacion){ // Si terminacion vino true significa que me dijeron que salga
+            deboSalir = true
+        } else {
+            receive Documentos[id](documento)
+            imprimirDocumento(documento)
+        }
+    }
+}
+
+process Administrativo[0..N-1]{
+    text documento
+    for(int i=0; i<10; i++){
+        // Trabajar
+        send PeticionUso(documento)
+        send HayAccion(false) // False significa una accion que representa una no terminacion
+    }
+    send HayAccion(true)
+}
+
+process Director{
+    text documento
+    for(int i=0; i<10; i++){
+        // Trabajar
+        send PeticionUsoPrioritaria(documento)
+        send HayAccion(false) // False significa una accion que representa una no terminacion
+    }
+    send HayAccion(true)
+}
+
+process Coordinador{
+    bool terminacion, int terminaciones = 0, bool terminar
+    bool deboTerminar = false
+    while(!deboTerminar){
+        receive HayAccion(terminacion)
+        if(terminacion){ // Si hay una terminacion la contabilizo y loopeo
+            terminaciones++
+        } else if (terminaciones == N + 1 && empty(PeticionUso) && empty(PeticionUsoPrioritaria)){ // Si ya terminaron todos Y no quedan impresiones pendientes deboTerminar
+            deboTerminar=true
+            for(int i=0; i<3;i++){
+                send ActivarImpresora[i](true)
+            }
+        } else { // Si no hay una terminacion y quedan peticiones entonces mando a imprimir
+            text documento, int impresora
+            receive ImpresoraLibre(impresora)
+            if (!empty(PeticionUsoPrioritaria)) {
+                receive PeticionUsoPrioritaria(documento)
+            } else {
+                receive PeticionUso(documento)
+            }
+            send Documentos[impresora](documento)
+            send ActivarImpresora[impresora](false)
+        }
+    }
+}
+```
+```
