@@ -1,4 +1,5 @@
-# 1
+# PMA
+## 1
 Suponga  que  N  clientes  llegan  a  la  cola  de  un  banco  y  que  serán  atendidos  por  sus 
 empleados. Analice el problema y defina qué procesos, recursos y canales/comunicaciones 
 serán necesarios/convenientes para resolverlo. Luego, resuelva considerando las siguientes 
@@ -103,7 +104,7 @@ process Cliente[id: 0..N-1] {
     }
 }
 ```
-# 2
+## 2
 Se  desea  modelar  el  funcionamiento  de  un  banco  en  el  cual  existen  5  cajas  para  realizar 
 pagos.  Existen  P  clientes que  desean  hacer  un  pago.  Para  esto,  cada  una  selecciona  la  caja donde hay menos personas esperando; una vez seleccionada, espera a ser atendido. En cada caja, los clientes son atendidos por orden de llegada por los cajeros. Luego del pago, se les 
 entrega un comprobante. Nota: maximizar la concurrencia.
@@ -156,7 +157,7 @@ process Caja[id:0..4]{
     }
 }
 ```
-# 3 
+## 3 
 3.  Se  debe  modelar  el  funcionamiento  de  una  casa  de  comida  rápida,  en  la  cual  trabajan  2 
 cocineros  y  3  vendedores,  y  que  debe  atender  a  C  clientes.  El  modelado  debe  considerar 
 que: 
@@ -214,7 +215,7 @@ process Vendedor[id:0..2]{
     }
 }
 ```
-# 4
+## 4
 Simular  la  atención  en  un  locutorio  con  10  cabinas  telefónicas,  el  cual  tiene  un  empleado 
 que se encarga de atender a N clientes. Al llegar, cada cliente espera hasta que el empleado 
 le  indique  a  qué  cabina  ir,  la  usa  y  luego  se  dirige  al  empleado  para  pagarle.  El  empleado 
@@ -282,5 +283,137 @@ process Cliente[id:0..N-1]{
     send ListoParaPagar(id, cabina)
     text ticket
     receive Tickets[id](ticket)
+}
+```
+## 5 
+Resolver la administración de 3 impresoras de una oficina. Las impresoras son usadas por N 
+administrativos, los cuales están continuamente trabajando y cada tanto envían documentos 
+a  imprimir.  Cada  impresora,  cuando  está  libre,  toma  un  documento  y  lo  imprime,  de 
+acuerdo con el orden de llegada.  
+a) Implemente una solución para el problema descrito. 
+b) Modifique la solución implementada para que considere la presencia de un director de 
+oficina que también usa las impresas, el cual tiene prioridad sobre los administrativos. 
+c) Modifique la solución (a) considerando que cada administrativo imprime 10 trabajos y 
+que todos los procesos deben terminar su ejecución. 
+d) Modifique la solución (b) considerando que tanto el director como cada administrativo 
+imprimen 10 trabajos y que todos los procesos deben terminar su ejecución. 
+e) Si la solución al ítem d) implica realizar Busy Waiting, modifíquela para evitarlo. 
+Nota: ni los administrativos ni el director deben esperar a que se imprima el documento.
+a)
+```cpp
+chan PeticionUso(text)
+process Impresora[0..2]{
+    text documento
+    while (true) {
+        receive PeticionUso(documento)
+        imprimirDocumento(documento)
+    }
+}
+process Administrativo[0..N-1]{
+    text documento
+    while(true){
+        // Trabajar
+        send PeticionUso(documento)
+    }
+}
+```
+b)
+```cpp
+chan PeticionUso(text)
+chan PeticionUsoPrioritaria(text)
+chan HayPeticion(bool)
+chan ImpresoraLibre(int)
+chan Impresiones[3](text)
+
+process Impresora[id:0..2]{
+    while (true) {
+        send ImpresoraLibre(id)
+        receive Impresiones[id](documento)
+        imprimirDocumento(documento)
+    }
+}
+
+process Administrador(){
+    text documento, bool peticion, int impresora
+    while(true){
+        receive HayPeticion(peticion)
+        receive ImpresoraLibre(impresora)
+        if(!empty(PeticionUsoPrioritaria)){
+            receive PeticionUsoPrioritaria(documento)
+        } else {
+            receive PeticionUso(documento)
+        }
+        send Impresiones[impresora](documento)
+    }
+}
+
+process Director{
+    text documento;
+    while(true) {
+        send PeticionUsoPrioritaria(documento)
+        send HayPeticion(true)
+    }
+}
+
+process Administrativo[0..N-1]{
+    text documento;
+    while(true){
+        // Trabajar
+        send PeticionUso(documento)
+        send HayPeticion(true)
+    }
+}
+```
+c)
+```cpp
+chan PeticionUso(text)
+chan HayAccion(bool)
+chan ActivarImpresora[3](bool)
+chan Documentos[3](text)
+chan ImpresoraLibre(int)
+
+process Impresora[id:0..2]{
+    text documento, bool activar, deboSalir = false
+    while (!deboSalir) {
+        send ImpresoraLibre(id)
+        receive ActivarImpresora[id](terminacion)
+        if(terminacion){ // Si terminacion vino true significa que me dijeron que salga
+            deboSalir = true
+        } else {
+            receive Documentos[id](documento)
+            imprimirDocumento(documento)
+        }
+    }
+}
+process Administrativo[0..N-1]{
+    text documento
+    for(int i=0; i<10; i++){
+        // Trabajar
+        send PeticionUso(documento)
+        send HayAccion(false) // False significa una accion que representa una no terminacion
+    }
+    send HayAccion(true)
+}
+
+process Coordinador{
+    bool terminacion, int terminaciones = 0, bool terminar
+    bool deboTerminar = false
+    while(!deboTerminar){
+        receive HayAccion(terminacion)
+        if(terminacion){ // Si hay una terminacion la contabilizo y loopeo
+            terminaciones++
+        } else if (terminaciones == N && empty(PeticionUso)){ // Si ya terminaron todos Y no quedan impresiones pendientes deboTerminar
+            deboTerminar=true
+            for(int i=0; i<3;i++){
+                send ActivarImpresora[i](true)
+            }
+        } else { // Si no hay una terminacion y quedan peticiones entonces mando a imprimir
+            text documento, int impresora
+            receive PeticionUso(documento)
+            receive ImpresoraLibre(impresora)
+            send Documentos[impresora](documento)
+            send ActivarImpresora[impresora](false)
+        }
+    }
 }
 ```
