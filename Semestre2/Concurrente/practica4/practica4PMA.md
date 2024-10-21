@@ -419,7 +419,6 @@ process Coordinador{
 ```
 d)
 ```cpp
-```cpp
 chan PeticionUso(text)
 chan PeticionUsoPrioritaria(text)
 chan HayAccion(bool)
@@ -486,5 +485,4 @@ process Coordinador{
         }
     }
 }
-```
 ```
