@@ -413,30 +413,18 @@ d)
 chan PeticionUso(text)
 chan PeticionUsoPrioritaria(text)
 chan HayAccion(bool)
-chan ActivarImpresora[3](bool)
 chan Documentos[3](text)
 chan ImpresoraLibre(int)
-chan PedidosHechos(int)
  
 process Impresora[id:0..2]{
-    text documento, int contadorHechos
-    if(id == 0){
-        send PedidosHechos(0)
-    }
-    receive PedidosHechos(contadorHechos)
-    while (contadorHechos < 11*N) { 
-        contadorHechos++
-        send PedidosHechos(contadorHechos)
-
+    text documento = '', int contadorHechos
+    while (documento!=null) { 
         send ImpresoraLibre(id)
-        receive ActivarImpresora[id]()
         receive Documentos[id](documento)
-        imprimirDocumento(documento)
-
-        receive PeticionUso(documento)
-        receive PedidosHechos(contadorHechos)
+        if(documento!=null){
+            imprimirDocumento(documento)
+        }
     }
-    send PedidosHechos(contadorHechos)
 }
 
 process Administrativo[0..N-1]{
@@ -446,7 +434,6 @@ process Administrativo[0..N-1]{
         send PeticionUso(documento)
         send HayAccion(false) // False significa una accion que representa una no terminacion
     }
-    send HayAccion(true)
 }
 
 process Director{
@@ -456,7 +443,6 @@ process Director{
         send PeticionUsoPrioritaria(documento)
         send HayAccion(false) // False significa una accion que representa una no terminacion
     }
-    send HayAccion(true)
 }
 
 process Coordinador{
@@ -471,7 +457,9 @@ process Coordinador{
             receive PeticionUso(documento)
         }
         send Documentos[impresora](documento)
-        send ActivarImpresora[impresora](false)
+    }
+    for (int i=0; i < 3; i++){
+        send Documentos[i](null)
     }
 }
 ```
