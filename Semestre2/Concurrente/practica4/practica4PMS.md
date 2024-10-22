@@ -260,7 +260,7 @@ process Coordinador {
 process Espectador[id:0..E-1]{
     Coordinador!pedir(id)
     Coordinador?recibir()
-    // Usar el simulador
+    // Usar la maquina
     Coordinador!salir()
 }
 ```
