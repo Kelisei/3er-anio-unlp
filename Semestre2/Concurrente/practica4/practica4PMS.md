@@ -33,10 +33,10 @@ process Analizador{
 process Admin{
     text sitioRecibido
     cola sitios<text>
-    do 
+    do {
         Robot[*]?aviso(sitioRecibido) -> sitios.push(sitioRecibido)
         [] !sitios.Empty(); Analizador?pedido()-> Analizador!aviso(sitios.pop())
-    od
+    } od
 }
 ```
 ## 2
@@ -47,5 +47,20 @@ preparada,  arma  el  set  de  análisis  que  se  deben  realizar  con  ella  y
 archivarlo.  Por  último,  el  tercer  empleado  se  encarga  de  realizar  el  análisis  y  devolverle  el 
 resultado al segundo empleado.  
 ```cpp
-
+process EmpleadoUno{
+    while(true){
+        muestra = prepararMuestra()
+        EmpleadoDos!muestra(muestra)
+    }
+}
+process EmpleadoDos{
+    cola muestras, cola analisis
+    do {
+        EmpleadoUno?muestra(muestra) -> muestras.push(armarSet(muestra))
+        [] !muestras.empty(); EmpleadoTres?pedido() -> EmpleadoTres!set(muestras.pop())
+        [] !EmpleadoTres?analisis(analisis) -> analisis.push(analisi) 
+    } od
+}
+process EmpleadoTres{
+}
 ```
