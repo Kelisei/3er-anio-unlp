@@ -419,9 +419,7 @@ chan ImpresoraLibre(int)
 chan PedidosHechos(int)
  
 process Impresora[id:0..2]{
-    text documento, bool activar, deboSalir = false
-    
-
+    text documento, int contadorHechos
     if(id == 0){
         send PedidosHechos(0)
     }
@@ -434,7 +432,7 @@ process Impresora[id:0..2]{
         receive ActivarImpresora[id]()
         receive Documentos[id](documento)
         imprimirDocumento(documento)
-        
+
         receive PeticionUso(documento)
         receive PedidosHechos(contadorHechos)
     }
