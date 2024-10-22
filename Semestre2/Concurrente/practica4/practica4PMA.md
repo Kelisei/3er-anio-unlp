@@ -235,10 +235,17 @@ chan Tickets[N](text)
 process Empleado{
     bool ocupacionCabina = ([10], false), int idCliente, int cabina
     while(true){
+        receive HayPeticion()
         if (hayCabinaLibre(ocupacionCabina) && !empty(PeticionCabina)){ //hayCabina chequea si algun booleano esta libre, siguienteCabina agarra la proximaCabina y pone copada
             receive PeticionCabina(idCliente)
             send CabinaAsignada[idCliente](siguienteCabina(ocupacionCabina))
-        } elif (!empty(ListoParaPagar)) {
+        elif (!hayCabinaLibre){
+            receive ListoParaPagar(idCliente, cabina)
+            send Tickets[idCliente] (Cobrar(idCliente))
+            ocupacionCabina[cabina] = false
+            receive PeticionCabina(idCliente)
+            send CabinaAsignada[idCliente](siguienteCabina(ocupacionCabina))
+        } else {
             receive ListoParaPagar(idCliente, cabina)
             send Tickets[idCliente] (Cobrar(idCliente))
             ocupacionCabina[cabina] = false
@@ -248,9 +255,11 @@ process Empleado{
 process Cliente[id:0..N-1]{
     int cabina
     send PeticionCabina(id)
+    send HayPeticion(true)
     receive CabinaAsignada[id](cabina)
     Usar()
     send ListoParaPagar(id, cabina)
+    send HayPeticion(true)
     text ticket
     receive Tickets[id](ticket)
 }
@@ -265,11 +274,18 @@ chan Tickets[N](text)
 process Empleado{
     bool ocupacionCabina = ([10], false), int idCliente, int cabina
     while(true){
+        receive HayPeticion()
         if (!empty(ListoParaPagar)) {
             receive ListoParaPagar(idCliente, cabina)
             send Tickets[idCliente] (Cobrar(idCliente))
             ocupacionCabina[cabina] = false
         } elif (hayCabinaLibre(ocupacionCabina) && !empty(PeticionCabina)){ //hayCabina chequea si algun booleano esta libre, siguienteCabina agarra la proximaCabina y pone copada
+            receive PeticionCabina(idCliente)
+            send CabinaAsignada[idCliente](siguienteCabina(ocupacionCabina))
+        else {
+            receive ListoParaPagar(idCliente, cabina)
+            send Tickets[idCliente] (Cobrar(idCliente))
+            ocupacionCabina[cabina] = false
             receive PeticionCabina(idCliente)
             send CabinaAsignada[idCliente](siguienteCabina(ocupacionCabina))
         }
@@ -278,9 +294,11 @@ process Empleado{
 process Cliente[id:0..N-1]{
     int cabina
     send PeticionCabina(id)
+    send HayPeticion(true)
     receive CabinaAsignada[id](cabina)
     Usar()
     send ListoParaPagar(id, cabina)
+    send HayPeticion(true)
     text ticket
     receive Tickets[id](ticket)
 }
@@ -333,7 +351,7 @@ process Impresora[id:0..2]{
     }
 }
 
-process Administrador(){
+process Coordinador(){
     text documento, bool peticion, int impresora
     while(true){
         receive HayPeticion(peticion)
@@ -367,53 +385,26 @@ process Administrativo[0..N-1]{
 c)
 ```cpp
 chan PeticionUso(text)
-chan HayAccion(bool)
-chan ActivarImpresora[3](bool)
-chan Documentos[3](text)
-chan ImpresoraLibre(int)
-
+chan PedidosHechos(int)
 process Impresora[id:0..2]{
-    text documento, bool activar, deboSalir = false
-    while (!deboSalir) {
-        send ImpresoraLibre(id)
-        receive ActivarImpresora[id](terminacion)
-        if(terminacion){ // Si terminacion vino true significa que me dijeron que salga
-            deboSalir = true
-        } else {
-            receive Documentos[id](documento)
-            imprimirDocumento(documento)
-        }
+    text documento, int contadorHechos
+    if(id == 0){
+        send PedidosHechos(0)
     }
+    receive PedidosHechos(contadorHechos)
+    while (contadorHechos < 10*N) { 
+        contadorHechos++
+        send PedidosHechos(contadorHechos)
+        receive PeticionUso(documento)
+        receive PedidosHechos(contadorHechos)
+    }
+    send PedidosHechos(contadorHechos)
 }
 process Administrativo[0..N-1]{
     text documento
     for(int i=0; i<10; i++){
         // Trabajar
         send PeticionUso(documento)
-        send HayAccion(false) // False significa una accion que representa una no terminacion
-    }
-    send HayAccion(true)
-}
-
-process Coordinador{
-    bool terminacion, int terminaciones = 0, bool terminar
-    bool deboTerminar = false
-    while(!deboTerminar){
-        receive HayAccion(terminacion)
-        if(terminacion){ // Si hay una terminacion la contabilizo y loopeo
-            terminaciones++
-        } else if (terminaciones == N && empty(PeticionUso)){ // Si ya terminaron todos Y no quedan impresiones pendientes deboTerminar
-            deboTerminar=true
-            for(int i=0; i<3;i++){
-                send ActivarImpresora[i](true)
-            }
-        } else { // Si no hay una terminacion y quedan peticiones entonces mando a imprimir
-            text documento, int impresora
-            receive PeticionUso(documento)
-            receive ImpresoraLibre(impresora)
-            send Documentos[impresora](documento)
-            send ActivarImpresora[impresora](false)
-        }
     }
 }
 ```
@@ -425,19 +416,29 @@ chan HayAccion(bool)
 chan ActivarImpresora[3](bool)
 chan Documentos[3](text)
 chan ImpresoraLibre(int)
-
+chan PedidosHechos(int)
+ 
 process Impresora[id:0..2]{
     text documento, bool activar, deboSalir = false
-    while (!deboSalir) {
-        send ImpresoraLibre(id)
-        receive ActivarImpresora[id](terminacion)
-        if(terminacion){ // Si terminacion vino true significa que me dijeron que salga
-            deboSalir = true
-        } else {
-            receive Documentos[id](documento)
-            imprimirDocumento(documento)
-        }
+    
+
+    if(id == 0){
+        send PedidosHechos(0)
     }
+    receive PedidosHechos(contadorHechos)
+    while (contadorHechos < 11*N) { 
+        contadorHechos++
+        send PedidosHechos(contadorHechos)
+
+        send ImpresoraLibre(id)
+        receive ActivarImpresora[id]()
+        receive Documentos[id](documento)
+        imprimirDocumento(documento)
+        
+        receive PeticionUso(documento)
+        receive PedidosHechos(contadorHechos)
+    }
+    send PedidosHechos(contadorHechos)
 }
 
 process Administrativo[0..N-1]{
@@ -461,28 +462,18 @@ process Director{
 }
 
 process Coordinador{
-    bool terminacion, int terminaciones = 0, bool terminar
+    text documento, int impresora
     bool deboTerminar = false
-    while(!deboTerminar){
-        receive HayAccion(terminacion)
-        if(terminacion){ // Si hay una terminacion la contabilizo y loopeo
-            terminaciones++
-        } else if (terminaciones == N + 1 && empty(PeticionUso) && empty(PeticionUsoPrioritaria)){ // Si ya terminaron todos Y no quedan impresiones pendientes deboTerminar
-            deboTerminar=true
-            for(int i=0; i<3;i++){
-                send ActivarImpresora[i](true)
-            }
-        } else { // Si no hay una terminacion y quedan peticiones entonces mando a imprimir
-            text documento, int impresora
-            receive ImpresoraLibre(impresora)
-            if (!empty(PeticionUsoPrioritaria)) {
-                receive PeticionUsoPrioritaria(documento)
-            } else {
-                receive PeticionUso(documento)
-            }
-            send Documentos[impresora](documento)
-            send ActivarImpresora[impresora](false)
+    for (int i = 0; i<N*11;i++){
+        receive HayAccion()
+        receive ImpresoraLibre(impresora)
+        if (!empty(PeticionUsoPrioritaria)) {
+            receive PeticionUsoPrioritaria(documento)
+        } else {
+            receive PeticionUso(documento)
         }
+        send Documentos[impresora](documento)
+        send ActivarImpresora[impresora](false)
     }
 }
 ```
