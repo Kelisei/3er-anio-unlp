@@ -97,14 +97,14 @@ Process Alumno[id:1..N]{
     Profesor?notas(nota);
 }
 Process Coordinador{
-    cola examenes
+    cola examenes, int examenesCorregidos = 0
     do
-        Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA)
+        examenesCorregidos < N; Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA); examenesCorregidos++
         [] !examenes.empty; Profesor?recibir() -> Profesor!pedidos(examenes.pop())
     od
 }
 Process Profesor{
-    while(true){
+    for (int i =0; i< N; i++)
         Coordinador!recibir();
         Coordinador?pedidos(examen,idA);
         int nota = corregirExamen(examen);
@@ -119,18 +119,25 @@ Process Alumno[id:1..N]{
     Profesor[*]?notas(nota);
 }
 Process Coordinador{
-    cola examenes
+    cola examenes, int examenesCorregidos = 0
     do
-        Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA)
-        [] !examenes.empty; Profesor[*]?recibir(idP) -> Profesor[idP]!pedidos(examenes.pop())
+        examenesCorregidos < N; Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA); examenesCorregidos++
+        [] !examenes.empty; Profesor?recibir() -> Profesor!pedidos(examenes.pop())
     od
+    for (int i=0; i<P;i++){
+        Profesor?recibir()
+        Profesor[i]!pedidos(null,null)
+    }
 }
 Process Profesor[id:1..P]{
-    while(true){
+    text examen=''
+    while(examen!=null){
         Coordinador!recibir(id);
         Coordinador?pedidos(examen,idA);
-        int nota = corregirExamen(examen);
-        Alumno[idA]!notas(nota);
+        if(examen!=null){
+            int nota = corregirExamen(examen);
+            Alumno[idA]!notas(nota);
+        }
     }
 }
 ```
@@ -149,18 +156,25 @@ Process Barrera{
         Alumno[i]!activar()
 }
 Process Coordinador{
-    cola examenes
+    cola examenes, int examenesCorregidos = 0
     do
-        Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA)
-        [] !examenes.empty; Profesor[*]?recibir(idP) -> Profesor[idP]!pedidos(examenes.pop())
+        examenesCorregidos < N; Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA); examenesCorregidos++
+        [] !examenes.empty; Profesor?recibir() -> Profesor!pedidos(examenes.pop())
     od
+    for (int i=0; i<P;i++){
+        Profesor?recibir()
+        Profesor[i]!pedidos(null,null)
+    }
 }
 Process Profesor[id:1..P]{
-    while(true){
+    text examen=''
+    while(examen!=null){
         Coordinador!recibir(id);
         Coordinador?pedidos(examen,idA);
-        int nota = corregirExamen(examen);
-        Alumno[idA]!notas(nota);
+        if(examen!=null){
+            int nota = corregirExamen(examen);
+            Alumno[idA]!notas(nota);
+        }
     }
 }
 ```

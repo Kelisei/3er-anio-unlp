@@ -448,7 +448,7 @@ process Director{
 process Coordinador{
     text documento, int impresora
     bool deboTerminar = false
-    for (int i = 0; i<N*11;i++){
+    for (int i = 0; i<(N+1)*10;i++){
         receive HayAccion()
         receive ImpresoraLibre(impresora)
         if (!empty(PeticionUsoPrioritaria)) {
