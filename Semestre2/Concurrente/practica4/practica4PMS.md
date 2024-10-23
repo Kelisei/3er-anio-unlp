@@ -122,11 +122,12 @@ Process Coordinador{
     cola examenes, int examenesCorregidos = 0
     do
         examenesCorregidos < N; Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA); examenesCorregidos++
-        [] !examenes.empty; Profesor?recibir() -> Profesor!pedidos(examenes.pop())
+        [] !examenes.empty; Profesor[*]?recibir(idP) -> Profesor[idP]!pedidos(examenes.pop())
     od
     for (int i=0; i<P;i++){
-        Profesor?recibir()
-        Profesor[i]!pedidos(null,null)
+        int idProf 
+        Profesor[*]?recibir(idProf)
+        Profesor[idProf]!pedidos(null,null)
     }
 }
 Process Profesor[id:1..P]{
@@ -159,11 +160,12 @@ Process Coordinador{
     cola examenes, int examenesCorregidos = 0
     do
         examenesCorregidos < N; Alumno[*]?examenes(examen,idA) -> examenes.push(examen,idA); examenesCorregidos++
-        [] !examenes.empty; Profesor?recibir() -> Profesor!pedidos(examenes.pop())
+        [] !examenes.empty; Profesor[*]?recibir(idP) -> Profesor[idP]!pedidos(examenes.pop())
     od
     for (int i=0; i<P;i++){
-        Profesor?recibir()
-        Profesor[i]!pedidos(null,null)
+        int idP
+        Profesor[*]?recibir(idP)
+        Profesor[idP]!pedidos(null,null)
     }
 }
 Process Profesor[id:1..P]{
