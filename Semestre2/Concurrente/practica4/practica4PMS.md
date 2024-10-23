@@ -210,7 +210,6 @@ process Persona[id:0..P-1]{
 ```
 b)
 ```cpp
-```cpp
 process Empleado{
     cola pedidos
     bool ocupado = false
@@ -238,6 +237,34 @@ process Empleado{
 process Persona[id:0..P-1]{
     while(true){
         Empleado!pedir(id)
+        Empleado?recibir()
+        // Usar el simulador
+        Empleado!salir()
+    }
+}
+```
+```cpp
+// Solucion con buffer
+process Empleado{
+    while(true){
+        Buffer!listo()
+        Buffer?proximo(idP)
+        Persona[idP]!recibir()
+        Persona[idP]?salir()
+    }
+}
+
+process Buffer{
+    cola pedidos
+    do 
+        Persona[*]?pedir(idP) -> pedidos.push(idP)
+        [] !pedidos.empty();Empleado?listo() -> Empleado!proximo(pedidos.pop())
+    od
+}
+
+process Persona[id:0..P-1]{
+    while(true){
+        Buffer!pedir(id)
         Empleado?recibir()
         // Usar el simulador
         Empleado!salir()
@@ -275,6 +302,32 @@ process Coordinador {
 }
 process Espectador[id:0..E-1]{
     Coordinador!pedir(id)
+    Coordinador?recibir()
+    // Usar la maquina
+    Coordinador!salir()
+}
+```
+```cpp
+// Solucion con buffer
+process Coordinador{
+    while(true){
+        Buffer!listo()
+        Buffer?proximo(idP)
+        Persona[idP]!recibir()
+        Persona[idP]?salir()
+    }
+}
+
+process Buffer{
+    cola pedidos
+    do 
+        Persona[*]?pedir(idP) -> pedidos.push(idP)
+        [] !pedidos.empty();Empleado?listo() -> Empleado!proximo(pedidos.pop())
+    od
+}
+
+process Espectador[id:0..E-1]{
+    Buffer!pedir(id)
     Coordinador?recibir()
     // Usar la maquina
     Coordinador!salir()
