@@ -308,7 +308,7 @@ Procedure Sistema is
     Begin
         loop
             accept inicioTimer();
-            delay 360.0;
+            delay 180.0;
             Central.finTimer();
         end loop;
     End Timer;
@@ -374,14 +374,11 @@ PROCEDURE clinica is
                 ACCEPT atencionEnfermero(pedido: IN text) do
                     procesar(pedido);
                 END atencionEnfermero;
-                ELSE 
-                    SELECT escritorio.buscarTarea(pedido) DO 
-                        IF deboFirmar(pedido) THEN
-                            firmarPedido(pedido);
-                        END IF;
-                    ELSE 
-                        null;
-                    END SELECT;
+            ELSE 
+                escritorio.buscarTarea(pedido) DO 
+                IF deboFirmar(pedido) THEN
+                    firmarPedido(pedido);
+                END IF;
             END SELECT
         END LOOP;
     END BODY medico;
@@ -395,9 +392,12 @@ PROCEDURE clinica is
     BEGIN
         LOOP
             SELECT 
-                WHEN (buscarTarea`COUNT > 0) =>
                     ACCEPT buscarTarea(pedido: OUT text) do
-                        pedido = pop(cola);
+                        IF size(cola) > 0 THEN
+                            pedido = pop(cola);
+                        ELSE 
+                            pedido = '';
+                        END IF;
                     END buscarTarea;
                 OR
                     ACCEPT dejarTarea(pedido: IN text) do
@@ -407,11 +407,13 @@ PROCEDURE clinica is
         END LOOP;
     END BODY escritorio;
     TASK paciente is
-        intentos: Integer := 0;
+        intentos: Integer := 0; 
+        termine: Boolean := false;
     BEGIN
-        WHILE intentos < 3 LOOP 
+        WHILE intentos < 3 AND NOT termine LOOP 
             SELECT 
                 medico.atencionPaciente();
+                termine := true;
             OR DELAY 300.0;
                 intentos := intentos + 1;
                 IF intentos < 3 THEN
@@ -488,6 +490,93 @@ de  1,  2  o  5  pesos)  y  se  suman  los  montos  de  las  60  monedas  conseg
 finalizar  cada  persona  debe  conocer  el  grupo  que  más  dinero  junto.  Nota:  maximizar  la 
 concurrencia.  Suponga  que  para  simular  la  búsqueda  de  una  moneda  por  parte  de  una 
 persona existe una función Moneda() que retorna el valor de la moneda encontrada. 
+
+BARRERA -> LOOP EN PERSONAS DONDE RECOLECTAN (1..15) -> TODOS DEJAN SUS MONEDAS EN EL EQUIPO -> EQUIPOS SE REUNEN EN OTRO Y COMPARAN TAMANIOS
+-> PERSONAS LLEGAN Y AGARRAN EL EQUIPO MAS PIOLA
+```ada
+PROCEDURE playa IS
+    TASK playa IS
+        ENTRY compararMonedas(monedas, id: IN Integer);
+        ENTRY conseguirMaximo(maxima: OUT Integer);
+    END playa;
+    TASK TYPE equipo IS
+        ENTRY llegadaBarrera();
+        ENTRY salidaBarrera();
+        ENTRY dejarMonedas(monedas: IN Integer);
+        ENTRY conseguirID(idE: IN Integer);
+    END;
+    TASK TYPE persona;
+
+    equipos: array (1..5) of equipo;
+    personas: array (1..20) of persona;
+
+    TASK BODY persona IS
+        monedas: Integer := 0;
+        max: Integer;
+        equipo: Integer := conseguirEquipo();
+    BEGIN
+        equipos[equipo].llegadaBarrera();
+        equipos[equipo].salidaBarrera();
+        FOR i IN 1..15 LOOP
+            monedas := Moneda();
+        END LOOP;
+        equipos[equipo].dejarMonedas(monedas);
+        playa.conseguirMaximo(max);
+    END persona;
+
+    TASK BODY equipo IS
+        cantidadMonedas: Integer := 0;
+        id: Integer;
+    BEGIN
+        ACCEPT conseguirID(idE: IN Integer) do
+            id:=idE;
+        END ACCEPT;
+        FOR i IN 1..4 LOOP
+            ACCEPT llegadaBarrera();
+        END LOOP;
+        FOR i IN 1..4 LOOP
+            ACCEPT salidaBarrera();
+        END LOOP;
+        FOR i IN 1..4 LOOP
+            ACCEPT dejarMonedas(monedas: IN Integer) do
+                cantidadMonedas := cantidadMonedas + monedas;
+            END dejarMonedas;
+        END LOOP;   
+        plata.compararMonedas(cantidadMonedas, id);
+    END BODY equipo;
+
+    TASK BODY playa IS 
+        max, idMax: Integer
+    BEGIN
+        max:=-1;
+        FOR i IN 1..5 LOOP
+            ACCEPT compararMonedas(monedas, id: IN Integer) DO
+                IF max < monedas THEN
+                    max:=monedas;
+                    idMax:=id;
+                END IF;
+            END compararMonedas;        
+        END LOOP;
+        FOR i IN 1..20 LOOP
+            ACCEPT conseguirMaximo(maxima: OUT Integer) DO
+                maxima:=max;
+            END conseguirMaximo;
+        END LOOP;
+    END playa;
+
+BEGIN
+    FOR i IN 1..4 LOOP
+        equipo[i].conseguirID(i);
+    END LOOP;
+END playa;
 ```
 
+# 6.  
+Se  debe  calcular  el  valor  promedio  de  un  vector  de  1  millón  de  números  enteros  que  se 
+encuentra  distribuido  entre  10  procesos  Worker  (es  decir,  cada Worker  tiene  un  vector  de 
+100  mil  números).  Para  ello,  existe  un  Coordinador  que  determina  el  momento  en  que  se 
+debe  realizar  el  cálculo  de  este  promedio  y  que,  además,  se  queda  con  el  resultado.  Nota: 
+maximizar la concurrencia; este cálculo se hace una sola vez.
+```java
 
+```
