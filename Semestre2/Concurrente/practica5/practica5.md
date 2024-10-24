@@ -578,5 +578,36 @@ encuentra  distribuido  entre  10  procesos  Worker  (es  decir,  cada Worker  t
 debe  realizar  el  cálculo  de  este  promedio  y  que,  además,  se  queda  con  el  resultado.  Nota: 
 maximizar la concurrencia; este cálculo se hace una sola vez.
 ```java
+PROCEDURE vectorizado IS
+    TASK TYPE empleado;
+    TASK coordinador IS
+        ENTRY dejarSuma(total: IN Integer);
+    END empleado;
 
+    empleados : array (1..10) of empleado;
+
+    TASK BODY empleado IS
+        vector: array (1..100000) of Float;
+        total: Integer := 0;
+    BEGIN
+        FOR i IN 1..100000 LOOP
+            total := total + vector[i];
+        END LOOP;
+        coordinador.dejarSuma(total);
+    END BODY empleado;
+    
+    TASK coordinador IS 
+        total: Float :=0;
+        resultado: Float :=0;
+    BEGIN
+        FOR i in 1..10 LOOP
+            ACCEPT dejarSuma(suma) DO
+                total:= total+suma;
+            END dejarSuma;
+        END LOOP;
+        resultado := total/1000000.0;
+    END coordinador;
+BEGIN
+    null;
+END vectorizado;
 ```
