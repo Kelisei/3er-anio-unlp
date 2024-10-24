@@ -577,11 +577,11 @@ encuentra  distribuido  entre  10  procesos  Worker  (es  decir,  cada Worker  t
 100  mil  números).  Para  ello,  existe  un  Coordinador  que  determina  el  momento  en  que  se 
 debe  realizar  el  cálculo  de  este  promedio  y  que,  además,  se  queda  con  el  resultado.  Nota: 
 maximizar la concurrencia; este cálculo se hace una sola vez.
-```java
+```ada
 PROCEDURE vectorizado IS
     TASK TYPE empleado;
     TASK coordinador IS
-        ENTRY dejarSuma(total: IN Integer);
+        ENTRY dejarSuma(total: IN Float);
     END empleado;
 
     empleados : array (1..10) of empleado;
@@ -610,4 +610,25 @@ PROCEDURE vectorizado IS
 BEGIN
     null;
 END vectorizado;
+```
+# 7.
+Hay un sistema de reconocimiento de huellas dactilares de la policía que tiene 8 Servidores 
+para realizar el reconocimiento, cada uno de ellos trabajando con una Base de Datos propia; 
+a su vez hay un Especialista que utiliza indefinidamente. El sistema funciona de la siguiente 
+manera: el Especialista toma una imagen de una huella (TEST) y se la envía a los servidores 
+para que cada uno de ellos le devuelva el código y el valor de similitud de la huella que más 
+se  asemeja  a  TEST  en  su  BD;  al  final  del  procesamiento,  el  especialista  debe  conocer  el 
+código  de  la  huella  con  mayor  valor  de  similitud  entre  las  devueltas  por  los  8  servidores. 
+Cuando  ha  terminado  de  procesar  una  huella  comienza  nuevamente  todo  el  ciclo.  Nota: 
+suponga  que  existe  una  función  Buscar(test,  código,  valor)  que  utiliza  cada  Servidor  donde 
+recibe  como  parámetro  de  entrada  la  huella  test,  y  devuelve  como  parámetros  de  salida  el 
+código  y  el  valor  de  similitud  de  la  huella  más  parecida  a  test  en  la  BD  correspondiente. 
+Maximizar la concurrencia y no generar demora innecesaria.
+```java
+PROCEDURE sistema IS
+    
+
+BEGIN
+
+END sistema;
 ```
