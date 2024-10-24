@@ -7,7 +7,7 @@ recursos y sincronizaciones serán necesarios/convenientes para resolverlo.
 ## Solución usando Rendezvous en ADA
 
 ## a. Realice la solución suponiendo que todos los vehículos tienen la misma prioridad. 
-```java
+```ada
 Procedure Puente is
     Task ControlPuente is
         Entry EntrarCaminoneta (Peso: IN Integer);
@@ -66,7 +66,7 @@ Begin
 End Puente;
 ```
 ## b. Modifique la solución para que tengan mayor prioridad los camiones que el resto de los vehículos.
-```java
+```ada
 Procedure Puente is
     Task ControlPuente is
         Entry EntrarCaminoneta (Peso: IN Integer);
@@ -132,7 +132,7 @@ un pago y retirar un comprobante. Existe un único empleado en el banco, el cual
 acuerdo con el orden de llegada.  
 
 ## a) Implemente una solución donde los clientes llegan y se retiran sólo después de haber sido atendidos. 
-```java
+```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -161,7 +161,7 @@ Begin
 End Banco;
 ```
 ## b) Implemente una solución donde los clientes se retiran si esperan más de 10 minutos para realizar el pago.
-    ```java
+    ```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -191,7 +191,7 @@ Begin
 End Banco;
 ```
 ## c) Implemente una solución donde los clientes se retiran si no son atendidos inmediatamente. 
-```java
+```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -221,7 +221,7 @@ Begin
 End Banco;
 ```
 ## d)  Implemente  una  solución  donde  los  clientes  esperan  a  lo  sumo  10  minutos  para  ser atendidos. Si pasado ese lapso no fueron atendidos, entonces solicitan atención una vez más y se retiran si no son atendidos inmediatamente. 
-```java
+```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -266,7 +266,7 @@ señal de proceso 2, recibe señales del mismo proceso durante 3 minutos.
 proceso  1  será  considerada  vieja  (se  deshecha)  si  en  2  minutos  no  fue  recibida.  Si  la 
 señal del proceso 2 no puede ser recibida inmediatamente, entonces espera 1 minuto y 
 vuelve a mandarla (no se deshecha). 
-```java
+```ada
 Procedure Sistema is
     Task Central is
         Entry s1(msj: IN text);
@@ -359,8 +359,84 @@ petición  ha  sido  recibida  por  el  médico  o  la  nota  ha  sido  dejada  
 trabajando y haciendo más peticiones. 
 ```ada
 PROCEDURE clinica is
-    TASK 
+
+    TASK medico IS
+        ENTRY atencionPaciente();
+        ENTRY atencionEnfemero(pedido: IN text);
+    END medico;
+    TASK BODY medico is
+    BEGIN
+        LOOP
+            SELECT  
+                ACCEPT atencionPaciente() DO
+                    -- atender paciente
+                END ACCEPT;
+            OR WHEN (atencionEnfemero`COUNT = 0) =>
+                ACCEPT atencionEnfermero(pedido) do
+                    procesar(pedido);
+                END ACCEPT;
+                ELSE 
+                    SELECT escritorio.buscarTarea(pedido) DO 
+                        IF deboFirmar(pedido) THEN
+                            firmarPedido(pedido);
+                        END IF;
+                    ELSE 
+                        null;
+                    END SELECT;
+            END SELECT
+        END LOOP;
+    END BODY medico;
+
+    TASK escritorio IS
+        ENTRY dejarTarea(pedido: IN text);
+        ENTRY buscarTarea(pedido: OUT text);
+    END escritorio;
+    TASK BODY escritorio IS
+        cola: colaNotas;
+    BEGIN
+        LOOP
+            SELECT 
+                WHEN (buscarTarea`COUNT > 0) =>
+                    ACCEPT buscarTarea(pedido) do
+                        pedido = pop(cola);
+                    END ACCEPT;
+                OR
+                    ACCEPT dejarTarea(pedido) do
+                        push(cola, pedido);
+                    END ACCEPT;
+            END SELECT; 
+        END LOOP;
+    END BODY escritorio;
+    TASK paciente is
+        intentos: Integer := 0;
+    BEGIN
+        WHILE intentos < 3 LOOP 
+            SELECT 
+                medico.atencionPaciente();
+            OR DELAY 300.0;
+                intentos := intentos + 1;
+                IF intentos < 3 THEN
+                    delay 600.0;
+                END IF;
+            END SELECT;
+        END LOOP;
+    END paciente;
+    TASK enfermera is
+        pedido: text;
+    BEGIN
+        LOOP
+            pedido := trabajar();
+            SELECT 
+                medico.atencionEnfermero(pedido);
+            ELSE 
+                escritorio.dejarTarea(pedido);
+        END LOOP;
+    END enfermera;
 BEGIN
 
 END clinica;
+```
+# 5.
+``` java
+
 ```
