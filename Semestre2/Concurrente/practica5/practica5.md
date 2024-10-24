@@ -359,7 +359,6 @@ petición  ha  sido  recibida  por  el  médico  o  la  nota  ha  sido  dejada  
 trabajando y haciendo más peticiones. 
 ```ada
 PROCEDURE clinica is
-
     TASK medico IS
         ENTRY atencionPaciente();
         ENTRY atencionEnfemero(pedido: IN text);
@@ -370,11 +369,11 @@ PROCEDURE clinica is
             SELECT  
                 ACCEPT atencionPaciente() DO
                     -- atender paciente
-                END ACCEPT;
+                END atencionPaciente;
             OR WHEN (atencionEnfemero`COUNT = 0) =>
-                ACCEPT atencionEnfermero(pedido) do
+                ACCEPT atencionEnfermero(pedido: IN text) do
                     procesar(pedido);
-                END ACCEPT;
+                END atencionEnfermero;
                 ELSE 
                     SELECT escritorio.buscarTarea(pedido) DO 
                         IF deboFirmar(pedido) THEN
@@ -397,13 +396,13 @@ PROCEDURE clinica is
         LOOP
             SELECT 
                 WHEN (buscarTarea`COUNT > 0) =>
-                    ACCEPT buscarTarea(pedido) do
+                    ACCEPT buscarTarea(pedido: OUT text) do
                         pedido = pop(cola);
-                    END ACCEPT;
+                    END buscarTarea;
                 OR
-                    ACCEPT dejarTarea(pedido) do
+                    ACCEPT dejarTarea(pedido: IN text) do
                         push(cola, pedido);
-                    END ACCEPT;
+                    END dejarTarea;
             END SELECT; 
         END LOOP;
     END BODY escritorio;
@@ -436,7 +435,59 @@ BEGIN
 
 END clinica;
 ```
-# 5.
-``` java
-
+# ?.
+En  un  sistema  para  acreditar  carreras  universitarias,  hay  UN  Servidor  que  atiende  pedidos 
+de  U  Usuarios  de  a  uno  a  la  vez  y  de  acuerdo  con  el  orden  en  que  se  hacen  los  pedidos. 
+Cada  usuario  trabaja  en  el  documento  a  presentar,  y  luego  lo  envía  al  servidor;  espera  la 
+respuesta de este que le indica si está todo bien o hay algún error. Mientras haya algún error, 
+vuelve a trabajar con el documento y a enviarlo al servidor. Cuando el servidor le responde 
+que está todo bien, el usuario se retira. Cuando un usuario envía un pedido espera a lo sumo 
+2 minutos a que sea recibido por el servidor, pasado ese tiempo espera un minuto y vuelve a 
+intentarlo (usando el mismo documento). 
+``` ada
+PROCEDURE server IS
+    TASK servidor IS
+        ENTRY peticionUsuario(documento: IN text; ok: OUT Boolean);
+    END servidor;
+    TASK BODY servidor IS
+    BEGIN
+        LOOP
+            SELECT 
+                ACCEPT peticionUsuario(documento: IN text, ok: OUT Boolean) DO
+                    ok = procesarDocumento(documento);
+                END peticionUsuario;
+            END SELECT;
+        END LOOP;
+    END servidor;
+    TASK TYPE usuario;
+    usuarios: array(0..U) of usuario;
+    TASK BODY usuario IS
+        documento: text; ok:boolean:=false;
+    BEGIN
+        documento = trabajar();
+        WHILE NOT ok LOOP
+            SELECT 
+                servidor.peticionUsuario(documento, ok);
+                IF NOT ok THEN
+                    documento = arreglar(documento);
+                END IF;
+            OR DELAY 120.0
+                delay 60.0
+            END SELECT;
+        END LOOP;
+    END BODY usuario;
+END server;
 ```
+# 5.  
+En una playa hay 5 equipos de 4 personas cada uno (en total son 20 personas donde cada 
+una  conoce  previamente  a  que  equipo  pertenece).  Cuando  las  personas  van  llegando 
+esperan  con  los  de  su  equipo  hasta  que  el  mismo  esté  completo  (hayan  llegado  los  4 
+integrantes), a partir de ese momento el equipo comienza a jugar. El juego consiste en que 
+cada integrante del grupo junta 15 monedas de a una en una playa (las monedas pueden ser 
+de  1,  2  o  5  pesos)  y  se  suman  los  montos  de  las  60  monedas  conseguidas  en  el  grupo.  Al 
+finalizar  cada  persona  debe  conocer  el  grupo  que  más  dinero  junto.  Nota:  maximizar  la 
+concurrencia.  Suponga  que  para  simular  la  búsqueda  de  una  moneda  por  parte  de  una 
+persona existe una función Moneda() que retorna el valor de la moneda encontrada. 
+```
+
+
