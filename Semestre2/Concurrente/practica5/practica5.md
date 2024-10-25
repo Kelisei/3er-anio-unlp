@@ -641,8 +641,7 @@ PROCEDURE sistema IS
     BEGIN
         ACCEPT recibirID(id);
         LOOP        
-            especialista.recibirIDListo(id);
-            ACCEPT recibirHuella(huella);
+            especialista.recibirListo(huella);
             dbs[id].buscar(huella, codigo, valor);
             especialista.recibirInformacion(codigo, valor);
         END LOOP;
@@ -664,7 +663,7 @@ PROCEDURE sistema IS
 
     TASK especialista IS
         ENTRY recibirInformacion(codigo: IN text; valor: IN Float);
-        ENTRY recibirIDListo(id: IN Integer);
+        ENTRY recibirListo(huella: OUT text);
     END especialista;
 
     TASK BODY especialista IS
@@ -675,11 +674,11 @@ PROCEDURE sistema IS
         LOOP 
             huellaTest := tomarImagen();
             maxSim := -1.0;
-            FOR i IN 1..8 LOOP
+            FOR i IN 1..16 LOOP
                 SELECT  
-                    ACCEPT recibirIDListo(id: IN Integer) DO
-                        servidores[id].recibirHuella(huellaTest);
-                    END recibirIDLISTO;
+                    ACCEPT recibirListo(huella: OUT text) DO
+                        huella := huellaTest;
+                    END recibirListo;
                 OR
                     ACCEPT recibirInformacion(codigo: IN text; valor: IN Float) DO
                         IF valor > maxSim THEN
