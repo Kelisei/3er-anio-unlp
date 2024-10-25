@@ -627,26 +627,44 @@ Maximizar la concurrencia y no generar demora innecesaria.
 
 ESPECIALISTA MANDA A 8 SERVIDORES IMAGEN -> SERVIDORES ANALIZAN Y COMPARAN CON SU DB
 -> SERVIDORES RETORNAN CODIGO Y VALOR DE SIMILUTUD -> REPITE?
-```ada
+```java
 PROCEDURE sistema IS
     TASK TYPE servidor IS
         ENTRY recibirHuella(huella: IN text);
+        ENTRY recibirID(id: IN Integer);
     END TYPE servidor;
     TASK BODY servidor IS
         codigo: text;
         valor: Float;
+        huella: text;
+        id: Integer;
     BEGIN
+        ACCEPT recibirID(id);
         LOOP        
-            ACCEPT recibirHuella(huella: IN text) DO
-                Buscar(huella, codigo, valor);
-            END recibirHuella;     
+            especialista.recibirIDListo(id);
+            ACCEPT recibirHuella(huella);
+            dbs[id].buscar(huella, codigo, valor);
             especialista.recibirInformacion(codigo, valor);
         END LOOP;
     END servidor;
     servidores : array (1..8) of servidor;
 
+    TASK TYPE db IS
+        ENTRY buscar(huella: IN text, codigo: OUT text, valor: OUT Float);
+    END TYPE db;
+    TASK BODY db IS
+    BEGIN
+        LOOP
+            ACCEPT buscar(huella: IN Integer, codigo: OUT Integer, valor: OUT Float) DO
+                Buscar(huella, codigo, valor);
+            END buscar
+        END LOOP;
+    END BODY db;        
+    dbs : array (1..8) of db;
+
     TASK especialista IS
         ENTRY recibirInformacion(codigo: IN text; valor: IN Float);
+        ENTRY recibirIDListo(id: IN Integer);
     END especialista;
 
     TASK BODY especialista IS
@@ -656,22 +674,27 @@ PROCEDURE sistema IS
     BEGIN
         LOOP 
             huellaTest := tomarImagen();
-            FOR i IN 1..8 LOOP
-                servidores[i].recibirHuella(huellaTest);
-            END LOOP;
             maxSim := -1.0;
             FOR i IN 1..8 LOOP
-                ACCEPT recibirInformacion(codigo: IN text; valor: IN Float) DO
-                    IF valor > maxSim THEN
-                        maxSim := valor;
-                        maxCodigo := codigo;
-                    END IF;
-                END recibirInformacion;
+                SELECT  
+                    ACCEPT recibirIDListo(id: IN Integer) DO
+                        servidores[id].recibirHuella(huellaTest);
+                    END recibirIDLISTO;
+                OR
+                    ACCEPT recibirInformacion(codigo: IN text; valor: IN Float) DO
+                        IF valor > maxSim THEN
+                            maxSim := valor;
+                            maxCodigo := codigo;
+                        END IF;
+                    END recibirInformacion;
+                END SELECT;
             END LOOP;
         END LOOP;       
     END BODY especialista;
 BEGIN
-    null;
+    FOR i IN 1..8 LOOP
+        servidores[i].recibirID(i);
+    END LOOP;
 END sistema;
 ```
 # 8.
