@@ -708,7 +708,7 @@ ha hecho sin ser atendido. Nota: maximizar la concurrencia.
 
 PERSONA PIDE CAMION -> CAMION VA SI ES EL Q MÁS PIDIO ? -> BUFFER SI O SI PARA ADMINISTRAR EL CAMION Y LOS INTENTOS
 
-```ada
+```java
 PROCEDURE ciudad IS
     TASK buffer IS
         ENTRY recibirPersona(idPersona: IN Integer; intentos: IN Integer);
@@ -718,16 +718,20 @@ PROCEDURE ciudad IS
         personasOrdenadasPorIntentos: Cola;
         intentos := array (1..P) of Integer;
         max, maxID: Integer;
+        cantidadQueReclamaron: Integer:=0;
     BEGIN
         maxID:= 0;
-        WHILE maxID <> -1 LOOP 
+        LOOP
             SELECT 
                 ACCEPT recibirPersona(idPersona: IN Integer) do
                     IF intentos[idPersona] <> -1 THEN
-                        intentos[idPersona] := intentos[idPersona]+1; 
+                        intentos[idPersona] := intentos[idPersona]+1;
+                         IF intentos[idPersona] == 0 THEN
+                            cantidadQueReclamaron = cantidadQueReclamaron + 1;
+                        END IF;
                     END IF;
                 END recibirPersona;
-            OR
+            OR WHEN (cantidadQueReclamaron > 0) =>
                 ACCEPT personaParaCamion(idPersona: OUT Integer) DO
                     max:=-1; maxID:=-1;
                     FOR i IN 1..P LOOP
@@ -738,6 +742,7 @@ PROCEDURE ciudad IS
                     END LOOP;
                     intentos[maxID] := -1;
                     idPersona:=maxID;
+                    cantidadQueReclamaron = cantidadQueReclamaron -1;
                 END personaParaCamion;
             END SELECT;
         END LOOP;
@@ -753,7 +758,7 @@ PROCEDURE ciudad IS
     BEGIN
         ACCEPT recibirID(idPersona);
         WHILE NOT vinoCamion LOOP
-            buffer.recibirPersona(idPersona, intentos);
+            buffer.recibirPersona(idPersona);
             SELECT 
                 ACCEPT esperarCamion() DO
                     vinoCamion:=true;
