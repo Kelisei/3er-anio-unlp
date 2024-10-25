@@ -462,7 +462,7 @@ PROCEDURE server IS
         END LOOP;
     END servidor;
     TASK TYPE usuario;
-    usuarios: array(0..U) of usuario;
+    usuarios: array(1..U) of usuario;
     TASK BODY usuario IS
         documento: text; ok:boolean:=false;
     BEGIN
@@ -624,11 +624,139 @@ suponga  que  existe  una  función  Buscar(test,  código,  valor)  que  utiliz
 recibe  como  parámetro  de  entrada  la  huella  test,  y  devuelve  como  parámetros  de  salida  el 
 código  y  el  valor  de  similitud  de  la  huella  más  parecida  a  test  en  la  BD  correspondiente. 
 Maximizar la concurrencia y no generar demora innecesaria.
-```java
+
+ESPECIALISTA MANDA A 8 SERVIDORES IMAGEN -> SERVIDORES ANALIZAN Y COMPARAN CON SU DB
+-> SERVIDORES RETORNAN CODIGO Y VALOR DE SIMILUTUD -> REPITE?
+```ada
 PROCEDURE sistema IS
-    
+    TASK TYPE servidor IS
+        ENTRY recibirHuella(huella: IN text);
+    END TYPE servidor;
+    TASK BODY servidor IS
+        codigo: text;
+        valor: Float;
+    BEGIN
+        LOOP        
+            ACCEPT recibirHuella(huella: IN text) DO
+                Buscar(huella, codigo, valor);
+            END recibirHuella;     
+            especialista.recibirInformacion(codigo, valor);
+        END LOOP;
+    END servidor;
+    servidores : array (1..8) of servidor;
 
+    TASK especialista IS
+        ENTRY recibirInformacion(codigo: IN text; valor: IN Float);
+    END especialista;
+
+    TASK BODY especialista IS
+        huellaTest: text;
+        maxSim: Float;
+        maxCodigo: text;
+    BEGIN
+        LOOP 
+            huellaTest := tomarImagen();
+            FOR i IN 1..8 LOOP
+                servidores[i].recibirHuella(huellaTest);
+            END LOOP;
+            maxSim := -1.0;
+            FOR i IN 1..8 LOOP
+                ACCEPT recibirInformacion(codigo: IN text; valor: IN Float) DO
+                    IF valor > maxSim THEN
+                        maxSim := valor;
+                        maxCodigo := codigo;
+                    END IF;
+                END recibirInformacion;
+            END LOOP;
+        END LOOP;       
+    END BODY especialista;
 BEGIN
-
+    null;
 END sistema;
+```
+# 8.
+Una  empresa  de  limpieza  se  encarga  de  recolectar  residuos  en  una  ciudad  por  medio  de  3 camiones.
+Hay  P  personas  que  hacen  reclamos  continuamente  hasta  que  uno  de  los
+camiones pase por su casa. Cada persona hace un reclamo y espera a lo sumo 15 minutos a 
+que  llegue  un  camión;  si  no  pasa,  vuelve  a  hacer  el  reclamo  y  a  esperar  a  lo  sumo  15 
+minutos a que llegue un camión; y así sucesivamente hasta que el camión llegue y recolecte 
+los  residuos.  Sólo  cuando  un  camión  llega,  es  cuando  deja  de  hacer  reclamos  y  se  retira. 
+Cuando un camión está libre la empresa lo envía a la casa de la persona que más reclamos 
+ha hecho sin ser atendido. Nota: maximizar la concurrencia. 
+
+PERSONA PIDE CAMION -> CAMION VA SI ES EL Q MÁS PIDIO ? -> BUFFER SI O SI PARA ADMINISTRAR EL CAMION Y LOS INTENTOS
+
+```ada
+PROCEDURE ciudad IS
+    TASK buffer IS
+        ENTRY recibirPersona(idPersona: IN Integer; intentos: IN Integer);
+        ENTRY personaParaCamion(idPersona: OUT Integer);
+    END buffer;
+    TASK BODY buffer IS
+        personasOrdenadasPorIntentos: Cola;
+        intentos := array (1..P) of Integer;
+        max, maxID: Integer;
+    BEGIN
+        WHILE maxID <> -1 LOOP 
+            SELECT 
+                ACCEPT recibirPersona(idPersona: IN Integer) do
+                    IF intentos[idPersona] <> -1 THEN
+                        intentos[idPersona] := intentos[idPersona]+1; 
+                    END IF;
+                END recibirPersona;
+            OR
+                ACCEPT personaParaCamion(idPersona: OUT Integer) DO
+                    max:=-1; maxID:=-1;
+                    FOR i IN 1..P LOOP
+                        IF intentos[i] > max THEN
+                            max:=intentos[i];
+                            maxID:=i;
+                        END IF;
+                    END LOOP;
+                    intentos[maxID] := -1;
+                    idPersona:=maxID;
+                END personaParaCamion;
+            END SELECT;
+        END LOOP;
+    END buffer;
+    
+    TASK TYPE persona IS
+        ENTRY recibirID(id: IN Integer);
+        ENTRY esperarCamion();
+    END persona;
+    TASK BODY persona IS
+        vinoCamion: Boolean := false;
+        idPersona: Integer;
+    BEGIN
+        ACCEPT recibirID(idPersona);
+        WHILE NOT vinoCamion LOOP
+            buffer.recibirPersona(idPersona, intentos);
+            SELECT 
+                ACCEPT esperarCamion() DO
+                    vinoCamion:=true;
+                END;
+            OR DELAY 900.0;
+        END LOOP;
+    END BODY persona;
+
+    TASK TYPE camion;
+    TASK BODY camion IS
+        idPersona: Integer;
+    BEGIN
+        WHILE idPersona <> -1 LOOP 
+            buffer.personaParaCamion(idPersona);
+            IF idPersona <> -1 THEN
+                SELECT 
+                    persona[idPersona].esperarCamion();
+                ELSE
+                    null;
+                END SELECT;
+            END IF;
+        END LOOP;
+    END camion;
+    camiones: array (1..3) of camion;
+    personas: array (1..P) of persona;
+BEGIN
+    null;
+END ciudad;
 ```
