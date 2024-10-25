@@ -697,6 +697,7 @@ PROCEDURE ciudad IS
         intentos := array (1..P) of Integer;
         max, maxID: Integer;
     BEGIN
+        maxID:= 0;
         WHILE maxID <> -1 LOOP 
             SELECT 
                 ACCEPT recibirPersona(idPersona: IN Integer) do
@@ -743,20 +744,19 @@ PROCEDURE ciudad IS
     TASK BODY camion IS
         idPersona: Integer;
     BEGIN
+        idPersona := 0;
         WHILE idPersona <> -1 LOOP 
             buffer.personaParaCamion(idPersona);
             IF idPersona <> -1 THEN
-                SELECT 
-                    persona[idPersona].esperarCamion();
-                ELSE
-                    null;
-                END SELECT;
+                persona[idPersona].esperarCamion();
             END IF;
         END LOOP;
     END camion;
     camiones: array (1..3) of camion;
     personas: array (1..P) of persona;
 BEGIN
-    null;
+    FOR i IN 1..P LOOP
+        personas[i].recibirID(i);
+    END LOOP;
 END ciudad;
 ```
