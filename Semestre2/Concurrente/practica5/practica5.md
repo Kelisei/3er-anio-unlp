@@ -673,20 +673,19 @@ PROCEDURE sistema IS
     BEGIN
         LOOP 
             huellaTest := tomarImagen();
+            FOR i IN 1..8 LOOP
+                ACCEPT recibirListo(huella: OUT text) DO
+                    huella := huellaTest;
+                END ACCEPT;
+            END LOOP;
             maxSim := -1.0;
-            FOR i IN 1..16 LOOP
-                SELECT  
-                    ACCEPT recibirListo(huella: OUT text) DO
-                        huella := huellaTest;
-                    END recibirListo;
-                OR
-                    ACCEPT recibirInformacion(codigo: IN text; valor: IN Float) DO
-                        IF valor > maxSim THEN
-                            maxSim := valor;
-                            maxCodigo := codigo;
-                        END IF;
-                    END recibirInformacion;
-                END SELECT;
+            FOR i IN 1..8 LOOP
+                ACCEPT recibirInformacion(codigo: IN text; valor: IN Float) DO
+                    IF valor > maxSim THEN
+                        maxSim := valor;
+                        maxCodigo := codigo;
+                    END IF;
+                END recibirInformacion;
             END LOOP;
         END LOOP;       
     END BODY especialista;
