@@ -74,10 +74,12 @@ process Coordinador{
                 ocupado = true
                 Persona[id]!puedo()
             }
-        [] !cola.empty(); !ocupado; ->
-            Persona[ids.pop()]!puedo()
         [] Persona[*]?meFui; -> 
-            ocupado = false;
+            if(!ids.empty()){
+                Persona[ids.pop()]!puedo();
+            } else {
+                ocupado = false;
+            }
     od
 }
 ```
@@ -88,6 +90,39 @@ de 5 boletas de los que pagan más. Adicionalmente, las personas embarazadas tie
 los dos casos anteriores. Las personas entregan sus boletas al cajero y el dinero de pago; el cajero les 
 devuelve el vuelto y los recibos de pago. 
 ```cpp
+chan colaCaja[3](int)
+chan hayPedido(bool)
+chan devolucion[P](int, text)
+process Persona[id:1..P]{
+    bool prioridad = ...; int cantBoletas = ...
+    if (cantBoletas < 5){
+        send colaCaja[1](id)
+    } else if (prioridad){
+        send colaCaja[2](id)
+    } else {
+        send colaCaja[0](id)
+    }
+    send hayPedido()
+    int vuelto; text recibo
+    receive devolucion[id](vuelto, recibo)
+}
+
+process Caja{
+    while(true){
+        receive hayPedido()
+        if(!empty(colaCaja[2])){
+            receive colaCaja[2](id)
+        } else if(!empty(colaCaja[1])){
+            receive colaCaja[1](id)
+        } else {
+            receive colaCaja[0](id)
+        }
+        vuelto, boleta = procesarPago(id)
+        send devolucion[id](vuelto, boleta)
+    }
+}
+
+
 ```
 # ADA 
 1) Resolver el siguiente problema. La página web del Banco Central exhibe las diferentes cotizaciones 
