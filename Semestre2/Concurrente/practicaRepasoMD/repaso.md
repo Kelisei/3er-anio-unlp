@@ -283,7 +283,7 @@ PROCEDURE oficina IS
     END db;
 BEGIN
     FOR i IN 1..100 LOOP
-        sucursales[id].recibirID(i);
+        sucursales[i].recibirID(i);
     END LOOP;
 END oficina;
 ```
