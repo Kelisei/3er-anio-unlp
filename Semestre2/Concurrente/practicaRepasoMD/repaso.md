@@ -132,7 +132,7 @@ de cada uno de los 20 bancos. Cada banco dispone de una API, cuya única funció
 solicitudes de aplicaciones externas. La tarea programada consulta de a una API por vez, esperando 
 a lo sumo 5 segundos por su respuesta. Si pasado ese tiempo no respondió, entonces se mostrará 
 vacía la información de ese banco. 
-```java
+```ada
 PROCEDURE pagina is
     TASK TYPE banco IS
         ENTRY consultarCambio(cambio: OUT Float);
@@ -172,7 +172,7 @@ con el orden de llegada, teniendo prioridad aquellos que deben pagar menos de 5 
 pagan más. Adicionalmente, las personas ancianas tienen prioridad sobre los dos casos anteriores. 
 Las personas entregan sus boletas al cajero y el dinero de pago; el cajero les devuelve el vuelto y los 
 recibos de pago.  
-```java
+```ada
 PROCEDURE negocio IS
     TASK caja IS 
         ENTRY colaPersonas(pedido: IN Integer, vuelto: Float, recibo: text);
@@ -232,7 +232,7 @@ identificador ID en la base de la sucursal que la llama.
 
 100 sucursale -> 100 db -> herramienta manda id a sucursal y despues retorna cantventas, herramienta suma
 
-```java
+```ada
 PROCEDURE oficina IS
     TASK herramienta IS
         ENTRY recibirVentas(ventas: IN Integer);

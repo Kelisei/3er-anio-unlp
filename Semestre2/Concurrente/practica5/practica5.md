@@ -7,7 +7,7 @@ recursos y sincronizaciones serán necesarios/convenientes para resolverlo.
 ## Solución usando Rendezvous en ADA
 
 ## a. Realice la solución suponiendo que todos los vehículos tienen la misma prioridad. 
-```java
+```ada
 Procedure Puente is
     Task ControlPuente is
         Entry EntrarCaminoneta (Peso: IN Integer);
@@ -66,7 +66,7 @@ Begin
 End Puente;
 ```
 ## b. Modifique la solución para que tengan mayor prioridad los camiones que el resto de los vehículos.
-```java
+```ada
 Procedure Puente is
     Task ControlPuente is
         Entry EntrarCaminoneta (Peso: IN Integer);
@@ -132,7 +132,7 @@ un pago y retirar un comprobante. Existe un único empleado en el banco, el cual
 acuerdo con el orden de llegada.  
 
 ## a) Implemente una solución donde los clientes llegan y se retiran sólo después de haber sido atendidos. 
-```java
+```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -161,7 +161,7 @@ Begin
 End Banco;
 ```
 ## b) Implemente una solución donde los clientes se retiran si esperan más de 10 minutos para realizar el pago.
-    ```java
+    ```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -191,7 +191,7 @@ Begin
 End Banco;
 ```
 ## c) Implemente una solución donde los clientes se retiran si no son atendidos inmediatamente. 
-```java
+```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -221,7 +221,7 @@ Begin
 End Banco;
 ```
 ## d)  Implemente  una  solución  donde  los  clientes  esperan  a  lo  sumo  10  minutos  para  ser atendidos. Si pasado ese lapso no fueron atendidos, entonces solicitan atención una vez más y se retiran si no son atendidos inmediatamente. 
-```java
+```ada
 Procedure Banco is
     Task AccesoBanco is 
         Entry Pago(Pedido: IN text; Comprobante: out text);
@@ -266,7 +266,7 @@ señal de proceso 2, recibe señales del mismo proceso durante 3 minutos.
 proceso  1  será  considerada  vieja  (se  deshecha)  si  en  2  minutos  no  fue  recibida.  Si  la 
 señal del proceso 2 no puede ser recibida inmediatamente, entonces espera 1 minuto y 
 vuelve a mandarla (no se deshecha). 
-```java
+```ada
 Procedure Sistema is
     Task Central is
         Entry s1(msj: IN text);
@@ -357,7 +357,7 @@ le  hace  una  nota  y  se  la  deja  en  el  consultorio  para  que  esta  resu
 momento  que  pueda  (el  pedido  puede  ser  que  el  médico  le  firme  algún  papel).  Cuando  la 
 petición  ha  sido  recibida  por  el  médico  o  la  nota  ha  sido  dejada  en  el  escritorio,  continúa 
 trabajando y haciendo más peticiones. 
-```java
+```ada
 PROCEDURE clinica is
     TASK medico IS
         ENTRY atencionPaciente();
@@ -493,7 +493,7 @@ persona existe una función Moneda() que retorna el valor de la moneda encontrad
 
 BARRERA -> LOOP EN PERSONAS DONDE RECOLECTAN (1..15) -> TODOS DEJAN SUS MONEDAS EN EL EQUIPO -> EQUIPOS SE REUNEN EN OTRO Y COMPARAN TAMANIOS
 -> PERSONAS LLEGAN Y AGARRAN EL EQUIPO MAS PIOLA
-```java
+```ada
 PROCEDURE playa IS
     TASK playa IS
         ENTRY compararMonedas(monedas, id: IN Integer);
@@ -577,7 +577,7 @@ encuentra  distribuido  entre  10  procesos  Worker  (es  decir,  cada Worker  t
 100  mil  números).  Para  ello,  existe  un  Coordinador  que  determina  el  momento  en  que  se 
 debe  realizar  el  cálculo  de  este  promedio  y  que,  además,  se  queda  con  el  resultado.  Nota: 
 maximizar la concurrencia; este cálculo se hace una sola vez.
-```java
+```ada
 PROCEDURE vectorizado IS
     TASK TYPE empleado IS
         ENTRY barrera();
@@ -633,7 +633,7 @@ Maximizar la concurrencia y no generar demora innecesaria.
 
 ESPECIALISTA MANDA A 8 SERVIDORES IMAGEN -> SERVIDORES ANALIZAN Y COMPARAN CON SU DB
 -> SERVIDORES RETORNAN CODIGO Y VALOR DE SIMILUTUD -> REPITE?
-```java
+```ada
 PROCEDURE sistema IS
     TASK TYPE servidor IS
         ENTRY recibirHuella(huella: IN text);
@@ -711,7 +711,7 @@ ha hecho sin ser atendido. Nota: maximizar la concurrencia.
 
 PERSONA PIDE CAMION -> CAMION VA SI ES EL Q MÁS PIDIO ? -> BUFFER SI O SI PARA ADMINISTRAR EL CAMION Y LOS INTENTOS
 
-```java
+```ada
 PROCEDURE ciudad IS
     TASK buffer IS
         ENTRY recibirPersona(idPersona: IN Integer; intentos: IN Integer);
