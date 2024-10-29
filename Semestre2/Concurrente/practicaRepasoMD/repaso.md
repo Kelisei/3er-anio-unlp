@@ -133,7 +133,38 @@ solicitudes de aplicaciones externas. La tarea programada consulta de a una API 
 a lo sumo 5 segundos por su respuesta. Si pasado ese tiempo no respondió, entonces se mostrará 
 vacía la información de ese banco. 
 ```java
+PROCEDURE pagina is
+    TASK TYPE banco IS
+        ENTRY consultarCambio(cambio: OUT Float);
+    END banco;
 
+    bancos: array (1..20) of banco;
+    TASK BODY actualizador IS
+        cambios: array (1..20) of Float;
+    BEGIN
+        LOOP
+            FOR i IN 1..20 LOOP
+                SELECT
+                    bancos[i].consultarCambio(cambios[i])
+                OR DELAY 5.0
+                    cambios[i]:=null
+            END LOOP;
+        END LOOP;
+    END BODY actualizador;
+
+    TASK BODY banco IS
+        cambio: Float;
+    BEGIN
+        LOOP
+            cambioB := actualizarCambio();
+            ACCEPT consultarCambio(cambio OUT Float) DO
+                cambio := cambioB;
+            END consultarCambio;    
+        END LOOP;
+    END BODY banco;
+BEGIN
+
+END pagina.
 ```
 2) Resolver el siguiente problema. En un negocio de cobros digitales hay P personas que deben pasar 
 por la única caja de cobros para realizar el pago de sus boletas. Las personas son atendidas de acuerdo 
@@ -142,7 +173,50 @@ pagan más. Adicionalmente, las personas ancianas tienen prioridad sobre los dos
 Las personas entregan sus boletas al cajero y el dinero de pago; el cajero les devuelve el vuelto y los 
 recibos de pago.  
 ```java
-
+PROCEDURE negocio IS
+    TASK caja IS 
+        ENTRY colaPersonas(pedido: IN Integer, vuelto: Float, recibo: text);
+        ENTRY colaBoletas(pedido: IN Integer, vuelto: Float, recibo: text);
+        ENTRY colaPrioridades(pedido: IN Integer, vuelto: Float, recibo: text);
+    END caja;
+    TASK TYPE persona IS
+    END persona;
+    personas: array (1..P) of persona;
+    TASK BODY caja IS
+    BEGIN
+        LOOP
+            SELECT
+                WHEN(colaPrioridades`COUNT =0 AND colaBoletas`Count=0) 
+                    ACCEPT colaPersonas(pedido: IN Integer, vuelto: Float, recibo: text) DO
+                        vuelto, recibo = pagar(pedido);
+                    END colaPersonas;
+            OR
+                WHEN(colaPrioridades`COUNT =0 ) 
+                    ACCEPT colaBoletas(pedido: IN Integer, vuelto: Float, recibo: text) DO
+                        vuelto, recibo = pagar(pedido);
+                    END colaPersonas;
+            OR
+                ACCEPT colaPrioridades(pedido: IN Integer, vuelto: Float, recibo: text) DO
+                    vuelto, recibo = pagar(pedido);
+                END colaPersonas;
+        END LOOP;
+    END;
+    TASK BODY persona IS
+        cantBoletas: Integer := ...; anciano:bool:= ...;
+        pedido:Integer := ...;
+        vuelto: Float, recibo: text;
+    BEGIN
+        IF (anciano) THEN
+            caja.colaPrioridades(pedido, vuelto, recibo);
+        ELSE IF cantBoletas < 5 THEN
+            caja.colaBoletas(pedido, vuelto, recibo);
+        ELSE
+            caja.colaPersonas(pedido, vuelto, recibo);
+        END IF
+    END persona;
+BEGIN
+    null;
+END negocio.
 ```
 3) Resolver el siguiente problema. La oficina central de una empresa de venta de indumentaria debe 
 calcular cuántas veces fue vendido cada uno de los artículos de su catálogo. La empresa se compone 
@@ -155,7 +229,62 @@ de procesar un artículo  comienza con  el siguiente (suponga que la herramienta
 generarArtículo()  que  retorna el  siguiente  ID  a  consultar).  Nota:  maximizar  la  concurrencia.  Existe 
 una  función  ObtenerVentas(ID)  que  retorna  la  cantidad  de  veces  que  fue  vendido  el  artículo  con 
 identificador ID en la base de la sucursal que la llama. 
-```java
 
+100 sucursale -> 100 db -> herramienta manda id a sucursal y despues retorna cantventas, herramienta suma
+
+```java
+PROCEDURE oficina IS
+    TASK herramienta IS
+        ENTRY recibirVentas(ventas: IN Integer);
+    END herramienta;
+    TASK TYPE db IS
+        ENTRY consultarVentas(idArticulo: IN Integer; ventas: OUT Integer);
+    END db;
+    TASK TYPE sucursal IS
+        ENTRY recibirID(id: IN Integer);
+        ENTRY recibirArticulo(idArt: In Integer);
+    END sucursal;   
+    sucursales : array (1..100) of sucursal;
+    dbs : array (1..100) of db;
+    TASK BODY herramienta IS
+        idArt, cantVentas: Integer;
+    BEGIN
+        LOOP    
+            idArt := generarArticulo();
+            cantVentas := 0;
+            FOR i IN 1..100 LOOP
+                sucursales[i].consultarArticulo(idArt);
+            END LOOP;
+            FOR i IN 1..100 LOOP
+                ACCEPT recibirVentas(ventas: IN Integer) DO
+                    cantVentas := cantVentas + ventas;
+                END recibirVentras;
+        END LOOP;
+    END BODY herramienta;
+    TASK BODY sucursal IS
+        idArticulo, cantVentas: Integer;
+        id: Integer;
+    BEGIN
+        ACCEPT recibirID(id);
+        LOOP
+            ACCEPT consultarArticulo(idArt: IN Integer) DO
+                idArticulo := idArt;
+            END consultarArticulo;
+            dbs[id].consultarVentas(idArticulo, cantVentas);
+            herramienta.recibirVentas(cantVentas);
+        END LOOP;
+    END BODY sucursal;
+    TASK BODY db IS
+        LOOP
+            ACCEPT consultarVentas(idArticulo: IN Integer; ventas: OUT Integer) DO
+                ventas := ObtenerVentas(idArticulo);
+            END consultarVentas;
+        END LOOP
+    END db;
+BEGIN
+    FOR i IN 1..100 LOOP
+        sucursales[id].recibirID(i);
+    END LOOP;
+END oficina;
 ```
  
