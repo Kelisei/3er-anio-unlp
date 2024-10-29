@@ -226,7 +226,7 @@ process Empleado{
         [] Persona[actual]?salir(); -> 
             if (pedidos.empty()) {
                 ocupado = false
-                actual = -1
+                actual = -1u
             } else {
                 actual = pedidos.pop()
                 Persona[actual]!recibir()
