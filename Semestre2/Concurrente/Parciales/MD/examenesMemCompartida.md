@@ -96,45 +96,49 @@ BEGIN
 
 END banco;
 ```
-
-# MD del 13-11-23
-
-## PMA
- 1.  En  una  oficina  existen  100  empleados  que  envían  documentos  para  imprimir  en  5  impresoras  compartidas.  Los 
-pedidos  de  impresión  son  procesados  por  orden  de  llegada  y  se  asignan  a  la  primera  impresora  que  se  encuentre 
-libre. Implemente un programa que permita resolver el problema anterior usando PASAJE DE MENSAJES 
-ASINCRÓNICO (PMA).
-```SH
-```
-
-## PMS
-2)  Resuelva el mismo problema anterior pero ahora usando PASAJE DE MENSAJES SINCRÓNICO (PMS).
-```SH
-```
-
-## ADA
-3)  Resuelva con ADA el siguiente problema: la página web del Banco Central exhibe las diferentes cotizaciones del dólar 
-oficial de 20 bancos del país, tanto para la compra como para la venta. Existe una tarea programada que se ocupa de 
-actualizar la página en forma periódica y para ello consulta  la cotización de  cada uno de  los 20 bancos. Cada banco 
-dispone  de  una  API,  cuya  única  función  es  procesar  las  solicitudes  de  aplicaciones  externas.  La  tarea  programada 
-consulta de a una API por vez, esperando a lo sumo 5 segundos por su respuesta. Si pasado ese tiempo no respondió, 
-entonces se mostrará vacía la información de ese banco. 
-```SH
-```
-
 # Programación Concurrente ATIC – Redictado de Programación Concurrente 
 ##  Segunda Fecha - 01/07/2021 
 
 ### PMA
 2. Resolver  el  siguiente  problema  con  Pasaje  de  Mensajes  Asincrónicos  (PMA).  En  una  empresa  de
-software  hay  3  prog ra madores  que  deben  arreglar  errores  informados  por  N  clientes.  Los  clientes
+software  hay  3  programadores  que  deben  arreglar  errores  informados  por  N  clientes.  Los  clientes
 continuamente están trabajando, y cuando encuentran un error envían un reporte a la empresa para que lo
 corrija (no tienen que esperar a que se resuelva). Los programadores resuelven los reclamos de acuerdo al
 orden de llegada, y si no hay reclamos pendientes trabajan durante una hora en otros programas. Nota: los
 procesos  no  deben  terminar  (trabajan  en  un  loop  infinito);  suponga  que  hay  una  función ResolverError  que
 simula que un programador está resolviendo un reporte de un cliente, y otra Programar que simula que está
 trabajando en otro programa
-```SH
+```cpp
+chan PLibre(int)
+chan errores(text)
+chan errorP[3](text)
+process Programador[id:1..3]{
+    while(true):
+        send PLibre(id)
+        text error;
+        receive errorP[id](error)
+        if (error != null){
+            ResolverError(error)
+        } else {
+            Programar()
+        }
+}
+process Cliente[1..N]{
+    while(true):
+        send errores(encontrarError())
+}
+process Coordinador{
+    while(true):
+        int idP
+        receive PLibre(idP)
+        if !empty(errores){
+            text error
+            receive errores(error)
+            send errorP[idP](error)
+        } else {
+            send errorP[idP](null)
+        }
+}
 ```
 
 ### ADA
@@ -145,7 +149,64 @@ siguiente secuencia de ADN. Para resolver estos pedidos el sitio web cuenta con 
 atienden los pedidos de acuerdo al orden de llegada (cada pedido es atendido por un único servidor). Nota: 
 maximizar  la  concurrencia.  Suponga  que  los  servidores  tienen  una  función  ResolverAnálisis  que  recibe  la
 secuencia de ADN y devuelve un entero con el resultado
-```SH
+```java
+PROCEDURE web IS
+    TASK coordinador IS 
+       ENTRY recibirMuestra(muestra IN text, id IN Integer)
+       ENTRY darMuestra(muestra: OUT text, id OUT Integer)
+    END coordinador;
+    TASK BODY coordinador IS
+        cola: queue;
+    BEGIN
+        LOOP 
+            SELECT 
+                ACCEPT recibirMuestra(muestra IN text, id IN Integer) DO
+                    cola.push(muestra, id);
+                END recibirMuestra;
+            OR 
+                WHEN (!cola.isEmpty()) =>
+                    ACCEPT darMuestra(muestra: OUT text, id OUT Integer) DO
+                        muestra, id := cola.pop()
+                    END darMuestra;
+            END SELECT;
+        END LOOP 
+    END BODY coordinador;
+
+    TASK TYPE cliente IS 
+        ENTRY getID(idn IN Integer)
+        ENTRY recibirResolucion(resolucion IN text);
+    END cliente;
+    clientes : array(1..N) of cliente;
+    TASK BODY cliente IS 
+        id:Integer, resolucion: text;
+    BEGIN
+        ACCEPT getID(idn IN Integer) DsO
+            id:=idn
+        END getID;
+        LOOP 
+            coordinador.darMuestra(generarMuestra(), id)
+            ACCEPT recibirResolucion(resolucion IN text) DO
+                resolucion:=resolucion;
+            END recibirResolucion;
+        END LOOP;
+    END BODY cliente;
+
+    TASK TYPE servidor; 
+    servidores: array (1..5) of servidor;
+    TASK BODY servidor IS 
+        muestra, resolucion: text; idC : Integer;
+    BEGIN
+        LOOP
+            coordinador.darMuestra(muestra, idC)
+            resolucion := ResolverAnálisis(muestra)
+            cliente[idC].recibirResolucion(resolucion)
+        END LOOP;
+    END BODY servidor;
+BEGIN 
+    FOR i IN 1..N LOOP 
+        clientes(i).getID(i)
+    END LOOP
+END web;
 ```
 
 # Programación Concurrente ATIC – Redictado de Programación Concurrente 
@@ -153,14 +214,47 @@ secuencia de ADN y devuelve un entero con el resultado
 
 ### PMS
 2. Resolver el siguiente problema con Pasaje de Mensajes Sincrónicos (PMS). En una excursión hay una 
-tirolesa que debe ser usada por 20 turistas. Para esto hay un g uía y un empleado. El empelado espera a 
+tirolesa que debe ser usada por 20 turistas. Para esto hay un guía y un empleado. El empelado espera a 
 que  todos  los  turistas  hayan  llegado  para  darles  una  charla explicando  las  medidas  de  seguridad.  Cuando  
 termina  la  charla  los  turistas  piden  usar  la  tirolesa  y  esperan  a  que  el  guía  les  vaya  dando  el  permiso  de  
 tirarse.  El  guía  deja  usar  la  tirolesa  a  un  cliente a  la  vez y  de  acuerdo  al  orden  en  que  lo  van  solicitando. 
 Nota: todos los procesos deben terminar;  suponga que el empleado tienen una función DarCharla() que 
 simula que el empleado está dando la charla, y los turistas tienen una función UsarTitolesa() que simula que 
 está usando la tirolesa. 
-```SH
+```cpp 
+process turista[id:1..20]{
+    empleado!llegoTurista()
+    empleado?terminoCharla()
+    buffer!pedirTirolesa(id)
+    guia?pasar()
+    // tirarse
+    guia!termine()
+}
+process buffer {
+    int cantEncolados; cola queue;
+    do
+        cantEncolados < 20; turista?pedirTirolesa(id) -> cola.push(id); cantEncolados++;
+        [] !cola.isEmpty(); guia?siguiente() -> guia!recibirID(cola.pop())
+    od
+}
+process guia{
+    int idP
+    for i:=1..20 {
+        buffer!siguiente()
+        buffer?recibirID(idP)
+        turista[idP]!pasar()
+        turista[idP]?termine()
+    }
+}
+process empleado {
+    for i:=1..20 {
+        turista[*]?llegoTurista()
+    }
+    // dar charla
+    for i:=1..20 {
+        turista[i]?terminoCharla()
+    }
+}
 ```
 
 ### ADA
@@ -174,52 +268,141 @@ acuerdo al orden de llegada pero manteniendo las siguientes prioridades: primero
 los  ancianos  y  luego  el  resto.  Nota:  suponga  que  existe  una  función  AtenderPedido()  que  simula  que  el  
 empleado está atendiendo a un cliente.
 ```SH
+PROCEDURE negocio IS
+    TASK empleado IS
+        ENTRY atencionEmbarazada()
+        ENTRY atencionAnciano()
+        ENTRY atencionNormal()
+    END empleado;
+    TASK TYPE cliente;
+    TASK BODY cliente IS
+        tipo := ...;
+    BEGIN
+        IF tipo = 'normal' THEN
+            empleado.atencionNormal();
+        ELSE IF tipo = 'anciano' THEN
+            SELECT empleado.atencionAnciano();
+            OR DELAY 300.0;
+        ELSE IF tipo = 'embarazada' THEN
+            SELECT empleado.atencionEmbarazada();
+            ELSE;
+        END IF;
+    END BODY cliente;
+    clientes : array (1..N) of cliente;
+    TASK BODY empleado IS
+        LOOP
+            SELECT
+                ACCEPT atencionEmbarazada() DO
+                    AtenderEmpleado();
+                END atencionEmbarazada();
+            OR
+                WHEN (atencionEmbarazada`count = 0) => ACCEPT atencionAnciano();
+                    AtenderEmpleado();
+                END atencionAnciano();
+            OR
+                WHEN (atencionAnciano`count = 0  AND atencionEmbarazada`count = 0) => ACCEPT atencionNormal();
+                    AtenderEmpleado();
+                END atencionNormal();
+            END SELECT;
+        END LOOP;
+    END BODY empleado;
+BEGIN 
+    null;
+END negocio;
 ```
-
-# parcial práctico del 18-12-23
-
-### PMA
-1. Resolver con PASAJE DE MENSAJES ASINCRÓNICO (PMA) el siguiente problema. En un negocio de cobros digitales 
-hay P personas que deben pasar por la única caja de cobros para realizar el pago de sus boletas. Las personas son 
-atendidas de acuerdo con el orden de llegada, teniendo prioridad aquellos que deben pagar menos de 5 boletas de 
-los que pagan más. Adicionalmente, las personas embarazadas tienen prioridad sobre los dos casos anteriores. Las 
-personas entregan sus boletas al cajero y el dinero de pago; el cajero les devuelve el vuelto y los recibos de pago.
-```SH
-```
-
-### ADA
-2) Resolver con  ADA el siguiente problema. La oficina central de  una empresa de  venta de  indumentaria debe calcular 
-cuántas  veces  fue  vendido  cada  uno  de  los  artículos de  su  catálogo. La empresa  se  compone  de  100  sucursales y  cada 
-una de ellas maneja su propia base de datos de ventas. La oficina central cuenta con una herramienta que funciona de la 
-siguiente  manera:  ante  la  consulta  realizada  para  un  artículo  determinado,  la  herramienta  envía  el  identificador  del 
-artículo a cada una de las sucursales, para que cada uno de éstas calcule cuántas veces fue vendido en ella. Al final del 
-procesamiento,  la  herramienta  debe  conocer  cuántas  veces  fue  vendido  en  total,  considerando  todas  las  sucursales. 
-Cuando ha terminado de procesar un artículo comienza con el siguiente (suponga que la herramienta tiene una función 
-generarArtículo  que  retorna  el  siguiente  ID  a  consultar).  Nota:  maximizar  la  concurrencia.  Supongo  que  existe  una 
-función  ObtenerVentas(ID) que  retorna la cantidad de veces  que fue vendido el artículo con identificador ID en la base 
-de datos de la sucursal que la llama.
-```SH
-```
-#  parcial práctico del 13-12-22
-
 ### PMS
 1. Resolver con Pasaje de Mensajes Sincrónicos (PMS) el siguiente problema. En un comedor estudiantil hay un horno microondas 
 que debe ser usado por E estudiantes de acuerdo con el orden de llegada. Cuando el estudiante accede al horno, lo usa y luego se 
 retira para dejar al siguiente. Nota: cada Estudiante una sólo una vez el horno.
-```SH
+```cpp
+process estudiante[id:1..E]{
+    horno!pedirAcceso(id) 
+    horno?recibirAcceso()
+    //usar
+    horno!liberar()
+}
+process horno{
+    cola queue, libre = false
+    do
+        estudiante[*]?pedirAcceso(idP) -> 
+            if(libre){
+                estudiante[idP]!recibirAcceso()
+                libre = false
+            } else {
+                cola.push(idP)
+            }
+        [] estudiante[*]?liberar(); -> 
+            if(!empty(cola)){
+                estudiante[cola.pop()]!recibirAcceso()
+            } else {
+                libre = true;
+            }
+    od
+}
 ```
 
 ### ADA
-2. Resolver  con  ADA  el  siguiente  problema.  Se  debe  controlar  el  acceso  a  una  base  de  datos.  Existen  L  procesos  Lectores  y  E 
-procesos Escritores que trabajan indefinidamente de la siguiente manera: 
-• Escritor:  intenta  acceder  para  escribir,  si  no  lo  logra  inmediatamente,  espera  1  minuto  y  vuelve  a  intentarlo  de  la  misma 
-manera. 
+2. Resolver  con  ADA  el  siguiente  problema.  Se  debe  controlar  el  acceso  a  una  base  de  datos.  Existen  L  procesos  Lectores  y  E procesos Escritores que trabajan indefinidamente de la siguiente manera: 
+• Escritor:  intenta  acceder  para  escribir,  si  no  lo  logra  inmediatamente,  espera  1  minuto  y  vuelve  a  intentarlo  de  la  misma manera. 
 • Lector: intenta acceder para leer, si no lo logro en 2 minutos, espera 5 minutos y vuelve a intentarlo de la misma manera. 
 Un proceso Escritor podrá acceder si no hay ningún otro proceso  usando la base de datos; al acceder escribe y sale de la BD. Un 
 proceso Lector podrá acceder si no hay procesos Escritores usando la base de datos; al acceder lee y sale de la BD. Siempre se le 
 debe dar prioridad al pedido de acceso para escribir sobre el pedido de acceso para leer. 
 ```SH
+PROCEDURE acceso IS
+    TASK TYPE escritor;
+    TASK TYPE lector;
 
+    TASK BODY escritor IS
+        LOOP
+            SELECT db.accesoEscritor();
+                //escribir
+                db.irseEscritor()
+            ELSE 
+                DELAY 60.0;           
+            END SELECT;
+        END LOOP;
+    END BODY escritor;
+    TASK BODY lector IS
+        LOOP
+            SELECT
+                db.accesoLector();
+                //leer
+                db.irseLector();
+            OR DELAY 120.0;
+                DELAY 300.0
+            END SELECT;
+        END LOOP;
+    END BODY lector;
+
+    TASK db IS
+        ENTRY accesoLector();
+        ENTRY accesoEscritor();
+        ENTRY irseLector();
+        ENTRY irseEscritor()
+    END;
+    TASK BODY db IS
+        cantLectores: Int:=0; cantEscritores:Int:=0;
+    BEGIN
+        LOOP
+            SELECT WHEN(accesoEscritor`count = 0 AND irseEscritor`count = 0 AND irseLector`count = 0 AND cantEscritores= 0 ) =>
+                ACCEPT accesoLector();
+                cantLectores++;
+            OR WHEN(irseEscritor`count = 0 AND irseLector`count = 0 AND cantLectores= 0 AND cantEscritores = 0) =>
+                ACCEPT accesoEscritor();
+                cantEscritor++;
+            OR 
+                ACCEPT irseLector();
+                cantLector--;
+            OR 
+                ACCEPT irseEscritor();
+                cantEscritor--;
+            END SELECT;
+        END LOOP;
+    END db;
+BEGIN
+    null
+END;
 ```
  
 # primer recuperatorio del parcial práctico
@@ -232,7 +415,40 @@ A continuación, espera a que alguno de los supervisores lo corrija y le indique
 errores, el competidor debe corregirlo y volver a entregar, repitiendo la misma metodología hasta que llegue 
 a la solución esperada. Los supervisores corrigen las entregas respetando el orden en que los competidores 
 van entregando. Nota: maximizar la concurrencia y no generar demora innecesaria.
-```SH
+```cpp
+process organizador:
+    for i:= 1..N:
+        idC: int
+        competidor[*]?llego(idC)
+        competior[idC]!desafio(nuevoDesafio())
+
+process competidor[id:1..N]:
+    organizador!llego(id)
+    desafio: text
+    organizador?desafio(desafio)
+    res = resolver(desafio)
+    buffer!recibirProblema(id, res)
+    correcion:text
+    supervisor[*]?correcion(correcion)
+    while correcion:
+        res = resolver(desafio, correcion)
+        buffer!recibirProblema(id, res)
+        supervisor[*]?correcion(correcion)
+
+process supervisor[id:1..S]:
+    while true:
+        buffer!libre(id)
+        idC: int, problema: text
+        buffer?correcion(idC, problema)
+        // corregir
+        competidor[idC]!correcion(null);
+
+process buffer:
+    cola = Queue()
+    do
+        competidor[*]?recibirProblema(id, problema) -> cola.push(id, problema)
+        [] ! cola.empty(); supervisor[*]?libre(idS) -> supervisor[idS]!correcion(cola.pop())
+    od
 ```
 
 ### ADA
@@ -246,16 +462,14 @@ Nota: suponga que existe una función DevolverStock(modelo,cantidad) que utiliza
 como parámetro de entrada el modelo de calzado y retorna como parámetro de salida la cantidad de pares 
 disponibles. Maximizar la concurrencia y no generar demora innecesaria
 ```SH
+// HAY UNO MUY SIMILAR EN LA DE REPASO
 ```
 
 # Programacion_Concurrente___Resolucion_Examenes_MD
 ## Parcial MC - 2020 - 1 - Tema 6
 
 ### PMA
-Resolver con PASAJE DE MENSAJES ASINCRÓNICOS (PMA) el siguiente problema. Se debe simular la atención en un banco con 3 cajas para atender
-a N clientes que pueden ser especiales (son las embarazadas y los ancianos) o regulares. Cuando el cliente llega al banco se dirige a la caja con menos
-personas esperando y se queda ahí hasta que lo terminan de atender y le dan el comprobante de pago. Las cajas atienden a las personas que van a ella de
-acuerdo al orden de llegada pero dando prioridad a los clientes especiales; cuando terminan de atender a un cliente le debe entregar un comprobante de
+Resolver con PASAJE DE MENSAJES ASINCRÓNICOS (PMA) el siguiente problema. Se debe simular la atención en un banco con 3 cajas para atender a N clientes que pueden ser especiales (son las embarazadas y los ancianos) o regulares. Cuando el cliente llega al banco se dirige a la caja con menos personas esperando y se queda ahí hasta que lo terminan de atender y le dan el comprobante de pago. Las cajas atienden a las personas que van a ella de acuerdo al orden de llegada pero dando prioridad a los clientes especiales; cuando terminan de atender a un cliente le debe entregar un comprobante de
 pago. Nota: maximizar la concurrencia. Respuesta:
 ```SH
 ```
