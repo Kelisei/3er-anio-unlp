@@ -152,23 +152,17 @@ secuencia de ADN y devuelve un entero con el resultado
 ```java
 PROCEDURE web IS
     TASK coordinador IS 
-       ENTRY recibirMuestra(muestra IN text, id IN Integer)
-       ENTRY darMuestra(muestra: OUT text, id OUT Integer)
+       ENTRY recibirMuestra(muestraR IN text, idR IN Integer)
+       ENTRY darMuestra(muestraD: OUT text, idD OUT Integer)
     END coordinador;
     TASK BODY coordinador IS
-        cola: queue;
     BEGIN
         LOOP 
-            SELECT 
-                ACCEPT recibirMuestra(muestra IN text, id IN Integer) DO
-                    cola.push(muestra, id);
+            ACCEPT darMuestra(muestraD: OUT text, idD OUT Integer) DO // Servidores viene agarrar la muestra
+                ACCEPT recibirMuestra(muestraR IN text, idR IN Integer) DO  //Esperamos un cliente, usamos cols implicitas
+                    muestraD, idD := muestraR, idR;
                 END recibirMuestra;
-            OR 
-                WHEN (!cola.isEmpty()) =>
-                    ACCEPT darMuestra(muestra: OUT text, id OUT Integer) DO
-                        muestra, id := cola.pop()
-                    END darMuestra;
-            END SELECT;
+            END darMuestra;
         END LOOP 
     END BODY coordinador;
 
@@ -184,7 +178,7 @@ PROCEDURE web IS
             id:=idn
         END getID;
         LOOP 
-            coordinador.darMuestra(generarMuestra(), id)
+            coordinador.recibirMuestra(generarMuestra(), id)
             ACCEPT recibirResolucion(resolucion IN text) DO
                 resolucion:=resolucion;
             END recibirResolucion;
@@ -224,7 +218,7 @@ está usando la tirolesa.
 ```cpp 
 process turista[id:1..20]{
     empleado!llegoTurista()
-    empleado?terminoCharla()
+    empleado!terminoCharla()
     buffer!pedirTirolesa(id)
     guia?pasar()
     // tirarse
@@ -252,7 +246,7 @@ process empleado {
     }
     // dar charla
     for i:=1..20 {
-        turista[i]?terminoCharla()
+        turista[*]?terminoCharla()
     }
 }
 ```
@@ -296,11 +290,11 @@ PROCEDURE negocio IS
                     AtenderEmpleado();
                 END atencionEmbarazada();
             OR
-                WHEN (atencionEmbarazada`count = 0) => ACCEPT atencionAnciano();
+                WHEN (atencionEmbarazada`count = 0) => ACCEPT atencionAnciano() DO
                     AtenderEmpleado();
                 END atencionAnciano();
             OR
-                WHEN (atencionAnciano`count = 0  AND atencionEmbarazada`count = 0) => ACCEPT atencionNormal();
+                WHEN (atencionAnciano`count = 0  AND atencionEmbarazada`count = 0) => ACCEPT atencionNormal() DO
                     AtenderEmpleado();
                 END atencionNormal();
             END SELECT;
@@ -471,7 +465,55 @@ disponibles. Maximizar la concurrencia y no generar demora innecesaria
 ### PMA
 Resolver con PASAJE DE MENSAJES ASINCRÓNICOS (PMA) el siguiente problema. Se debe simular la atención en un banco con 3 cajas para atender a N clientes que pueden ser especiales (son las embarazadas y los ancianos) o regulares. Cuando el cliente llega al banco se dirige a la caja con menos personas esperando y se queda ahí hasta que lo terminan de atender y le dan el comprobante de pago. Las cajas atienden a las personas que van a ella de acuerdo al orden de llegada pero dando prioridad a los clientes especiales; cuando terminan de atender a un cliente le debe entregar un comprobante de
 pago. Nota: maximizar la concurrencia. Respuesta:
-```SH
+```cpp
+chan clienteLlego(int)
+chan asignarCaja[int](int)
+chan colaRegular[3](int)
+chan colaPrioritaria[3](int)
+chan clienteEnCaja[3](bool)
+chan comprobantesCliente[int](text)
+chan cajaLibre(int)
+
+process caja[id:1..3]{
+    while(true){
+        int idCliente
+        receive clienteEnCaja[id]()
+        if (!empty(colaPrioritaria[id])){
+            receive colaPrioritaria[id](idCliente)
+        } else {
+            receive colaRegular[id](idCliente)
+        }
+        comprobante = procesarCliente(idCliente)
+        send comprobantesCliente[idCliente](comprobante)
+        send cajaLibre(id)
+    }
+}
+process coordinador{
+    int clientesEnCaja[3] = (0,0,0), int cajaMinima, idCliente, idCaja
+    while (true) {
+        if !empty(clienteLlego) -> 
+            receive clienteLlego(idCliente)
+            cajaMinima = encontrarCajaMinima(clientesEnCaja)
+            send asignarCaja[cajaMinima](idCliente)
+            clientesEnCaja[cajaMinima] ++
+        [] !empty(cajaLibre); -> 
+            receive cajaLibre(idCaja)
+            clientesEnCaja[idCaja] --
+        
+    }
+}
+process cliente[id:1..P]{
+    int cajaAsignada; text comprobante; bool esPrioritario = ...;
+    send clienteLlego(id)
+    receive asignarCaja[id](cajaAsignada)
+    if (esPrioritario){
+        send colaPrioritaria[cajaAsignada](id)
+    } else {
+        send colaRegular[cajaAsignada](id)
+    }
+    send clienteEnCaja[cajaAsignada]();
+    receive comprobantesCliente[id](comprobante)
+}
 ```
 ### PMS
 Resolver con PMS (Pasaje de Mensajes SINCRONICOS) el
@@ -480,6 +522,7 @@ administrar el uso del mismo. A su vez hay P personas que van a la exposición y
 deje acceder, lo usa por un rato y se retira para que el empleado deje pasar a otra persona. El empleado deja usar el simulador a las personas respetando
 el orden en que hicieron la solicitud. Nota: cada persona usa sólo una vez el simulador. Respuesta:
 ```SH
+// ES EL DE LA PRACTICA 
 ```
 
 ### PMS
@@ -487,27 +530,55 @@ Resolver con PMS (Pasaje de Mensajes SINCRÓNICOS) el siguiente problema. Simula
 tiene un empleado que atiende a los N clientes de acuerdo al orden de llegada. Cada cliente espera hasta que el empleado lo atienda y le indica qué y
 cuánto cargar; espera hasta que termina de cargarle combustible y se retira. Nota: cada cliente carga combustible sólo una vez; todos los procesos deben
 terminar. Respuesta:
-```SH
+```cpp
+process Empleado{
+    int idC, cantidad; text tipo
+    for i:=1..N {
+        Buffer!siguiente()
+        Buffer?recibir(idC)
+        Cliente[idC]?seleccion(tipo, cantidad)
+        // Surtir
+        Cliente[idC]!termino()
+    }
+}
+process Buffer {
+    cola Queue; cantAtentidos int
+    do
+        cantAtendidos < 20; Cliente[*]?llegue(idC) -> cola.push(idC); cantAtendidos++;
+        [] ! cola.isEmpty(); Empleado?siguiente() -> Empleado!recibir(cola.pop())
+    od
+}
+process Cliente[id:1..N]{
+    Buffer!llegue(id)
+    Empleado!seleccion(elegirTipo(), elegirCantidad())
+    Empleado?termino()
+}
 ```
 
 ### PMS
 En una carrera hay C corredores y 3 Coordinadores. Al llegar los corredores deben dirigirse a los coordinadores para que cualquiera de ellos le dé el número
 de “chaleco” con el que van a correr y luego se va. Los coordinadores atienden a los corredores de acuerdo al orden de llegada (cuando un coordinador está
 libre atiende al primer corredor que está esperando). Nota: maximizar la concurrencia. Respuesta
-```SH
+```cpp
+process Coordinador[id:1..3] {
+    int idC
+    Buffer!siguiente(id)
+    Buffer?recibir(idC)
+    Corredor[idC]!recibirChaleco(new Chaleco())
+}
+process Corredor[id:1..C]{
+    text chaleco;
+    Buffer!llegue(id)
+    Empleado[*]?recibirChaleco(chaleco)
+}
+process Buffer {
+    cola Queue; cantAtentidos int
+    do
+        cantAtendidos < 20; Corredor[*]?llegue(idC) -> cola.push(idC); cantAtendidos++;
+        [] ! cola.isEmpty(); Coordinador[*]?siguiente(idC) -> Coordinador[idC]!recibir(cola.pop())
+    od
+}
 ```
-
-### ADA
-3.Resolver el siguiente problema con ADA. Hay un sitio web para identificación genética que resuelve pedidos de N clientes . Cada cliente trabaja
-continuamente de la siguiente manera: genera la secuencia de ADN, la envía al sitio web para evaluar y espera el resultado; después de esto puede
-comenzar a generar la siguiente secuencia de ADN. Para resolver estos pedidos el sitio web cuenta con 5 servidores idénticos que atienden los pedidos de
-acuerdo al orden de llegada (cada pedido es atendido por un único servidor). Nota: maximizar la concurrencia. Suponga que los servidores tienen una
-función ResolverAnálisis que recibe la secuencia de ADN y devuelve un entero con el resultado.
-Respuesta:
-```SH
-
-```
-
 ### ADA
 Consigna:
 2- Resolver con ADA la siguiente situación. En una obra social que tiene 15 sedes en diferentes lugares se tiene información de las enfermedades de cada
@@ -516,6 +587,12 @@ y debe calcular la cantidad total de clientes que la han tenido. Esta informaci�
 una función ElegirEnfermos(e) que es llamada por cada Sede y devuelve la cantidad de clientes de esa sede que han tenido la enfermedad e.
 Respuesta:
 ```SH
+PROCEDURE obraSocial IS
+    TASK
+
+BEGIN
+
+END obraSocial.
 ```
 
 ### ADA
