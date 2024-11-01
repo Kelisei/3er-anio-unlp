@@ -587,12 +587,6 @@ y debe calcular la cantidad total de clientes que la han tenido. Esta informaci√
 una funci√≥n ElegirEnfermos(e) que es llamada por cada Sede y devuelve la cantidad de clientes de esa sede que han tenido la enfermedad e.
 Respuesta:
 ```SH
-PROCEDURE obraSocial IS
-    TASK
-
-BEGIN
-
-END obraSocial.
 ```
 
 ### ADA
