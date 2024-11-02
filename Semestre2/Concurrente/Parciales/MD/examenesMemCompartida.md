@@ -473,7 +473,7 @@ chan colaPrioritaria[3](int)
 chan clienteEnCaja[3](bool)
 chan comprobantesCliente[int](text)
 chan cajaLibre(int)
-
+chan accion(bool)
 process caja[id:1..3]{
     while(true){
         int idCliente
@@ -486,11 +486,13 @@ process caja[id:1..3]{
         comprobante = procesarCliente(idCliente)
         send comprobantesCliente[idCliente](comprobante)
         send cajaLibre(id)
+        send accion()
     }
 }
 process coordinador{
     int clientesEnCaja[3] = (0,0,0), int cajaMinima, idCliente, idCaja
     while (true) {
+        receive accion()
         if !empty(clienteLlego) -> 
             receive clienteLlego(idCliente)
             cajaMinima = encontrarCajaMinima(clientesEnCaja)
@@ -499,12 +501,12 @@ process coordinador{
         [] !empty(cajaLibre); -> 
             receive cajaLibre(idCaja)
             clientesEnCaja[idCaja] --
-        
     }
 }
 process cliente[id:1..P]{
     int cajaAsignada; text comprobante; bool esPrioritario = ...;
     send clienteLlego(id)
+    send accion()
     receive asignarCaja[id](cajaAsignada)
     if (esPrioritario){
         send colaPrioritaria[cajaAsignada](id)
