@@ -586,8 +586,8 @@ uno de sus clientes (cada sede tiene sus propios datos). Se tiene una Central do
 y debe calcular la cantidad total de clientes que la han tenido. Esta información se la debe pedir a cada Sede. Maximizar la concurrencia. Nota: existe
 una función ElegirEnfermos(e) que es llamada por cada Sede y devuelve la cantidad de clientes de esa sede que han tenido la enfermedad e.
 Respuesta:
-<img src="image.png"/>
-<img src="IMG_3146.jpg"/>
+<img src="CamScanner 01-11-2024 10.57_2.jpg"/>
+<img src="CamScanner 01-11-2024 10.57_1.jpg"/>
 
 ### ADA
 En un sistema para acreditar carreras universitarias, hay UN Servidor que atiende pedidos de U Usuarios de a uno a la vez y de acuerdo con el orden en
@@ -595,8 +595,8 @@ que se hacen los pedidos. Cada usuario trabaja en el documento a presentar, y lu
 todo bien o hay algún error. Mientras haya algún error,vuelve a trabajar con el documento y a enviarlo al servidor. Cuando el servidor le responde que
 está todo bien, el usuario se retira. Cuando un usuario envía un pedido espera a lo sumo 2 minutos a que sea recibido por el servidor, pasado ese tiempo
 espera un minuto y vuelve a intentarlo (usando el mismo documento). Respuesta:
-```SH
-```
+<img src="CamScanner 01-11-2024 12.05_1.jpg">
+<img src="CamScanner 01-11-2024 12.05_2.jpg">
 
 ### ADA
 Resolver con ADA el siguiente problema. Simular la venta de entradas a un evento musical por medio de un portal web. Hay N clientes que intentan
@@ -609,8 +609,8 @@ atiende un pedido, si aún quedan entradas disponibles le vende una al cliente q
 Nota: no debe modelarse la parte de la impresión del comprobante, sólo llamar a una función Imprimir (comprobante) en el cliente que simulará esa
 parte; la cantidad E de entradas es mucho menor que la cantidad de clientes (E « C); todas las tareas deben terminar.
 Respuesta:
-```SH
-```
+<img src="CamScanner 01-11-2024 19.35_1.jpg"/>
+<img src="CamScanner 01-11-2024 19.35_2.jpg"/>
 
 ### ADA
 Resolver con ADA el siguiente problema. Simular la atención en una oficina donde atiende un empleado. Hay N personas que deben hacer UN trámite
@@ -620,8 +620,8 @@ sigue trabajando durante 10 minutos y luego lo vuelve a intentar siguiendo el mi
 y luego lo vuelve a intentar) hasta que el empleado lo atienda y le dé el informe pedido. El empleado atiende los pedidos de acuerdo al orden de llegada
 pero siempre dando prioridad a los pedidos de las personas. Nota:
 todas las tareas deben terminar. Respuesta:
-```SH
-```
+
+# SIGUIENTE
 
 ### ADA
 Resolver con ADA el siguiente problema. Un programador contrató a 5 estudiantes para testear los sistemas desarrollados por él. Cada estudiante tiene
@@ -657,3 +657,9 @@ orden de llegada (se debe usar con exclusión mutua). El usuario debe esperar su
 cada usuario usa sólo una vez el teléfono. Respuesta:
 ```SH
 ```
+
+# Extra
+### ADA
+Resolver con ADA el siguiente problema. Para un experimento se tiene una red con 150 controladores de temperatura y un módulo central. Cada controlador toma la temperatura cada 30 segundos y si está fuera de rango realiza lo siguiente: si está por encima del rango espera a que la central que le indique qué acción realizar; si está por debajo del rango espera a lo sumo 10 minutos a que la central le indique qué acción realizar; en cualquiera de los dos casos, realiza la acción indicada por la central (si fue atendido). La central atiende los pedidos de los controladores dando prioridad a aquellos que son por superar el rango permitido. Nota: suponga que existen las funciones medir() que retorna la temperatura al controlador; actualizar() que simula que el controlador está haciendo la acción indicada por la central; determinar() que es usado por la central para determinar qué acción debe hacer el controlador en base a la información que le envió; el experimento nunca finaliza.
+
+<img src="IMG_3171.jpg"/>
