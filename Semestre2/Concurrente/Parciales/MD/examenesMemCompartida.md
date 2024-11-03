@@ -623,17 +623,20 @@ y luego lo vuelve a intentar) hasta que el empleado lo atienda y le dé el infor
 pero siempre dando prioridad a los pedidos de las personas. Nota:
 todas las tareas deben terminar. Respuesta:
 
-# SIGUIENTE
+<img src="IMG_3183.jpg"/>
 
 ### ADA
-Resolver con ADA el siguiente problema. Un programador contrató a 5 estudiantes para testear los sistemas desarrollados por él. Cada estudiante tiene
-que trabajar con un sistema diferente y debe encontrar 10 errores (suponga que seguro existen 10 errores en cada sistema) que pueden ser: urgentes,
-importantes, secundarios. Cada vez que encuentra un error se lo reporta al programador y espera hasta que lo resuelva para continuar. El programador
-atiende los reportes de acuerdo al orden de llegada pero teniendo en cuenta las siguientes prioridades: primero los urgentes, luego los importantes y por
-último los secundarios; si en un cierto momento no hay reportes para atender durante 5 minutos trabaja en un nuevo sistema que está desarrollando. De-
-spués de resolver los 50 reportes de error (10 por cada estudiante) el programador termina su ejecución. Nota: todas las tareas deben terminar. Respuesta:
-```SH
-```
+Resolver con ADA el siguiente problema. 
+
+Un programador contrató a 5 estudiantes para testear los sistemas desarrollados por él. 
+
+Cada estudiante tiene que trabajar con un sistema diferente y debe encontrar 10 errores (suponga que seguro existen 10 errores en cada sistema) que pueden ser: urgentes, importantes, secundarios. Cada vez que encuentra un error se lo reporta al programador y espera hasta que lo resuelva para continuar. 
+
+El programador atiende los reportes de acuerdo al orden de llegada pero teniendo en cuenta las siguientes prioridades: primero los urgentes, luego los importantes y por último los secundarios; si en un cierto momento no hay reportes para atender durante 5 minutos trabaja en un nuevo sistema que está desarrollando. Después de resolver los 50 reportes de error (10 por cada estudiante) el programador termina su ejecución. 
+Nota: todas las tareas deben terminar. Respuesta:
+
+<img src="IMG_3201.jpg"/>
+<img src="IMG_3202.jpg"/>
 
 ### PMA
 2) Resolver con PMA el siguiente problema. Para una aplicación de venta de pasaje se tienen 3 servidores replicados para mejorar la eficiencia en la
@@ -665,3 +668,50 @@ cada usuario usa sólo una vez el teléfono. Respuesta:
 Resolver con ADA el siguiente problema. Para un experimento se tiene una red con 150 controladores de temperatura y un módulo central. Cada controlador toma la temperatura cada 30 segundos y si está fuera de rango realiza lo siguiente: si está por encima del rango espera a que la central que le indique qué acción realizar; si está por debajo del rango espera a lo sumo 10 minutos a que la central le indique qué acción realizar; en cualquiera de los dos casos, realiza la acción indicada por la central (si fue atendido). La central atiende los pedidos de los controladores dando prioridad a aquellos que son por superar el rango permitido. Nota: suponga que existen las funciones medir() que retorna la temperatura al controlador; actualizar() que simula que el controlador está haciendo la acción indicada por la central; determinar() que es usado por la central para determinar qué acción debe hacer el controlador en base a la información que le envió; el experimento nunca finaliza.
 
 <img src="IMG_3171.jpg"/>
+
+### PMA
+Resolver con PASAJE DE MENSAJES ASINCRÓNICOS (PMA) el siguiente problema. Se debe simular la
+atención en un peaje con 7 cabinas para atender a N vehículos (algunos de ellos son ambulancias).
+Cuando el vehículo llega al peaje se dirige a la cabina con menos vehículos esperando y se queda
+ahí hasta que lo terminan de atender y le dan el ticket de pago. Las cabinas atienden a los
+vehículos que van a ella de acuerdo al orden de llegada pero dando prioridad a las ambulancias;
+cuando terminan de atender a un vehículo le dan el ticket de pago.
+Nota: maximizar la concurrencia.
+
+Faltan los canales y conviene invertir el if en el coord
+
+<img src="IMG_3188.jpg"/>
+<img src="IMG_3189.jpg"/>
+
+### PMA
+Resolver con PMA. N alumnos rinden un examen de promocion, M rinden normal, los alumnos realizan el examen (suponga que ya lo tienen al empezar) y luego lo entregan. Hay 3 profesores que corrigen los examenes priorizando los de promocion, luego le dan la nota al alumno y este se retira.
+
+<img src="IMG_3200.jpg"/>
+
+### PMA
+Resolver con PASAJE DE MENSAJES ASINCRÓNICOS (PMA) el siguiente problema. En un corralón se pueden pedir presupuestos por mail, para esto tiene 3 empleados para atender los pedidos de N personas de acuerdo con el orden en que llegan los mismos. Cada persona envía la lista de materiales a comprar y recibe el presupuesto para dicha lista. Los empleados atienden los pedidos de a uno a la vez, cuando no hay pedidos para pendientes ordenen materiales durante 10 minutos. NOTA: los empleados no deben terminar.
+
+<img src="IMG_3199.jpg"/>
+
+### PMS
+Resolver este ejercicio con PMS. En un banco se tiene un sistema que administra el uso de una sala de reuniones por parte de N clientes. Los clientes se clasifican en habituales o temporales. La sala puede ser usada por un unico cliente a la vez Y cuando esta libre se debe determinar a quien permitirle su uso siempre priorizando a los clientes habituales Dentro de cada clase de cliente se debe respetar el orden de llegada Nota: suponga que existe una funcion tipo() que le indica al cliente de que tipo esta.
+
+No va el while true en el coordinador
+<img src="IMG_3190.jpg">
+
+### PMS
+Resolver con PASAJES DE MENSAJES SINCRÓNICOS (PMS) el siguiente problema. Existe un sitio de algebra lineal especializado en resolver multiplicaciones de matrices que atiende pedidos de N clientes, el sitio tiene un Servidor encargado de resolver los pedidos de los clientes de acuerdo con el orden en que se hacen los mismos. Cada cliente hace un solo pedido. NOTA: todas las tareas deben terminar.
+
+<img src="IMG_3194.jpg"/>
+
+### PMS
+Resolver con PMS el siguiente problema: Se debe administrar el acceso para usar en
+determinado Servidor donde no se permite más de 10 usuarios trabajando al mismo tiempo,
+por cuestiones de rendimiento. Existen N usuarios que solicitan acceder al Servidor,
+esperan hasta que se les de acceso para trabajar en él y luego salen del mismo.
+Nota: suponga que existe una función TrabajarEnServidor() que llaman los usuarios para
+representar que están trabajando en el Servidor
+
+Orden de llegada no es necesario, te ahorras cola.
+
+<img src="IMG_3192.jpg"/>
