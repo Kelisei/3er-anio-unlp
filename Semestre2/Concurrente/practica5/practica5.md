@@ -699,6 +699,79 @@ BEGIN
     END LOOP;
 END sistema;
 ```
+```JAVA
+PROCEDURE sistema IS
+    TASK TYPE servidor IS
+        ENTRY recibirID(id: IN Integer);
+    END TYPE servidor;
+    TASK BODY servidor IS
+        codigo: text;
+        valor: Float;
+        huella: text;
+        id: Integer;
+    BEGIN
+        ACCEPT recibirID(id);
+        LOOP        
+            especialista.darInfo(huella)
+            dbs[id].buscar(huella, codigo, valor);
+            especialista.recibirInformacion(codigo, valor);
+            especialista.barrera();
+        END LOOP;
+    END servidor;
+    servidores : array (1..8) of servidor;
+
+    TASK TYPE db IS
+        ENTRY buscar(huella: IN text, codigo: OUT text, valor: OUT Float);
+    END TYPE db;
+    TASK BODY db IS
+    BEGIN
+        LOOP
+            ACCEPT buscar(huella: IN Integer, codigo: OUT Integer, valor: OUT Float) DO
+                Buscar(huella, codigo, valor);
+            END buscar
+        END LOOP;
+    END BODY db;        
+    dbs : array (1..8) of db;
+
+    TASK especialista IS
+        ENTRY recibirInformacion(codigo: IN text; valor: IN Float);
+        ENTRY darInfo(huella: OUT text);
+        ENTRY barrera();
+    END especialista;
+
+    TASK BODY especialista IS
+        huellaTest: text;
+        maxSim: Float;
+        maxCodigo: text;
+    BEGIN
+        LOOP 
+            huellaTest := tomarImagen();
+            maxSim := -1.0;
+            FOR i IN 1..16 LOOP
+                SELECT 
+                    ACCEPT darInfo(huella: OUT text) DO
+                        huella:=hulleTest;
+                    END darInfo;
+                    OR 
+                    ACCEPT recibirInformacion(codigo: IN text; valor: IN Float) DO
+                        IF valor > maxSim THEN
+                            maxSim := valor;
+                            maxCodigo := codigo;
+                        END IF;
+                    END recibirInformacion;
+                END SELECT;
+            END LOOP;
+            FOR i IN 1..8 LOOP
+                ACCEPT barrera();
+            END LOOP;
+        END LOOP;       
+    END BODY especialista;
+BEGIN
+    FOR i IN 1..8 LOOP
+        servidores[i].recibirID(i);
+    END LOOP;
+END sistema;
+```
 # 8.
 Una  empresa  de  limpieza  se  encarga  de  recolectar  residuos  en  una  ciudad  por  medio  de  3 camiones.
 Hay  P  personas  que  hacen  reclamos  continuamente  hasta  que  uno  de  los
