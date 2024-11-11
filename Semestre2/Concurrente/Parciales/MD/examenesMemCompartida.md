@@ -638,31 +638,6 @@ Nota: todas las tareas deben terminar. Respuesta:
 <img src="IMG_3201.jpg"/>
 <img src="IMG_3202.jpg"/>
 
-### PMA
-2) Resolver con PMA el siguiente problema. Para una aplicación de venta de pasaje se tienen 3 servidores replicados para mejorar la eficiencia en la
-atención. Existen N clientes que hacen alguna de estas dos solicitudes: compra de un pasaje o devolución de un pasaje. Las solicitudes se deben atender
-dando prioridad a las solicitudes de compra. Nota: suponga que cada cliente llama a la función TipoSolicitud() que le devuelve el tipo de solicitud a
-realizar. Maximizar la concurrencia. Respuesta:
-```SH
-```
-
-### ADA
-Resolver con ADA el siguiente problema. Se debe simular un juego en el que participan 30 jugadores que forman 5 grupos de 6 personas. Al llegar cada
-jugador debe buscar las instrucciones y el grupo al que pertenece en un cofre de cemento privado para cada uno; para esto deben usar un único martillo
-gigante de a uno a la vez y de acuerdo al orden de llegada. Luego se debe juntar con el resto de los integrantes de su grupo y los 6 juntos realizan
-las acciones que indican sus instrucciones. Cuando un grupo termina su juego le avisa a un Coordinador que le indica en qué orden término el grupo.
-Nota: maximizar la concurrencia; suponer que existe una función Jugar() que simula que los 6 integrantes de un grupo están jugando juntos; suponga que
-existe una función Romper(grupo) que simula cuando un jugador está rompiendo su cofre con el martillo y le retorna el grupo al que pertenece. Respuesta
-```SH
-```
-
-### PMS
-Resolver con PMS (Pasaje de Mensajes SINCRÓNICOS) el siguiente problema. Hay un teléfono público que debe ser usado por U usuarios de acuerdo al
-orden de llegada (se debe usar con exclusión mutua). El usuario debe esperar su turno, usa el teléfono y luego lo deja para que el siguiente lo use. Nota:
-cada usuario usa sólo una vez el teléfono. Respuesta:
-```SH
-```
-
 # Extra
 ### ADA
 Resolver con ADA el siguiente problema. Para un experimento se tiene una red con 150 controladores de temperatura y un módulo central. Cada controlador toma la temperatura cada 30 segundos y si está fuera de rango realiza lo siguiente: si está por encima del rango espera a que la central que le indique qué acción realizar; si está por debajo del rango espera a lo sumo 10 minutos a que la central le indique qué acción realizar; en cualquiera de los dos casos, realiza la acción indicada por la central (si fue atendido). La central atiende los pedidos de los controladores dando prioridad a aquellos que son por superar el rango permitido. Nota: suponga que existen las funciones medir() que retorna la temperatura al controlador; actualizar() que simula que el controlador está haciendo la acción indicada por la central; determinar() que es usado por la central para determinar qué acción debe hacer el controlador en base a la información que le envió; el experimento nunca finaliza.
@@ -707,7 +682,8 @@ Resolver con PASAJES DE MENSAJES SINCRÓNICOS (PMS) el siguiente problema. Exist
 ### PMS
 Resolver con PMS el siguiente problema: Se debe administrar el acceso para usar en
 determinado Servidor donde no se permite más de 10 usuarios trabajando al mismo tiempo,
-por cuestiones de rendimiento. Existen N usuarios que solicitan acceder al Servidor,
+por cuestiones de rendimiento. 
+Existen N usuarios que solicitan acceder al Servidor,
 esperan hasta que se les de acceso para trabajar en él y luego salen del mismo.
 Nota: suponga que existe una función TrabajarEnServidor() que llaman los usuarios para
 representar que están trabajando en el Servidor

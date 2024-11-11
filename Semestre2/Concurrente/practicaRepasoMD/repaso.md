@@ -230,9 +230,9 @@ generarArtículo()  que  retorna el  siguiente  ID  a  consultar).  Nota:  maxim
 una  función  ObtenerVentas(ID)  que  retorna  la  cantidad  de  veces  que  fue  vendido  el  artículo  con 
 identificador ID en la base de la sucursal que la llama. 
 
-100 sucursale -> 100 db -> herramienta manda id a sucursal y despues retorna cantventas, herramienta suma
+100 sucursales -> 100 db -> herramienta manda id a sucursal y despues retorna cantventas, herramienta suma
 
-```ada
+```java
 PROCEDURE oficina IS
     TASK herramienta IS
         ENTRY recibirVentas(ventas: IN Integer);
